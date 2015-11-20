@@ -17,7 +17,10 @@ unsigned char waveform_data[WAVE_DATA_SIZE];
 
 double preamble[10];
 
-scope::scope(){}
+scope::scope()
+{
+//
+}
 
 void scope::closeScope(void)
 {

@@ -16,10 +16,10 @@ int main(void)
 {
     //Initialize variables to pull in settings
     char dataDir[100], expName[100], expType[100];
-    MOTSETTINGS  motorSettings;
-    SCOPESETTINGS  scopeSettings;
-    //mptr = &motorSettings;
-    //sptr = &scopeSettings;
+    MOTSETTINGS   *mptr, motorSettings;
+    SCOPESETTINGS   scopeSettings;
+    mptr = &motorSettings;
+    // sptr = &scopeSettings;
     char foo[1000];
 
 //    // Read in experiment/scope/motor setting parameters from settings.txt file
@@ -75,6 +75,7 @@ int main(void)
 
     // if planar do as follows
     scope SCOPE;
+    //SCOPE.initializeScope()
     SCOPE.initializeScope(scopeSettings);
     int i;
     std::ostringstream s;
@@ -94,4 +95,5 @@ int main(void)
     //initializeScope();
     //getScopeData();
     //closeScope();
+   // return 0;
 }

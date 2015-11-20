@@ -1,14 +1,14 @@
 #ifndef SCOPE_H
 #define SCOPE_H
 
+//struct SCOPESETTINGS;
 
 class scope
 {
     //struct scopeSettings;
     public:
         scope();
-        virtual ~scope();
-        void closeScope(void);
+        void closeScope();
         void initializeScope(const struct SCOPESETTINGS&);
         void getScopeData(const char* x, const struct SCOPESETTINGS&);
         //void getScopeData(std::string x);
