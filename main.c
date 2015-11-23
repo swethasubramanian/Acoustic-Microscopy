@@ -106,41 +106,30 @@ int main(void)
 
         // calculate pause time
 
-        // move motor to bottom left of the ROI
-        MOTOR.mov(motorSettings, "X", -windowX/2);
-        MOTOR.mov(motorSettings, "Y", windowY/2);
+        // move motor to bottom left of the ROI (from computer perspective)
+        MOTOR.mov(motorSettings, "X", -windowX/2); //(minus is left)
+        MOTOR.mov(motorSettings, "Y", windowY/2); //(minus is up)
 
 
         int count = 1;
         s << count;
         std::string filename = dirLevel + "\\" + s.str() + ".dat";
         SCOPE.getScopeData(filename.c_str(), scopeSettings);
-
+        s.str("");
+        s.clear();
         for (i=0; i<=Nx; i++)
         {
             if (i>0)
             {
-               MOTOR.mov(motorSettings, "X", stepXmm);
-               count = count+1;
-               s<<count;
-               filename = dirLevel + "\\" + s.str() + ".dat";
-               SCOPE.getScopeData(filename.c_str(), scopeSettings);
+                MOTOR.mov(motorSettings, "X", stepXmm);
+                count = count+1;
+                s<<count;
+                filename = dirLevel + "\\" + s.str() + ".dat";
+                SCOPE.getScopeData(filename.c_str(), scopeSettings);
+                s.str("");
+                s.clear();
             }
             if (i%2 == 0)
-            {
-                for (j=0; j<=Ny; j++)
-                {
-                    if (j>0)
-                    {
-                        MOTOR.mov(motorSettings, "Y", stepYmm);
-                        count = count+1;
-                        s<<count;
-                        filename = dirLevel + "\\" + s.str() + ".dat";
-                        SCOPE.getScopeData(filename.c_str(), scopeSettings);
-                    }
-                }
-            }
-            else
             {
                 for (j=0; j<=Ny; j++)
                 {
@@ -151,6 +140,24 @@ int main(void)
                         s<<count;
                         filename = dirLevel + "\\" + s.str() + ".dat";
                         SCOPE.getScopeData(filename.c_str(), scopeSettings);
+                        s.str("");
+                        s.clear();
+                    }
+                }
+            }
+            else
+            {
+                for (j=0; j<=Ny; j++)
+                {
+                    if (j>0)
+                    {
+                        MOTOR.mov(motorSettings, "Y", stepYmm);
+                        count = count+1;
+                        s<<count;
+                        filename = dirLevel + "\\" + s.str() + ".dat";
+                        SCOPE.getScopeData(filename.c_str(), scopeSettings);
+                        s.str("");
+                        s.clear();
                     }
                 }
             }

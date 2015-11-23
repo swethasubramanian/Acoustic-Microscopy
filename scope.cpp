@@ -110,7 +110,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
     else{
         // save the data
-        printf("\nReading ... \n");
+        printf("\nReading oscilloscope data... \n");
         FILE *fp;
         fp = fopen(filename, "w");
         // Write preamble first

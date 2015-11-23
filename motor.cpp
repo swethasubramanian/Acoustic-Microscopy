@@ -92,14 +92,14 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
     }
     int distInSteps = dist*motorSettings.pitch;
         // calculate pausetime
-    int pausetime = abs(2000*(distInSteps/motorSettings.velX)) + 100;
-    printf("Pause for %d\n", distInSteps);
+    int pausetime = abs(2000*(distInSteps/motorSettings.velX)) + 2000;
+    printf("Pause for %d\n", pausetime);
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
 
     printf("moved %s axis a distance of %d mm\n", motID, dist);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    Sleep(4000);
+    Sleep(pausetime);
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
