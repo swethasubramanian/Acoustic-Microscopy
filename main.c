@@ -8,6 +8,7 @@
 #include <windows.h>
 #include "scope.h"
 #include "settingsMotorScope.h"
+#include "motor.h"
 
 
 
@@ -16,9 +17,10 @@ int main(void)
 {
     //Initialize variables to pull in settings
     char dataDir[100], expName[100], expType[100];
-    MOTSETTINGS   *mptr, motorSettings;
+    MOTORSETTINGS   motorSettings;
     SCOPESETTINGS   scopeSettings;
-    mptr = &motorSettings;
+    char motorID[1];
+
     // sptr = &scopeSettings;
     char foo[1000];
 
@@ -73,27 +75,30 @@ int main(void)
     dirLevel = dirLevel + std::string(expType);
     CreateDirectory(dirLevel.c_str(), NULL);
 
-    // if planar do as follows
-    scope SCOPE;
-    //SCOPE.initializeScope()
-    SCOPE.initializeScope(scopeSettings);
-    int i;
-    std::ostringstream s;
-    if (strcmp(expType, "Planar") == 0)
-    {
-        for (i = 0; i <= Nx*Ny; i++)
-        {
-            //std::string s = std::to_string(i);
-            s << i;
-            std::string filename = dirLevel+"\\"+s.str()+".dat";
-            SCOPE.getScopeData(filename.c_str(), scopeSettings);
-            s.str("");
-            s.clear();
-        }
-    }
-    SCOPE.closeScope();
-    //initializeScope();
-    //getScopeData();
-    //closeScope();
-   // return 0;
+//    // if planar do as follows
+//    scope SCOPE;
+//    //SCOPE.initializeScope()
+//    SCOPE.initializeScope(scopeSettings);
+//    int i;
+//    std::ostringstream s;
+//    if (strcmp(expType, "Planar") == 0)
+//    {
+//        for (i = 0; i <= Nx*Ny; i++)
+//        {
+//            //std::string s = std::to_string(i);
+//            s << i;
+//            std::string filename = dirLevel+"\\"+s.str()+".dat";
+//            SCOPE.getScopeData(filename.c_str(), scopeSettings);
+//            s.str("");
+//            s.clear();
+//        }
+//    }
+//    SCOPE.closeScope();
+
+    // motor testing
+    motor MOTOR;
+    MOTOR.openMotor(motorSettings);
+   MOTOR.mov(motorSettings, "1");
+   MOTOR.closeMotor();
+
 }

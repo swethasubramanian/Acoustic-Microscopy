@@ -2,7 +2,7 @@
 #define SETTINGSMOTORSCOPE_H_INCLUDED
 
     // MOTORSETTINGS
-    struct MOTSETTINGS
+    struct MOTORSETTINGS
     {
         int stepSizeX;
         int stepSizeY;

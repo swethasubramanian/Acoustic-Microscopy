@@ -37,11 +37,16 @@
 			<Add option="-Wall" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/include" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc" />
+			<Add directory="C:/Boost/boost_1_47_0/boost" />
+			<Add directory="$(#boost.include)" />
+			<Add directory="C:/Boost/boost_1_47_0/boost/asio" />
 		</Compiler>
 		<Linker>
 			<Add library="C:\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/include" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc" />
+			<Add directory="C:/Boost/boost_1_47_0/stage/lib" />
+			<Add directory="$(#boost.lib)" />
 		</Linker>
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
