@@ -2,6 +2,7 @@
 //#include <boost/asio/serial_port.hpp>
 #include <windows.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "settingsMotorScope.h"
 
 
@@ -74,16 +75,31 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
 }
 
 
-int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID)
+int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
 {
     // convert dist to mm
+    char idx[2];
 
-    int distInSteps = motorSettings.stepSizeX*motorSettings.pitch;
-    // Convert int to char
-    sprintf(foo, "C I%sM%d,R", motID, distInSteps);
-    printf("command sent is: %s", foo);
+
+
+    if (!strcmp(motID,"X"))
+    {
+        sprintf(idx, "2");
+    }
+    else if (!strcmp(motID, "Y"))
+    {
+        sprintf(idx, "1");
+    }
+    int distInSteps = dist*motorSettings.pitch;
+        // calculate pausetime
+    int pausetime = abs(2000*(distInSteps/motorSettings.velX)) + 100;
+    printf("Pause for %d\n", distInSteps);
+    // Move the infernal motor
+    sprintf(foo, "C I%sM%d,R", idx, distInSteps);
+
+    printf("moved %s axis a distance of %d mm\n", motID, dist);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    Sleep(2000);
+    Sleep(4000);
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
@@ -94,6 +110,8 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID)
 
 void motor::closeMotor(void)
 {
+    sprintf(foo, "Q"); // Close the offline mode so you can operate the dongle
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     CloseHandle(hCom);
 }
 

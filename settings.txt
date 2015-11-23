@@ -1,13 +1,13 @@
 dataDir = C:\\Documents and Settings\\wetlab\\My Documents\\MATLAB\\Data\\
-expName = Test1
-expType = Planar
+expName = Test2
+expType = Sample
 stepSizeX [mm] = 3
 stepSizeY [mm] = 3
 windowSizeX [mm] = 12
 windowSizeY [mm] = 12
 velocityX = 1000 // Number of steps per 2 sec, pitch is 400
 velocityY = 1000
-pausetime [s] = 15
+pausetime [ms] = 2500
 probeAttn = 10
 channel = CHANNEL1
 coupling = AC

@@ -110,7 +110,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
     else{
         // save the data
-        printf("Reading ... \n");
+        printf("\nReading ... \n");
         FILE *fp;
         fp = fopen(filename, "w");
         // Write preamble first
