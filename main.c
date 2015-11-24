@@ -175,4 +175,5 @@ int main(void)
         MOTOR.closeMotor();
     }
     SCOPE.closeScope();
+    return 0;
 }

@@ -12,5 +12,4 @@ probeAttn = 10
 channel = CHANNEL1
 coupling = AC
 numOfPoints = 1000
-numOfAverages = 100
-
+numOfAverages = 1000

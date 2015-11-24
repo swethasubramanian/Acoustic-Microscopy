@@ -3,6 +3,7 @@
 #include "scope.h" // includes a header file
 #include "settingsMotorScope.h"
 #include <visa.h> # Agilent stuff
+#include <windows.h>
 
 
 #define RESOURCE "GPIB0::7::INSTR"
@@ -101,7 +102,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     //Read data from the scope
     viPrintf(vi, ":WAVEFORM:DATA?\n");
-
+    Sleep(1000);
     viScanf(vi, "%#b\n", &waveform_size, waveform_data);
     if (waveform_size == WAVE_DATA_SIZE)
     {
@@ -110,7 +111,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
     else{
         // save the data
-        printf("\nReading oscilloscope data... \n");
+        printf("Reading oscilloscope data... \n\n");
         FILE *fp;
         fp = fopen(filename, "w");
         // Write preamble first

@@ -27,6 +27,14 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
                       OPEN_EXISTING,
                       0,
                       NULL);
+    // Get communication state
+    fSuccess = GetCommState(hCom, &dcb);
+    if (!fSuccess)
+    {
+      // Handle the error.
+      printf ("GetCommState failed with error %d.\n", GetLastError());
+      return (3);
+    }
 
     // Initialize DCB structure
     dcb.BaudRate = CBR_9600;
@@ -36,6 +44,7 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
 
     // setup communication settings
     fSuccess = SetCommState(hCom, &dcb);
+
 
     COMMTIMEOUTS timeouts;
     timeouts.ReadIntervalTimeout = 1;
@@ -97,7 +106,7 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
 
-    printf("moved %s axis a distance of %d mm\n", motID, dist);
+    printf("moved in %s direction a distance of %d mm\n", motID, dist);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     Sleep(pausetime);
     if (!fSuccess)
