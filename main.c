@@ -24,14 +24,7 @@
 
 int main(int argc, char *argv[])
 {
-    //Initialize variables to pull in settings
-    char dataDir[100], expName[100], expType[100];
-    MOTORSETTINGS   motorSettings;
-    SCOPESETTINGS   scopeSettings;
-    char motorID[1];
 
-    // sptr = &scopeSettings;
-    char foo[1000];
 
     // Setting up GUI here
    //
@@ -41,55 +34,9 @@ int main(int argc, char *argv[])
 
 
    // Read in experiment/scope/motor setting parameters from settings.txt file
-    FILE * settingsFile;
-    settingsFile = fopen("settings.txt", "r");
-
-    // Read in file storage settings
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "dataDir = %[^\n]s\n", dataDir);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "expName = %s\n", expName);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "expType = %s\n", expType);
-
-    // Read in motor settings
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "stepSizeX [mm] = %d", &motorSettings.stepSizeX);//&motorSettings.stepSizeX);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "stepSizeY [mm] = %d", &motorSettings.stepSizeY);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "windowSizeX [mm] = %d", &motorSettings.windowSizeX);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "windowSizeY [mm] = %d", &motorSettings.windowSizeY);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "velocityX = %d", &motorSettings.velX);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "velocityY = %d", &motorSettings.velY);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "pausetime [s] = %d", &motorSettings.pauseTime);
-
-    // Read in scope settings
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "probeAttn = %s", scopeSettings.probeAttn);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "channel = %s", scopeSettings.channel);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "coupling = %s", scopeSettings.coupling);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "numOfPoints = %s", scopeSettings.numOfPoints);
-    fgets(foo, 10000, settingsFile);
-    sscanf(foo, "numOfAverages = %s", scopeSettings.numOfAverages);
-    fclose(settingsFile);
-
-    // Copy this to raster scan later
-    int Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    int Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
 
     // first make directory for storing files
-    std::string dirLevel = std::string(dataDir) + std::string(expName) + "\\" ;
-    CreateDirectory(dirLevel.c_str(), NULL);
-    dirLevel = dirLevel + std::string(expType);
-    CreateDirectory(dirLevel.c_str(), NULL);
+
 
 //    // if planar do as follows
 //    scope SCOPE;

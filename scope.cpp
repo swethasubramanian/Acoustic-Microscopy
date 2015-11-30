@@ -56,7 +56,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     // Acquistion settings
     viPrintf(vi, ":ACQUIRE:TYPE AVERAGE\n");
-    sprintf(foo, ":ACQUIRE:COUNT %s\n", scopeSettings.numOfAverages);
+    sprintf(foo, ":ACQUIRE:COUNT %d\n", scopeSettings.numOfAverages);
     viPrintf(vi, foo);
 
     //Write data out
@@ -97,7 +97,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
    // printf("Preamble YREFERENCE: %e\n", preamble[9]);
 
     // Set number of points
-    sprintf(foo, ":WAVEFORM:POINTS %s\n", scopeSettings.numOfPoints);
+    sprintf(foo, ":WAVEFORM:POINTS %d\n", scopeSettings.numOfPoints);
     viPrintf(vi, foo);
 
     //Read data from the scope

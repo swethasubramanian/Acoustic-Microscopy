@@ -16,11 +16,11 @@
 
     struct SCOPESETTINGS
     {
-        char probeAttn[10];
-        char numOfPoints[10];
-        char numOfAverages[10];
-        char channel[10];
-        char coupling[10];
+        char probeAttn[10] = "10";
+        int numOfPoints;
+        int numOfAverages;
+        char channel[10] = "CHANNEL1";
+        char coupling[10] = "AC";
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED
