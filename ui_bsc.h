@@ -19,8 +19,10 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QToolButton>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -44,8 +46,16 @@ public:
     QLineEdit *numOfPoints;
     QLabel *label_8;
     QLabel *label_9;
-    QPushButton *getDirName;
     QLineEdit *dirName;
+    QLineEdit *expName;
+    QLabel *label_10;
+    QLabel *label_11;
+    QToolButton *getDirName;
+    QLabel *label_12;
+    QRadioButton *planar;
+    QRadioButton *sample;
+    QLabel *statusMsg;
+    QPushButton *acquireData;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -102,12 +112,36 @@ public:
         label_9 = new QLabel(centralWidget);
         label_9->setObjectName(QStringLiteral("label_9"));
         label_9->setGeometry(QRect(230, 30, 141, 20));
-        getDirName = new QPushButton(centralWidget);
-        getDirName->setObjectName(QStringLiteral("getDirName"));
-        getDirName->setGeometry(QRect(480, 230, 101, 23));
         dirName = new QLineEdit(centralWidget);
         dirName->setObjectName(QStringLiteral("dirName"));
-        dirName->setGeometry(QRect(90, 230, 371, 20));
+        dirName->setGeometry(QRect(120, 260, 371, 20));
+        expName = new QLineEdit(centralWidget);
+        expName->setObjectName(QStringLiteral("expName"));
+        expName->setGeometry(QRect(120, 230, 211, 20));
+        label_10 = new QLabel(centralWidget);
+        label_10->setObjectName(QStringLiteral("label_10"));
+        label_10->setGeometry(QRect(30, 260, 81, 20));
+        label_11 = new QLabel(centralWidget);
+        label_11->setObjectName(QStringLiteral("label_11"));
+        label_11->setGeometry(QRect(30, 230, 91, 20));
+        getDirName = new QToolButton(centralWidget);
+        getDirName->setObjectName(QStringLiteral("getDirName"));
+        getDirName->setGeometry(QRect(500, 260, 25, 19));
+        label_12 = new QLabel(centralWidget);
+        label_12->setObjectName(QStringLiteral("label_12"));
+        label_12->setGeometry(QRect(450, 200, 91, 16));
+        planar = new QRadioButton(centralWidget);
+        planar->setObjectName(QStringLiteral("planar"));
+        planar->setGeometry(QRect(420, 230, 82, 17));
+        sample = new QRadioButton(centralWidget);
+        sample->setObjectName(QStringLiteral("sample"));
+        sample->setGeometry(QRect(500, 230, 82, 17));
+        statusMsg = new QLabel(centralWidget);
+        statusMsg->setObjectName(QStringLiteral("statusMsg"));
+        statusMsg->setGeometry(QRect(30, 320, 241, 16));
+        acquireData = new QPushButton(centralWidget);
+        acquireData->setObjectName(QStringLiteral("acquireData"));
+        acquireData->setGeometry(QRect(530, 380, 75, 23));
         bsc->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -139,7 +173,14 @@ public:
         label_7->setText(QApplication::translate("bsc", "Number of Points", 0));
         label_8->setText(QApplication::translate("bsc", "Oscilloscope Settings", 0));
         label_9->setText(QApplication::translate("bsc", "Backscatter Measurements", 0));
-        getDirName->setText(QApplication::translate("bsc", "Select Directory", 0));
+        label_10->setText(QApplication::translate("bsc", "Select Directory", 0));
+        label_11->setText(QApplication::translate("bsc", "Experiment Name", 0));
+        getDirName->setText(QApplication::translate("bsc", "...", 0));
+        label_12->setText(QApplication::translate("bsc", "Experiment Type", 0));
+        planar->setText(QApplication::translate("bsc", "Planar", 0));
+        sample->setText(QApplication::translate("bsc", "Sample", 0));
+        statusMsg->setText(QApplication::translate("bsc", "Status Message", 0));
+        acquireData->setText(QApplication::translate("bsc", "Run", 0));
     } // retranslateUi
 
 };

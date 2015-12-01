@@ -3,6 +3,8 @@
 #include <QtGui>
 #include <QFileDialog>
 
+#include "motor.h"
+#include "scope.h"
 #include "settingsMotorScope.h"
 
 bsc::bsc(QWidget *parent) :
@@ -10,41 +12,19 @@ bsc::bsc(QWidget *parent) :
     ui(new Ui::bsc)
 {
     ui->setupUi(this);
-    scanSettings();
+    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquireData()));
 }
 
-// For settings adjustments look here!!
+// This will read in scan parameters run the scan
+void bsc::acquireData(void)
+{
+    connect(ui->planar, SIGNAL(clicked()), this, SLOT(getPlanarData()));
+    connect(ui->sample, SIGNAL(clicked()), this, SLOT(getSampleData()));
+}
+
+// Set up motor and scope settings
 void bsc::scanSettings(void)
 {
-        //Initialize variables to pull in settings
-//    char dataDir[100], expName[100], expType[100];
-//    MOTORSETTINGS   motorSettings;
-//    //SCOPESETTINGS   scopeSettings;
-//    char motorID[1];
-//
-//    // sptr = &scopeSettings;
-//    char foo[1000];
-//
-//    std::string dirLevel = std::string(dataDir) + std::string(expName) + "\\" ;
-//    CreateDirectory(dirLevel.c_str(), NULL);
-//    dirLevel = dirLevel + std::string(expType);
-//    CreateDirectory(dirLevel.c_str(), NULL);
-//
-//    FILE * settingsFile;
-//    settingsFile = fopen("settings.txt", "r");
-//
-//    // Read in file storage settings
-//    fgets(foo, 10000, settingsFile);
-//    sscanf(foo, "dataDir = %[^\n]s\n", dataDir);
-//    fgets(foo, 10000, settingsFile);
-//    sscanf(foo, "expName = %s\n", expName);
-//    fgets(foo, 10000, settingsFile);
-//    sscanf(foo, "expType = %s\n", expType);
-//
-//    fclose(settingsFile);
-//
-
-
     QString tmp;
     tmp = ui->stepSizeX->text();
     motorSettings.stepSizeX = tmp.toInt();
@@ -66,27 +46,64 @@ void bsc::scanSettings(void)
     scopeSettings.numOfAverages = tmp.toInt();
     tmp = ui->numOfPoints->text();
     scopeSettings.numOfPoints = tmp.toInt();
+}
 
+QString bsc::saveDir()
+{
     // Set File name settings here
     // Defaults
     QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
     ui->dirName->setText(parentDir);
 
+    // Select parent directory (optional)
     connect(ui->getDirName, SIGNAL(clicked()), this, SLOT(getParentDir()));
+    parentDir = ui->dirName->text();
+
+    // Set default experiment name (timestamp)
+    QString timeStamp = QDateTime::currentDateTime().toString("MMddyyyy_hhmmss");
+    ui->expName->setText(timeStamp);
+
+    // Ask for experiment name
+    QString saveDirName;
+    saveDirName = ui->expName->text();
+
+    // Create a directory for every experiment
+    QString savePath = parentDir+"/"+saveDirName;
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+    return savePath;
 }
 
-
-
-QString bsc::getParentDir()
+void bsc::getParentDir()
 {
    //
     QString parentDirName = QFileDialog::getExistingDirectory(this, tr("Select Experiment Directory"),
                  "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/",
                  QFileDialog::ShowDirsOnly);
     ui->dirName->setText(parentDirName);
-    return parentDirName;
 }
 
+// Motor will not move
+void bsc::getPlanarData()
+{
+    ui->statusMsg->setText("Acquiring planar reflector data...");
+
+    // Create a directory for saving planar data
+    QString savePath = saveDir()+"/Planar";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+    ui->statusMsg->setText("saving to: " + savePath);
+}
+
+void bsc::getSampleData()
+{
+    ui->statusMsg->setText("Sample Code will run");
+        // Create a directory for saving planar data
+    QString savePath = saveDir()+"/Sample";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+    ui->statusMsg->setText("saving to: " + savePath);
+}
 
 bsc::~bsc()
 {

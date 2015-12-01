@@ -14,7 +14,6 @@ class bsc : public QMainWindow
 
 public:
     explicit bsc(QWidget *parent = 0);
-    void scanSettings();
     ~bsc();
 
 private:
@@ -23,7 +22,12 @@ private:
     SCOPESETTINGS scopeSettings;
 
 public slots:
-    QString getParentDir();
+    void acquireData();
+    void getParentDir();
+    void scanSettings();
+    void getSampleData();
+    void getPlanarData();
+    QString saveDir();
 };
 
 #endif // BSC_H
