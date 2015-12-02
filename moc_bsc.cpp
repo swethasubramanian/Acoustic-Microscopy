@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_bsc_t {
-    QByteArrayData data[8];
-    char stringdata[79];
+    QByteArrayData data[11];
+    char stringdata[102];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,18 +30,21 @@ struct qt_meta_stringdata_bsc_t {
 static const qt_meta_stringdata_bsc_t qt_meta_stringdata_bsc = {
     {
 QT_MOC_LITERAL(0, 0, 3), // "bsc"
-QT_MOC_LITERAL(1, 4, 11), // "acquireData"
-QT_MOC_LITERAL(2, 16, 0), // ""
-QT_MOC_LITERAL(3, 17, 12), // "getParentDir"
-QT_MOC_LITERAL(4, 30, 12), // "scanSettings"
-QT_MOC_LITERAL(5, 43, 13), // "getSampleData"
-QT_MOC_LITERAL(6, 57, 13), // "getPlanarData"
-QT_MOC_LITERAL(7, 71, 7) // "saveDir"
+QT_MOC_LITERAL(1, 4, 16), // "acquireScopeData"
+QT_MOC_LITERAL(2, 21, 0), // ""
+QT_MOC_LITERAL(3, 22, 8), // "newValue"
+QT_MOC_LITERAL(4, 31, 7), // "acquire"
+QT_MOC_LITERAL(5, 39, 12), // "getParentDir"
+QT_MOC_LITERAL(6, 52, 13), // "getParameters"
+QT_MOC_LITERAL(7, 66, 13), // "getSampleData"
+QT_MOC_LITERAL(8, 80, 7), // "getData"
+QT_MOC_LITERAL(9, 88, 5), // "value"
+QT_MOC_LITERAL(10, 94, 7) // "saveDir"
 
     },
-    "bsc\0acquireData\0\0getParentDir\0"
-    "scanSettings\0getSampleData\0getPlanarData\0"
-    "saveDir"
+    "bsc\0acquireScopeData\0\0newValue\0acquire\0"
+    "getParentDir\0getParameters\0getSampleData\0"
+    "getData\0value\0saveDir"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,27 +54,33 @@ static const uint qt_meta_data_bsc[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       6,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       0,       // signalCount
+       1,       // signalCount
+
+ // signals: name, argc, parameters, tag, flags
+       1,    1,   49,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   44,    2, 0x0a /* Public */,
-       3,    0,   45,    2, 0x0a /* Public */,
-       4,    0,   46,    2, 0x0a /* Public */,
-       5,    0,   47,    2, 0x0a /* Public */,
-       6,    0,   48,    2, 0x0a /* Public */,
-       7,    0,   49,    2, 0x0a /* Public */,
+       4,    0,   52,    2, 0x0a /* Public */,
+       5,    0,   53,    2, 0x0a /* Public */,
+       6,    0,   54,    2, 0x0a /* Public */,
+       7,    0,   55,    2, 0x0a /* Public */,
+       8,    1,   56,    2, 0x0a /* Public */,
+      10,    0,   59,    2, 0x0a /* Public */,
+
+ // signals: parameters
+    QMetaType::Void, QMetaType::Int,    3,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    9,
     QMetaType::QString,
 
        0        // eod
@@ -82,14 +91,24 @@ void bsc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **
     if (_c == QMetaObject::InvokeMetaMethod) {
         bsc *_t = static_cast<bsc *>(_o);
         switch (_id) {
-        case 0: _t->acquireData(); break;
-        case 1: _t->getParentDir(); break;
-        case 2: _t->scanSettings(); break;
-        case 3: _t->getSampleData(); break;
-        case 4: _t->getPlanarData(); break;
-        case 5: { QString _r = _t->saveDir();
+        case 0: _t->acquireScopeData((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 1: _t->acquire(); break;
+        case 2: _t->getParentDir(); break;
+        case 3: _t->getParameters(); break;
+        case 4: _t->getSampleData(); break;
+        case 5: _t->getData((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 6: { QString _r = _t->saveDir();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
         default: ;
+        }
+    } else if (_c == QMetaObject::IndexOfMethod) {
+        int *result = reinterpret_cast<int *>(_a[0]);
+        void **func = reinterpret_cast<void **>(_a[1]);
+        {
+            typedef void (bsc::*_t)(int );
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&bsc::acquireScopeData)) {
+                *result = 0;
+            }
         }
     }
 }
@@ -119,14 +138,21 @@ int bsc::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 7)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
+}
+
+// SIGNAL 0
+void bsc::acquireScopeData(int _t1)
+{
+    void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_END_MOC_NAMESPACE

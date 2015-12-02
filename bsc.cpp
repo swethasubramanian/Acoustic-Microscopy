@@ -2,6 +2,11 @@
 #include "ui_bsc.h"
 #include <QtGui>
 #include <QFileDialog>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <QtConcurrent/QtConcurrent>
+//#include <sstream>
 
 #include "motor.h"
 #include "scope.h"
@@ -12,18 +17,71 @@ bsc::bsc(QWidget *parent) :
     ui(new Ui::bsc)
 {
     ui->setupUi(this);
-    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquireData()));
+
+    // Load up defaults here
+    // Default parent directory
+    QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
+    ui->dirName->setText(parentDir);
+
+    // Set default experiment name (timestamp)
+    QString timeStamp = QDateTime::currentDateTime().toString("MMddyyyy_hhmmss");
+    ui->expName->setText(timeStamp);
+
+    // Setting default motor and ocilloscope settings
+    ui->stepSizeX->setText("3");
+    ui->stepSizeY->setText("3");
+    ui->windowSizeX->setText("18");
+    ui->windowSizeY->setText("18");
+    ui->numOfAverages->setText("1000");
+    ui->numOfPoints->setText("1000");
+
+    ui->planar->setChecked(true);
+    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
 }
 
-// This will read in scan parameters run the scan
-void bsc::acquireData(void)
+
+// This will read in scan parameters and run the scan
+void bsc::acquire(void)
 {
-    connect(ui->planar, SIGNAL(clicked()), this, SLOT(getPlanarData()));
-    connect(ui->sample, SIGNAL(clicked()), this, SLOT(getSampleData()));
+    getParameters();
+    Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
+    Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+    if (ui->planar->isChecked())
+    {
+    ui->statusMsg->setText("Acquiring planar reflector data...");
+
+    // Create a directory for saving planar data
+    savePath = saveDir()+"/Planar";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+        SCOPE.initializeScope(scopeSettings);
+        connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getData(int)));
+        getPlanar(0);
+        ui->statusMsg->setText("Done!");
+        SCOPE.closeScope();
+    }
+    if (ui->sample->isChecked()) getSampleData();
+}
+
+void bsc::getPlanar(int counter)
+{
+    counter++;
+    if (counter<5) acquireScopeData(counter);
+}
+
+void bsc::getData(int i)
+{
+    // Setup scan
+        ui->statusMsg->setText("saving to: " + savePath);
+        qFilename = savePath + QString("//%1.dat").arg(i) ;
+        std::string filename = qFilename.toUtf8().constData();
+        SCOPE.getScopeData(filename.c_str(), scopeSettings);
+        ui->statusMsg->setText("saving to: " + qFilename);
+        getPlanar(i);
 }
 
 // Set up motor and scope settings
-void bsc::scanSettings(void)
+void bsc::getParameters(void)
 {
     QString tmp;
     tmp = ui->stepSizeX->text();
@@ -37,10 +95,6 @@ void bsc::scanSettings(void)
     motorSettings.velX = 1000;
     motorSettings.velY = 1000;
 
-    // Copy this to raster scan later
-    //int Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    //int Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
-
     // Oscilloscope Settings
     tmp = ui->numOfAverages->text();
     scopeSettings.numOfAverages = tmp.toInt();
@@ -51,17 +105,9 @@ void bsc::scanSettings(void)
 QString bsc::saveDir()
 {
     // Set File name settings here
-    // Defaults
-    QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
-    ui->dirName->setText(parentDir);
-
     // Select parent directory (optional)
     connect(ui->getDirName, SIGNAL(clicked()), this, SLOT(getParentDir()));
-    parentDir = ui->dirName->text();
-
-    // Set default experiment name (timestamp)
-    QString timeStamp = QDateTime::currentDateTime().toString("MMddyyyy_hhmmss");
-    ui->expName->setText(timeStamp);
+    QString parentDir = ui->dirName->text();
 
     // Ask for experiment name
     QString saveDirName;
@@ -83,26 +129,36 @@ void bsc::getParentDir()
     ui->dirName->setText(parentDirName);
 }
 
-// Motor will not move
-void bsc::getPlanarData()
-{
-    ui->statusMsg->setText("Acquiring planar reflector data...");
 
-    // Create a directory for saving planar data
-    QString savePath = saveDir()+"/Planar";
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
-    ui->statusMsg->setText("saving to: " + savePath);
-}
+
 
 void bsc::getSampleData()
 {
-    ui->statusMsg->setText("Sample Code will run");
-        // Create a directory for saving planar data
+    getParameters();
+    ui->statusMsg->setText("Acquiring sample data...");
+
+    // Create a directory for saving planar data
     QString savePath = saveDir()+"/Sample";
     QDir dir(savePath);
     if(!dir.exists()) dir.mkpath(".");
     ui->statusMsg->setText("saving to: " + savePath);
+
+    // Setup scan
+    scope SCOPE;
+    SCOPE.initializeScope(scopeSettings);
+    int Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
+    int Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+
+    int i;
+    QString qFilename;
+    for (i = 0; i <= Nx*Ny; i++)
+    {
+        qFilename = savePath + QString("/%1.dat").arg(i);
+        std::string filename = qFilename.toLocal8Bit().constData();
+        SCOPE.getScopeData(filename.c_str(), scopeSettings);
+        ui->statusMsg->setText("saving to: " + qFilename);
+    }
+    ui->statusMsg->setText(QString("%1").arg(Nx));
 }
 
 bsc::~bsc()

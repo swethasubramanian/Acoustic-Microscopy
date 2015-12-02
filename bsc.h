@@ -4,6 +4,7 @@
 
 #include <QMainWindow>
 #include "settingsMotorScope.h"
+#include "scope.h"
 namespace Ui {
 class bsc;
 }
@@ -14,20 +15,29 @@ class bsc : public QMainWindow
 
 public:
     explicit bsc(QWidget *parent = 0);
+    void getPlanar(int i);
+    QString savePath;
+    QString qFilename;
+    scope SCOPE;
     ~bsc();
 
 private:
     Ui::bsc *ui;
     MOTORSETTINGS motorSettings;
     SCOPESETTINGS scopeSettings;
+    int Nx;
+    int Ny;
 
 public slots:
-    void acquireData();
+    void acquire();
     void getParentDir();
-    void scanSettings();
+    void getParameters();
     void getSampleData();
-    void getPlanarData();
+    void getData(int value);
     QString saveDir();
+
+signals:
+    void acquireScopeData(int newValue);
 };
 
 #endif // BSC_H

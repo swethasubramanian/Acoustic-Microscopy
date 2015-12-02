@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
-#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <windows.h>
@@ -42,7 +41,7 @@ int main(int argc, char *argv[])
 //    scope SCOPE;
 //
 //    //SCOPE.initializeScope()
-//    SCOPE.initializeScope(scopeSettings);
+//
 //    int i;
 //    std::ostringstream s;
 //    if (strcmp(expType, "Planar") == 0)
