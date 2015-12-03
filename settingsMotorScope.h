@@ -4,10 +4,10 @@
     // MOTORSETTINGS
     struct MOTORSETTINGS
     {
-        int stepSizeX;
-        int stepSizeY;
-        int windowSizeX;
-        int windowSizeY;
+        double stepSizeX;
+        double stepSizeY;
+        double windowSizeX;
+        double windowSizeY;
         int pitch = 400;
         int velX;
         int velY;

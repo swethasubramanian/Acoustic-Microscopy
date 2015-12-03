@@ -102,11 +102,11 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
     int distInSteps = dist*motorSettings.pitch;
         // calculate pausetime
     int pausetime = abs(2000*(distInSteps/motorSettings.velX)) + 2000;
-    printf("Pause for %d\n", pausetime);
+   // printf("Pause for %d\n", pausetime);
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
 
-    printf("moved in %s direction a distance of %d mm\n", motID, dist);
+    // printf("moved in %s direction a distance of %d mm\n", motID, dist);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     Sleep(pausetime);
     if (!fSuccess)
@@ -122,5 +122,10 @@ void motor::closeMotor(void)
     sprintf(foo, "Q"); // Close the offline mode so you can operate the dongle
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     CloseHandle(hCom);
+}
+
+void motor::killMotor(void)
+{
+    sprintf(foo, "K"); // sends kill command to motor
 }
 

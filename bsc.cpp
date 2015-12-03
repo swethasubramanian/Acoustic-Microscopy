@@ -37,8 +37,9 @@ bsc::bsc(QWidget *parent) :
 
     ui->planar->setChecked(true);
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
+    connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
+    connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
 }
-
 
 // This will read in scan parameters and run the scan
 void bsc::acquire(void)
@@ -46,38 +47,39 @@ void bsc::acquire(void)
     getParameters();
     Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
     Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
-    if (ui->planar->isChecked())
-    {
-    ui->statusMsg->setText("Acquiring planar reflector data...");
-
-    // Create a directory for saving planar data
-    savePath = saveDir()+"/Planar";
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
-        SCOPE.initializeScope(scopeSettings);
-        connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getData(int)));
-        getPlanar(0);
-        ui->statusMsg->setText("Done!");
-        SCOPE.closeScope();
-    }
+    connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getDataFromScope(int)));
+    if (ui->planar->isChecked()) getPlanarData();
     if (ui->sample->isChecked()) getSampleData();
 }
 
-void bsc::getPlanar(int counter)
+void bsc::movMotor(void)
 {
-    counter++;
-    if (counter<5) acquireScopeData(counter);
+    QString tmp;
+    tmp = ui->displacement->text();
+    double dist = tmp.toDouble();
+    if (ui->XDir->isChecked())
+    {
+        MOTOR.openMotor(motorSettings);
+        MOTOR.mov(motorSettings, "X", dist);
+        MOTOR.closeMotor();
+    }
+    else if (ui->YDir->isChecked())
+    {
+        MOTOR.openMotor(motorSettings);
+        MOTOR.mov(motorSettings, "Y", dist);
+        MOTOR.closeMotor();
+    }
+    else if (ui->ZDir->isChecked())
+    {
+        MOTOR.openMotor(motorSettings);
+        MOTOR.mov(motorSettings, "Z", dist);
+        MOTOR.closeMotor();
+    }
 }
 
-void bsc::getData(int i)
+void bsc::killMotor(void)
 {
-    // Setup scan
-        ui->statusMsg->setText("saving to: " + savePath);
-        qFilename = savePath + QString("//%1.dat").arg(i) ;
-        std::string filename = qFilename.toUtf8().constData();
-        SCOPE.getScopeData(filename.c_str(), scopeSettings);
-        ui->statusMsg->setText("saving to: " + qFilename);
-        getPlanar(i);
+    MOTOR.killMotor();
 }
 
 // Set up motor and scope settings
@@ -91,7 +93,7 @@ void bsc::getParameters(void)
     tmp = ui->windowSizeX->text();
     motorSettings.windowSizeX = tmp.toInt();
     tmp = ui->windowSizeY->text();
-    motorSettings.windowSizeX = tmp.toInt();
+    motorSettings.windowSizeY = tmp.toInt();
     motorSettings.velX = 1000;
     motorSettings.velY = 1000;
 
@@ -129,36 +131,100 @@ void bsc::getParentDir()
     ui->dirName->setText(parentDirName);
 }
 
+void bsc::getPlanarData()
+{
+    ui->statusMsg->setText("Acquiring planar reflector data...");
+    // Create a directory for saving planar data
+    savePath = saveDir()+"/Planar";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
 
-
+    //Set up scan
+        SCOPE.initializeScope(scopeSettings);
+        for (int k=1;k<Nx*Ny;k++) acquireScopeData(k);
+        ui->statusMsg->setText("Done!");
+        SCOPE.closeScope();
+}
 
 void bsc::getSampleData()
 {
     getParameters();
     ui->statusMsg->setText("Acquiring sample data...");
-
     // Create a directory for saving planar data
-    QString savePath = saveDir()+"/Sample";
+    savePath = saveDir()+"/Sample";
     QDir dir(savePath);
     if(!dir.exists()) dir.mkpath(".");
-    ui->statusMsg->setText("saving to: " + savePath);
 
     // Setup scan
-    scope SCOPE;
     SCOPE.initializeScope(scopeSettings);
-    int Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    int Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+    double windowX = motorSettings.windowSizeX;
+    double windowY = motorSettings.windowSizeY;
+    double stepXmm = motorSettings.stepSizeX;
+    double stepYmm = motorSettings.stepSizeY;
+    MOTOR.openMotor(motorSettings);
 
-    int i;
-    QString qFilename;
-    for (i = 0; i <= Nx*Ny; i++)
+    // move motor to bottom left of the ROI (from computer perspective) and get scope data
+    MOTOR.mov(motorSettings, "X", -windowX/2); //(minus is left)
+    MOTOR.mov(motorSettings, "Y", windowY/2); //(minus is up)
+    int k=1;
+    int i,j;
+    ui->statusMsg->setText(QString("k is %1").arg(k));
+    acquireScopeData(k);
+
+    for (int i=0; i<=Nx; i++)
     {
-        qFilename = savePath + QString("/%1.dat").arg(i);
-        std::string filename = qFilename.toLocal8Bit().constData();
+        if (i>0)
+        {
+            MOTOR.mov(motorSettings, "X", stepXmm);
+            k++;
+            acquireScopeData(k);
+        }
+        if (i%2 == 0)
+        {
+            for (j=0; j<=Ny; j++)
+            {
+                if (j>0)
+                {
+                    MOTOR.mov(motorSettings, "Y", -stepYmm);
+                    k++;
+                    acquireScopeData(k);
+                }
+            }
+        }
+        else
+        {
+            for (j=0; j<=Ny; j++)
+            {
+                if (j>0)
+                {
+                    MOTOR.mov(motorSettings, "Y", stepYmm);
+                    k++;
+                    acquireScopeData(k);
+                }
+            }
+        }
+    }
+    // Move motor back to center of the ROI
+    MOTOR.mov(motorSettings, "X", -windowX/2);
+    if (i%2==0)
+    {
+        MOTOR.mov(motorSettings, "Y", -windowY/2);
+    }
+    else
+    {
+        MOTOR.mov(motorSettings, "Y", windowY/2);
+    }
+    MOTOR.closeMotor();
+    SCOPE.closeScope();
+}
+
+void bsc::getDataFromScope(int k)
+{
+    // Setup scan
+        qFilename = savePath + QString("//%1.dat").arg(k) ;
+        std::string filename = qFilename.toUtf8().constData();
         SCOPE.getScopeData(filename.c_str(), scopeSettings);
         ui->statusMsg->setText("saving to: " + qFilename);
-    }
-    ui->statusMsg->setText(QString("%1").arg(Nx));
 }
 
 bsc::~bsc()

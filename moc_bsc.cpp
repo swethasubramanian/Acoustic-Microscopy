@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_bsc_t {
     QByteArrayData data[11];
-    char stringdata[102];
+    char stringdata[108];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -36,15 +36,15 @@ QT_MOC_LITERAL(3, 22, 8), // "newValue"
 QT_MOC_LITERAL(4, 31, 7), // "acquire"
 QT_MOC_LITERAL(5, 39, 12), // "getParentDir"
 QT_MOC_LITERAL(6, 52, 13), // "getParameters"
-QT_MOC_LITERAL(7, 66, 13), // "getSampleData"
-QT_MOC_LITERAL(8, 80, 7), // "getData"
-QT_MOC_LITERAL(9, 88, 5), // "value"
-QT_MOC_LITERAL(10, 94, 7) // "saveDir"
+QT_MOC_LITERAL(7, 66, 16), // "getDataFromScope"
+QT_MOC_LITERAL(8, 83, 5), // "value"
+QT_MOC_LITERAL(9, 89, 8), // "movMotor"
+QT_MOC_LITERAL(10, 98, 9) // "killMotor"
 
     },
     "bsc\0acquireScopeData\0\0newValue\0acquire\0"
-    "getParentDir\0getParameters\0getSampleData\0"
-    "getData\0value\0saveDir"
+    "getParentDir\0getParameters\0getDataFromScope\0"
+    "value\0movMotor\0killMotor"
 };
 #undef QT_MOC_LITERAL
 
@@ -68,8 +68,8 @@ static const uint qt_meta_data_bsc[] = {
        4,    0,   52,    2, 0x0a /* Public */,
        5,    0,   53,    2, 0x0a /* Public */,
        6,    0,   54,    2, 0x0a /* Public */,
-       7,    0,   55,    2, 0x0a /* Public */,
-       8,    1,   56,    2, 0x0a /* Public */,
+       7,    1,   55,    2, 0x0a /* Public */,
+       9,    0,   58,    2, 0x0a /* Public */,
       10,    0,   59,    2, 0x0a /* Public */,
 
  // signals: parameters
@@ -79,9 +79,9 @@ static const uint qt_meta_data_bsc[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,    8,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,    9,
-    QMetaType::QString,
+    QMetaType::Void,
 
        0        // eod
 };
@@ -95,10 +95,9 @@ void bsc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **
         case 1: _t->acquire(); break;
         case 2: _t->getParentDir(); break;
         case 3: _t->getParameters(); break;
-        case 4: _t->getSampleData(); break;
-        case 5: _t->getData((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: { QString _r = _t->saveDir();
-            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 4: _t->getDataFromScope((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 5: _t->movMotor(); break;
+        case 6: _t->killMotor(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {

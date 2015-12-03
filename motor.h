@@ -10,6 +10,7 @@ class motor
         int openMotor(const struct MOTORSETTINGS&);
         int mov(const struct MOTORSETTINGS&, const char* motID, int dist);
         void closeMotor(void);
+        void killMotor(void);
        // initializeMotor(const struct &MOTORSETTINGS);
        // mov(const struct &MOTORSETTINGS);
     private:

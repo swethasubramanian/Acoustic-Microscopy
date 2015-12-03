@@ -10,19 +10,23 @@
 				<Option output="bin/Debug/BSCMeasurements" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option external_deps="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc/visa32.lib;" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
 				<Linker>
 					<Add library="..\..\..\..\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
+					<Add library="C:\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
 				</Linker>
+				<ExtraCommands>
+					<Add before="moc bsc.h -o moc_bsc.cpp" />
+				</ExtraCommands>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/BSCMeasurements" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
-				<Option type="1" />
+				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
@@ -30,6 +34,7 @@
 				<Linker>
 					<Add option="-s" />
 					<Add library="..\..\..\..\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
+					<Add library="C:\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -37,26 +42,36 @@
 			<Add option="-Wall" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/include" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc" />
-			<Add directory="C:/Boost/boost_1_47_0/boost" />
-			<Add directory="$(#boost.include)" />
-			<Add directory="C:/Boost/boost_1_47_0/boost/asio" />
+			<Add directory="C:/Qt/5.5/mingw492_32/include/QtGui" />
+			<Add directory="C:/Qt/5.5/mingw492_32/include" />
+			<Add directory="C:/Qt/5.5/mingw492_32/include/QtCore" />
+			<Add directory="C:/Qt/5.5/mingw492_32/include/QtWidgets" />
 		</Compiler>
 		<Linker>
 			<Add library="C:\Program Files\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
+			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Gui.a" />
+			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Core.a" />
+			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5OpenGL.a" />
+			<Add library="C:\Qt\5.4\mingw491_32\lib\libQt5Widgets.a" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/include" />
 			<Add directory="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc" />
-			<Add directory="C:/Boost/boost_1_47_0/stage/lib" />
-			<Add directory="$(#boost.lib)" />
+			<Add directory="C:/Qt/5.5/mingw492_32/lib" />
+			<Add directory="C:/Qt/5.5/mingw492_32/lib/cmake" />
 		</Linker>
+		<Unit filename="bsc.cpp" />
+		<Unit filename="bsc.h" />
+		<Unit filename="bsc.ui" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>
+		<Unit filename="moc_bsc.cpp" />
 		<Unit filename="motor.cpp" />
 		<Unit filename="motor.h" />
 		<Unit filename="scope.cpp" />
 		<Unit filename="scope.h" />
 		<Unit filename="settings.txt" />
 		<Unit filename="settingsMotorScope.h" />
+		<Unit filename="ui_bsc.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

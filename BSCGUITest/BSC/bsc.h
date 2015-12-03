@@ -13,7 +13,13 @@ class bsc : public QMainWindow
 
 public:
     explicit bsc(QWidget *parent = 0);
+    void scanSettings();
     ~bsc();
+public slots:
+    QString getFolderName();
+    void getSampleData();
+    void getPlanarData();
+
 
 private:
     Ui::bsc *ui;
