@@ -17,7 +17,7 @@ motor::motor()
 }
 
 
-int motor::openMotor(const MOTORSETTINGS& motorSettings)
+void motor::openMotor(const MOTORSETTINGS& motorSettings)
 {
 
     hCom = CreateFile(pcCommPort,
@@ -33,7 +33,6 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
     {
       // Handle the error.
       printf ("GetCommState failed with error %d.\n", GetLastError());
-      return (3);
     }
 
     // Initialize DCB structure
@@ -58,7 +57,6 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
     {
       // Handle the error.
       printf ("SetCommState failed with error %d.\n", GetLastError());
-      return (3);
     }
     printf ("Serial port %s successfully reconfigured.\n", pcCommPort);
 
@@ -77,20 +75,14 @@ int motor::openMotor(const MOTORSETTINGS& motorSettings)
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
-        return(3);
     }
-
-    return 0;
 }
 
 
-int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
+void motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dist)
 {
     // convert dist to mm
     char idx[2];
-
-
-
     if (!strcmp(motID,"X"))
     {
         sprintf(idx, "2");
@@ -99,9 +91,9 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
     {
         sprintf(idx, "1");
     }
-    int distInSteps = dist*motorSettings.pitch;
+    int distInSteps = (int) (dist*motorSettings.pitch);
         // calculate pausetime
-    int pausetime = abs(2000*(distInSteps/motorSettings.velX)) + 2000;
+    int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 2000;
    // printf("Pause for %d\n", pausetime);
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
@@ -112,9 +104,7 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, int dist)
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
-        return(3);
     }
-    return 0;
 }
 
 void motor::closeMotor(void)
@@ -127,5 +117,7 @@ void motor::closeMotor(void)
 void motor::killMotor(void)
 {
     sprintf(foo, "K"); // sends kill command to motor
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
+    CloseHandle(hCom);
 }
 

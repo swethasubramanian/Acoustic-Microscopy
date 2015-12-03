@@ -7,8 +7,8 @@ class motor
 {
     public:
         motor();
-        int openMotor(const struct MOTORSETTINGS&);
-        int mov(const struct MOTORSETTINGS&, const char* motID, int dist);
+        void openMotor(const struct MOTORSETTINGS&);
+        void mov(const struct MOTORSETTINGS&, const char* motID, double dist);
         void closeMotor(void);
         void killMotor(void);
        // initializeMotor(const struct &MOTORSETTINGS);

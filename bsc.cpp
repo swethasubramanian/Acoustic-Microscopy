@@ -34,6 +34,7 @@ bsc::bsc(QWidget *parent) :
     ui->windowSizeY->setText("18");
     ui->numOfAverages->setText("1000");
     ui->numOfPoints->setText("1000");
+    ui->displacement->setText("0");
 
     ui->planar->setChecked(true);
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
@@ -57,24 +58,23 @@ void bsc::movMotor(void)
     QString tmp;
     tmp = ui->displacement->text();
     double dist = tmp.toDouble();
+    MOTOR.openMotor(motorSettings);
     if (ui->XDir->isChecked())
     {
-        MOTOR.openMotor(motorSettings);
         MOTOR.mov(motorSettings, "X", dist);
-        MOTOR.closeMotor();
+        ui->statusMsg->setText(QString("distance is %1").arg(dist));
     }
-    else if (ui->YDir->isChecked())
+    if (ui->YDir->isChecked())
     {
-        MOTOR.openMotor(motorSettings);
         MOTOR.mov(motorSettings, "Y", dist);
-        MOTOR.closeMotor();
+        ui->statusMsg->setText(QString("distance is %1").arg(dist));
     }
-    else if (ui->ZDir->isChecked())
+    if (ui->ZDir->isChecked())
     {
-        MOTOR.openMotor(motorSettings);
         MOTOR.mov(motorSettings, "Z", dist);
-        MOTOR.closeMotor();
+        ui->statusMsg->setText(QString("distance is %1").arg(dist));
     }
+    MOTOR.closeMotor();
 }
 
 void bsc::killMotor(void)
@@ -94,8 +94,6 @@ void bsc::getParameters(void)
     motorSettings.windowSizeX = tmp.toInt();
     tmp = ui->windowSizeY->text();
     motorSettings.windowSizeY = tmp.toInt();
-    motorSettings.velX = 1000;
-    motorSettings.velY = 1000;
 
     // Oscilloscope Settings
     tmp = ui->numOfAverages->text();
@@ -134,22 +132,24 @@ void bsc::getParentDir()
 void bsc::getPlanarData()
 {
     ui->statusMsg->setText("Acquiring planar reflector data...");
+
     // Create a directory for saving planar data
     savePath = saveDir()+"/Planar";
     QDir dir(savePath);
     if(!dir.exists()) dir.mkpath(".");
 
     //Set up scan
-        SCOPE.initializeScope(scopeSettings);
-        for (int k=1;k<Nx*Ny;k++) acquireScopeData(k);
-        ui->statusMsg->setText("Done!");
-        SCOPE.closeScope();
+    SCOPE.initializeScope(scopeSettings);
+    for (int k=1;k<Nx*Ny;k++) acquireScopeData(k);
+    ui->statusMsg->setText("Done!");
+    SCOPE.closeScope();
 }
 
 void bsc::getSampleData()
 {
     getParameters();
     ui->statusMsg->setText("Acquiring sample data...");
+
     // Create a directory for saving planar data
     savePath = saveDir()+"/Sample";
     QDir dir(savePath);
