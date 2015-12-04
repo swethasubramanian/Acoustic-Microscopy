@@ -35,63 +35,87 @@ bsc::bsc(QWidget *parent) :
     ui->displacement->setText("1");
 
     ui->planar->setChecked(true);
+
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
+    connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
 }
 
+void bsc::stopAcquistion(void)
+{
+    abort = true;
+    ui->statusMsg->setText("Ready!");
+}
 
 // This will read in scan parameters and run the scan
 void bsc::acquire(void)
 {
-    getParameters();
-    Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
-    connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getDataFromScope(int)));
-    if (ui->planar->isChecked()) getPlanarData();
-    if (ui->sample->isChecked()) getSampleData();
+    if (abort)
+    {
+        abort = false;
+        getParameters();
+        Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
+        Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+        connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getDataFromScope(int)));
+        if (ui->planar->isChecked())
+        {
+            QFuture<void> future = QtConcurrent::run(this, &bsc::getPlanarData);
+        }
+        if (ui->sample->isChecked()) getSampleData();
+       stopAcquistion();
+    }
+
 }
 
 // Moving motor for aligning things
 void bsc::movMotor(void)
 {
-    QString tmp;
-    tmp = ui->displacement->text();
-    double dist = tmp.toDouble();
-    MOTOR.openMotor(motorSettings);
-    if (ui->XDir->isChecked())
+    if (abort)
     {
-        Sleep(1000);
-        MOTOR.mov(motorSettings, "X", dist);
-        ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+        abort = false;
+        QString tmp;
+        tmp = ui->displacement->text();
+        double dist = tmp.toDouble();
+        MOTOR.openMotor(motorSettings);
+        if (ui->XDir->isChecked())
+        {
+            Sleep(1000);
+            MOTOR.mov(motorSettings, "X", dist);
+            ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+        }
+        if (ui->YDir->isChecked())
+        {
+            Sleep(1000);
+            MOTOR.mov(motorSettings, "Y", dist);
+            ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
+        }
+        if (ui->ZDir->isChecked())
+        {
+            Sleep(1000);
+            MOTOR.mov(motorSettings, "Z", dist);
+            ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
+        }
+        MOTOR.closeMotor();
+        stopAcquistion();
     }
-    if (ui->YDir->isChecked())
-    {
-        Sleep(1000);
-        MOTOR.mov(motorSettings, "Y", dist);
-        ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
-    }
-    if (ui->ZDir->isChecked())
-    {
-        Sleep(1000);
-        MOTOR.mov(motorSettings, "Z", dist);
-        ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
-    }
-    MOTOR.closeMotor();
 }
 
+// To kill motor movement
 void bsc::killMotor(void)
 {
     MOTOR.killMotor();
+    MOTOR.closeMotor();
+    SCOPE.closeScope();
 }
 
 void bsc::getDataFromScope(int k)
 {
-    // Setup scan
-        qFilename = savePath + QString("//%1.dat").arg(k) ;
-        std::string filename = qFilename.toUtf8().constData();
-        SCOPE.getScopeData(filename.c_str(), scopeSettings);
-        ui->statusMsg->setText("saving to: " + qFilename);
+    if (!abort) stopAcquistion();
+    qFilename = savePath + QString("//%1.dat").arg(k) ;
+    std::string filename = qFilename.toUtf8().constData();
+    SCOPE.getScopeData(filename.c_str(), scopeSettings);
+    ui->statusMsg->setText("saving to: " + qFilename);
 }
 
 // Set up motor and scope settings
@@ -99,13 +123,13 @@ void bsc::getParameters(void)
 {
     QString tmp;
     tmp = ui->stepSizeX->text();
-    motorSettings.stepSizeX = tmp.toInt();
+    motorSettings.stepSizeX = tmp.toDouble();
     tmp = ui->stepSizeY->text();
-    motorSettings.stepSizeY = tmp.toInt();
+    motorSettings.stepSizeY = tmp.toDouble();
     tmp = ui->windowSizeX->text();
-    motorSettings.windowSizeX = tmp.toInt();
+    motorSettings.windowSizeX = tmp.toDouble();
     tmp = ui->windowSizeY->text();
-    motorSettings.windowSizeY = tmp.toInt();
+    motorSettings.windowSizeY = tmp.toDouble();
 
     // Oscilloscope Settings
     tmp = ui->numOfAverages->text();
@@ -134,8 +158,8 @@ void bsc::getPlanarData()
 
     //Set up scan
     SCOPE.initializeScope(scopeSettings);
-    for (int k=1;k<Nx*Ny;k++) acquireScopeData(k);
-    ui->statusMsg->setText("Done!");
+    for (int k=1; k<Nx*Ny; k++) acquireScopeData(k);
+    ui->statusMsg->setText(QString("Done! %1").arg(Nx*Ny));
     SCOPE.closeScope();
 }
 

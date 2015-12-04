@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     // Setting up GUI here
     QApplication app(argc, argv);
-    bsc gooey;
-    gooey.show();
+    bsc BSCGUI;
+    BSCGUI.show();
     return app.exec();
 }

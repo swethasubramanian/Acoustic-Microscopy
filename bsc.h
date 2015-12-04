@@ -40,9 +40,11 @@ public slots:
     void getDataFromScope(int value);
     void movMotor();
     void killMotor();
+    void stopAcquistion();
 
 signals:
     void acquireScopeData(int newValue);
+   // void finished();
 };
 
 #endif // BSC_H
