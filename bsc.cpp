@@ -2,8 +2,6 @@
 #include "ui_bsc.h"
 #include <QtGui>
 #include <QFileDialog>
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #include <QtConcurrent/QtConcurrent>
 //#include <sstream>
@@ -34,13 +32,14 @@ bsc::bsc(QWidget *parent) :
     ui->windowSizeY->setText("18");
     ui->numOfAverages->setText("1000");
     ui->numOfPoints->setText("1000");
-    ui->displacement->setText("0");
+    ui->displacement->setText("1");
 
     ui->planar->setChecked(true);
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
 }
+
 
 // This will read in scan parameters and run the scan
 void bsc::acquire(void)
@@ -53,6 +52,7 @@ void bsc::acquire(void)
     if (ui->sample->isChecked()) getSampleData();
 }
 
+// Moving motor for aligning things
 void bsc::movMotor(void)
 {
     QString tmp;
@@ -61,18 +61,21 @@ void bsc::movMotor(void)
     MOTOR.openMotor(motorSettings);
     if (ui->XDir->isChecked())
     {
+        Sleep(1000);
         MOTOR.mov(motorSettings, "X", dist);
-        ui->statusMsg->setText(QString("distance is %1").arg(dist));
+        ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
     }
     if (ui->YDir->isChecked())
     {
+        Sleep(1000);
         MOTOR.mov(motorSettings, "Y", dist);
-        ui->statusMsg->setText(QString("distance is %1").arg(dist));
+        ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
     }
     if (ui->ZDir->isChecked())
     {
+        Sleep(1000);
         MOTOR.mov(motorSettings, "Z", dist);
-        ui->statusMsg->setText(QString("distance is %1").arg(dist));
+        ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
     }
     MOTOR.closeMotor();
 }
@@ -80,6 +83,15 @@ void bsc::movMotor(void)
 void bsc::killMotor(void)
 {
     MOTOR.killMotor();
+}
+
+void bsc::getDataFromScope(int k)
+{
+    // Setup scan
+        qFilename = savePath + QString("//%1.dat").arg(k) ;
+        std::string filename = qFilename.toUtf8().constData();
+        SCOPE.getScopeData(filename.c_str(), scopeSettings);
+        ui->statusMsg->setText("saving to: " + qFilename);
 }
 
 // Set up motor and scope settings
@@ -100,24 +112,6 @@ void bsc::getParameters(void)
     scopeSettings.numOfAverages = tmp.toInt();
     tmp = ui->numOfPoints->text();
     scopeSettings.numOfPoints = tmp.toInt();
-}
-
-QString bsc::saveDir()
-{
-    // Set File name settings here
-    // Select parent directory (optional)
-    connect(ui->getDirName, SIGNAL(clicked()), this, SLOT(getParentDir()));
-    QString parentDir = ui->dirName->text();
-
-    // Ask for experiment name
-    QString saveDirName;
-    saveDirName = ui->expName->text();
-
-    // Create a directory for every experiment
-    QString savePath = parentDir+"/"+saveDirName;
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
-    return savePath;
 }
 
 void bsc::getParentDir()
@@ -206,25 +200,28 @@ void bsc::getSampleData()
     }
     // Move motor back to center of the ROI
     MOTOR.mov(motorSettings, "X", -windowX/2);
-    if (i%2==0)
-    {
-        MOTOR.mov(motorSettings, "Y", -windowY/2);
-    }
-    else
-    {
-        MOTOR.mov(motorSettings, "Y", windowY/2);
-    }
+    if (i%2==0) MOTOR.mov(motorSettings, "Y", -windowY/2);
+    else MOTOR.mov(motorSettings, "Y", windowY/2);
     MOTOR.closeMotor();
     SCOPE.closeScope();
 }
 
-void bsc::getDataFromScope(int k)
+QString bsc::saveDir()
 {
-    // Setup scan
-        qFilename = savePath + QString("//%1.dat").arg(k) ;
-        std::string filename = qFilename.toUtf8().constData();
-        SCOPE.getScopeData(filename.c_str(), scopeSettings);
-        ui->statusMsg->setText("saving to: " + qFilename);
+    // Set File name settings here
+    // Select parent directory (optional)
+    connect(ui->getDirName, SIGNAL(clicked()), this, SLOT(getParentDir()));
+    QString parentDir = ui->dirName->text();
+
+    // Ask for experiment name
+    QString saveDirName;
+    saveDirName = ui->expName->text();
+
+    // Create a directory for every experiment
+    QString savePath = parentDir+"/"+saveDirName;
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+    return savePath;
 }
 
 bsc::~bsc()

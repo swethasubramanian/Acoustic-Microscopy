@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "settingsMotorScope.h"
+#include <QtGui>
+#include <iostream>
 
 
 motor::motor()
@@ -12,7 +14,7 @@ motor::motor()
     HANDLE hCom;
     BOOL fSuccess;
     char *pcCommPort = "COM1";
-    DWORD buffer_size_w;
+    DWORD buffer_size_w, buffer_size_r;
     char foo[100];
 }
 
@@ -79,32 +81,28 @@ void motor::openMotor(const MOTORSETTINGS& motorSettings)
 }
 
 
-void motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dist)
+int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dist)
 {
     // convert dist to mm
     char idx[2];
-    if (!strcmp(motID,"X"))
-    {
-        sprintf(idx, "2");
-    }
-    else if (!strcmp(motID, "Y"))
-    {
-        sprintf(idx, "1");
-    }
-    int distInSteps = (int) (dist*motorSettings.pitch);
-        // calculate pausetime
+    if (!strcmp(motID,"X")) sprintf(idx, "2");
+    else if (!strcmp(motID, "Y")) sprintf(idx, "1");
+    else if (!strcmp(motID, "Z")) sprintf(idx, "3");
+    int distInSteps = (int) dist*motorSettings.pitch;
+
+    // calculate pausetime
     int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 2000;
-   // printf("Pause for %d\n", pausetime);
+
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
-
-    // printf("moved in %s direction a distance of %d mm\n", motID, dist);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     Sleep(pausetime);
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
+        return 3;
     }
+    return 0;
 }
 
 void motor::closeMotor(void)
@@ -118,6 +116,15 @@ void motor::killMotor(void)
 {
     sprintf(foo, "K"); // sends kill command to motor
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    CloseHandle(hCom);
+    closeMotor();
 }
 
+QString motor::getX(void)
+{
+    sprintf(foo, "X");
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
+    char foobar[10];
+    fSuccess = ReadFile(hCom, &foobar, strlen(foobar), &buffer_size_r, 0);
+    std::string str(foobar);
+    return QString::fromStdString(str);
+}

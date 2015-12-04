@@ -31,6 +31,7 @@ private:
     Ui::bsc *ui;
     MOTORSETTINGS motorSettings;
     SCOPESETTINGS scopeSettings;
+    bool abort;
 
 public slots:
     void acquire();
