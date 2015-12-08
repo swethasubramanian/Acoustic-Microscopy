@@ -2,19 +2,17 @@
 #include "ui_bsc.h"
 #include <QtGui>
 #include <QFileDialog>
+#include <QApplication>
 #include <iostream>
-#include <QtConcurrent/QtConcurrent>
-//#include <sstream>
 
-#include "motor.h"
-#include "scope.h"
-#include "settingsMotorScope.h"
+
 
 bsc::bsc(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::bsc)
 {
     ui->setupUi(this);
+    abort = false;
 
     // Load up defaults here
     // Default parent directory
@@ -35,37 +33,48 @@ bsc::bsc(QWidget *parent) :
     ui->displacement->setText("1");
 
     ui->planar->setChecked(true);
-
-    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(acquire()));
+    //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
+    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquistion()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
+    //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
+}
+
+void bsc::startAcquistion(void)
+{
+    QThread *thread;
+    acquistion *ACQ;
+
+    ui->statusMsg->setText("Starting Acquistion...");
+
+    thread = new QThread;
+    ACQ = new acquistion();
+    ACQ->moveToThread(thread);
+
+    // setup scan settings
+    getParameters();
+    QString tmp = saveDir();
+
+    connect(this, SIGNAL(planarDataRequested()), ACQ, SLOT(getPlanarData(tmp, scopeSettings)));
+    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()));
+    connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()));
+    connect(ACQ, SIGNAL(finished()), this, SLOT(stopAcquistion()));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+    if (ui->planar->isChecked())
+    {
+        ui->statusMsg->setText("Acquiring Planar data...");
+        //thread->start();
+        ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
+    }
+    //if (ui->sample->isChecked())  sampleDataRequested();
 }
 
 void bsc::stopAcquistion(void)
 {
     abort = true;
     ui->statusMsg->setText("Ready!");
-}
-
-// This will read in scan parameters and run the scan
-void bsc::acquire(void)
-{
-    if (abort)
-    {
-        abort = false;
-        getParameters();
-        Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-        Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
-        connect(this, SIGNAL(acquireScopeData(int)), this, SLOT(getDataFromScope(int)));
-        if (ui->planar->isChecked())
-        {
-            QFuture<void> future = QtConcurrent::run(this, &bsc::getPlanarData);
-        }
-        if (ui->sample->isChecked()) getSampleData();
-       stopAcquistion();
-    }
-
 }
 
 // Moving motor for aligning things
@@ -109,15 +118,6 @@ void bsc::killMotor(void)
     SCOPE.closeScope();
 }
 
-void bsc::getDataFromScope(int k)
-{
-    if (!abort) stopAcquistion();
-    qFilename = savePath + QString("//%1.dat").arg(k) ;
-    std::string filename = qFilename.toUtf8().constData();
-    SCOPE.getScopeData(filename.c_str(), scopeSettings);
-    ui->statusMsg->setText("saving to: " + qFilename);
-}
-
 // Set up motor and scope settings
 void bsc::getParameters(void)
 {
@@ -147,89 +147,6 @@ void bsc::getParentDir()
     ui->dirName->setText(parentDirName);
 }
 
-void bsc::getPlanarData()
-{
-    ui->statusMsg->setText("Acquiring planar reflector data...");
-
-    // Create a directory for saving planar data
-    savePath = saveDir()+"/Planar";
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
-
-    //Set up scan
-    SCOPE.initializeScope(scopeSettings);
-    for (int k=1; k<Nx*Ny; k++) acquireScopeData(k);
-    ui->statusMsg->setText(QString("Done! %1").arg(Nx*Ny));
-    SCOPE.closeScope();
-}
-
-void bsc::getSampleData()
-{
-    getParameters();
-    ui->statusMsg->setText("Acquiring sample data...");
-
-    // Create a directory for saving planar data
-    savePath = saveDir()+"/Sample";
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
-
-    // Setup scan
-    SCOPE.initializeScope(scopeSettings);
-    double windowX = motorSettings.windowSizeX;
-    double windowY = motorSettings.windowSizeY;
-    double stepXmm = motorSettings.stepSizeX;
-    double stepYmm = motorSettings.stepSizeY;
-    MOTOR.openMotor(motorSettings);
-
-    // move motor to bottom left of the ROI (from computer perspective) and get scope data
-    MOTOR.mov(motorSettings, "X", -windowX/2); //(minus is left)
-    MOTOR.mov(motorSettings, "Y", windowY/2); //(minus is up)
-    int k=1;
-    int i,j;
-    ui->statusMsg->setText(QString("k is %1").arg(k));
-    acquireScopeData(k);
-
-    for (int i=0; i<=Nx; i++)
-    {
-        if (i>0)
-        {
-            MOTOR.mov(motorSettings, "X", stepXmm);
-            k++;
-            acquireScopeData(k);
-        }
-        if (i%2 == 0)
-        {
-            for (j=0; j<=Ny; j++)
-            {
-                if (j>0)
-                {
-                    MOTOR.mov(motorSettings, "Y", -stepYmm);
-                    k++;
-                    acquireScopeData(k);
-                }
-            }
-        }
-        else
-        {
-            for (j=0; j<=Ny; j++)
-            {
-                if (j>0)
-                {
-                    MOTOR.mov(motorSettings, "Y", stepYmm);
-                    k++;
-                    acquireScopeData(k);
-                }
-            }
-        }
-    }
-    // Move motor back to center of the ROI
-    MOTOR.mov(motorSettings, "X", -windowX/2);
-    if (i%2==0) MOTOR.mov(motorSettings, "Y", -windowY/2);
-    else MOTOR.mov(motorSettings, "Y", windowY/2);
-    MOTOR.closeMotor();
-    SCOPE.closeScope();
-}
-
 QString bsc::saveDir()
 {
     // Set File name settings here
@@ -250,5 +167,9 @@ QString bsc::saveDir()
 
 bsc::~bsc()
 {
+    //ACQ->stopAcquistion();
+    //thread->wait();
+    //delete thread;
+    //delete ACQ;
     delete ui;
 }

@@ -1,11 +1,12 @@
 #ifndef BSC_H
 #define BSC_H
 
-
 #include <QMainWindow>
 #include "settingsMotorScope.h"
 #include "scope.h"
 #include "motor.h"
+#include "acquistion.h"
+
 namespace Ui {
 class bsc;
 }
@@ -16,14 +17,13 @@ class bsc : public QMainWindow
 
 public:
     explicit bsc(QWidget *parent = 0);
-    void getPlanarData();
-    void getSampleData();
+    void acquire();
+    void getParameters();
     QString saveDir();
     QString savePath;
     QString qFilename;
     scope SCOPE;
     motor MOTOR;
-    double Nx, Ny;
 
     ~bsc();
 
@@ -33,17 +33,17 @@ private:
     SCOPESETTINGS scopeSettings;
     bool abort;
 
+
 public slots:
-    void acquire();
+    void startAcquistion();
     void getParentDir();
-    void getParameters();
-    void getDataFromScope(int value);
     void movMotor();
     void killMotor();
     void stopAcquistion();
 
 signals:
-    void acquireScopeData(int newValue);
+    void planarDataRequested();
+    void sampleDataRequested();
    // void finished();
 };
 
