@@ -13,15 +13,14 @@ class acquistion : public QObject
     Q_OBJECT
     public:
         explicit acquistion(QObject *parent = 0);
-        void setMotorSettings(const struct MOTORSETTINGS&);
-        void setScopeSettings(const struct SCOPESETTINGS&);
         void getDataFromScope(int value);
         void stopAcquistion();
-        int runIndex()
+        void requestWork(const QString &, const struct SCOPESETTINGS&, const struct MOTORSETTINGS&);
+        QString getSaveDir()
         {
-            return index;
+            return saveDir;
         }
-        ~acquistion();
+        int runIndex();
 
     protected:
     private:
@@ -30,15 +29,20 @@ class acquistion : public QObject
         MOTORSETTINGS motorSettings;
         SCOPESETTINGS scopeSettings;
         bool abort;
+        bool acquiring;
+        QMutex mutex;
         int Nx, Ny;
         QString savePath, qFilename;
         int index=0;
+        QString saveDir;
 
     public slots:
-        void getPlanarData(QString savedir, const struct SCOPESETTINGS&);
-        void getSampleData(QString savedir);
+        void getPlanarData();
+        void getSampleData();
 
     signals:
+        void workRequested();
+        void runIndexChanged();
         void finished();
         //void error(QString err);
 };

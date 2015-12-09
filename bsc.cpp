@@ -14,6 +14,16 @@ bsc::bsc(QWidget *parent) :
     ui->setupUi(this);
     abort = false;
 
+    // The thread and the worker are created in the constructor so it is always safe to delete them.
+    thread = new QThread();
+    ACQ = new acquistion();
+
+    ACQ->moveToThread(thread);
+    connect(ACQ, SIGNAL(runIndexChanged()), ui->label, SLOT(setText("something happened")));
+    connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
+    connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
+    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+
     // Load up defaults here
     // Default parent directory
     QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
@@ -43,30 +53,18 @@ bsc::bsc(QWidget *parent) :
 
 void bsc::startAcquistion(void)
 {
-    QThread *thread;
-    acquistion *ACQ;
-
     ui->statusMsg->setText("Starting Acquistion...");
-
-    thread = new QThread;
-    ACQ = new acquistion();
-    ACQ->moveToThread(thread);
 
     // setup scan settings
     getParameters();
-    QString tmp = saveDir();
-
-    connect(this, SIGNAL(planarDataRequested()), ACQ, SLOT(getPlanarData(tmp, scopeSettings)));
-    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()));
-    connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()));
-    connect(ACQ, SIGNAL(finished()), this, SLOT(stopAcquistion()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-
     if (ui->planar->isChecked())
     {
         ui->statusMsg->setText("Acquiring Planar data...");
-        //thread->start();
+        ACQ->stopAcquistion();
+        thread->wait();
+        ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
         ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
+        ui->statusMsg->setText(ACQ->getSaveDir());
     }
     //if (ui->sample->isChecked())  sampleDataRequested();
 }
@@ -167,9 +165,9 @@ QString bsc::saveDir()
 
 bsc::~bsc()
 {
-    //ACQ->stopAcquistion();
-    //thread->wait();
-    //delete thread;
-    //delete ACQ;
+    ACQ->stopAcquistion();
+    thread->wait();
+    delete thread;
+    delete ACQ;
     delete ui;
 }

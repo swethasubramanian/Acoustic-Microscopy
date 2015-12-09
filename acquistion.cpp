@@ -4,47 +4,67 @@
 #include "settingsMotorScope.h"
 #include <QtGui>
 
+
 acquistion::acquistion(QObject *parent):
     QObject(parent)
 {
-    //QObject::connect(acquistion, SIGNAL(acquireScopeData(int)), acquistion, SLOT(getDataFromScope(int)));
+    abort = false;
+    acquiring = false;
 }
 
-
-
-void acquistion::setMotorSettings(const MOTORSETTINGS& motorSettings)
+void acquistion::requestWork(const QString &param, const SCOPESETTINGS& scopeSet, const MOTORSETTINGS& motorSet)
 {
-    Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+    mutex.lock();
+    acquiring = true;
+    abort = false;
+    saveDir = param;
+    scopeSettings = scopeSet;
+    motorSettings = motorSet;
+    mutex.unlock();
+    emit workRequested();
 }
 
-void acquistion::setScopeSettings(const SCOPESETTINGS& scopeSettings)
+void acquistion::getPlanarData()
 {
-    //
-}
-
-void acquistion::getPlanarData(QString saveDir, const SCOPESETTINGS& scopeSettings)
-{
-    //qDebug("saveDir");
     // Create a directory for saving planar data
-    savePath = saveDir+"/Planar";
-    QDir dir(savePath);
-    if(!dir.exists()) dir.mkpath(".");
+   savePath = saveDir+"/Planar";
+   QDir dir(savePath);
+   if(!dir.exists()) dir.mkpath(".");
 
     //Set up scan
-//    SCOPE.initializeScope(scopeSettings);
-//    for (int k=1; k<Nx*Ny; k++)
-//    {
-//        getDataFromScope(k);
-//    }
-//    //ui->statusMsg->setText(QString("Done! %1").arg(Nx*Ny));
-//    SCOPE.closeScope();
+   SCOPE.initializeScope(scopeSettings);
+   for (int k=1; k<10; k++)
+    {
+        // Checks if the process should be aborted
+        index = k;
+        getDataFromScope(k);
+
+        mutex.lock();
+        bool _abort = abort;
+        mutex.unlock();
+
+        if (_abort) break;
+
+        // This will stupidly wait 1 sec doing nothing...
+        QEventLoop loop;
+        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        loop.exec();
+
+        emit runIndexChanged();
+    }
+   SCOPE.closeScope();
+
+    // Set _working to false, meaning the process can't be aborted anymore.
+    mutex.lock();
+    acquiring = false;
+    mutex.unlock();
+
     emit finished();
 }
 
 
 
-void acquistion::getSampleData(QString saveDir)
+void acquistion::getSampleData()
 {
     // Create a directory for saving planar data
     savePath = saveDir+"/Sample";
@@ -105,7 +125,7 @@ void acquistion::getSampleData(QString saveDir)
     else MOTOR.mov(motorSettings, "Y", windowY/2);
     MOTOR.closeMotor();
     SCOPE.closeScope();
-    emit finished();
+    //emit finished();
    // stopAcquistion();
 
 }
@@ -122,10 +142,13 @@ void acquistion::getDataFromScope(int k)
 
 void acquistion::stopAcquistion(void)
 {
-    //ui->statusMsg->setText("Ready!");
+    mutex.lock();
+    if (acquiring) abort = true;
+    mutex.unlock();
 }
 
-acquistion::~acquistion()
+int acquistion::runIndex(void)
 {
-    //
+    return index;
 }
+

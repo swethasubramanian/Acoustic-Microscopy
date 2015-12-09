@@ -32,6 +32,8 @@ private:
     MOTORSETTINGS motorSettings;
     SCOPESETTINGS scopeSettings;
     bool abort;
+    QThread *thread;
+    acquistion *ACQ;
 
 
 public slots:
@@ -42,7 +44,7 @@ public slots:
     void stopAcquistion();
 
 signals:
-    void planarDataRequested();
+    void planarDataRequested();//, const struct SCOPESETTINGS&);
     void sampleDataRequested();
    // void finished();
 };
