@@ -20,6 +20,8 @@ void acquistion::requestWork(const QString &param, const SCOPESETTINGS& scopeSet
     saveDir = param;
     scopeSettings = scopeSet;
     motorSettings = motorSet;
+    Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
+    Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
     mutex.unlock();
     emit workRequested();
 }
@@ -27,23 +29,22 @@ void acquistion::requestWork(const QString &param, const SCOPESETTINGS& scopeSet
 void acquistion::getPlanarData()
 {
     // Create a directory for saving planar data
+   acquiring = true;
    savePath = saveDir+"/Planar";
    QDir dir(savePath);
    if(!dir.exists()) dir.mkpath(".");
 
     //Set up scan
    SCOPE.initializeScope(scopeSettings);
-   for (int k=1; k<10; k++)
+   for (int k=1; k<Nx*Ny; k++)
     {
         // Checks if the process should be aborted
         index = k;
         getDataFromScope(k);
 
         mutex.lock();
-        bool _abort = abort;
+        if (abort) break;
         mutex.unlock();
-
-        if (_abort) break;
 
         // This will stupidly wait 1 sec doing nothing...
         QEventLoop loop;
@@ -58,7 +59,6 @@ void acquistion::getPlanarData()
     mutex.lock();
     acquiring = false;
     mutex.unlock();
-
     emit finished();
 }
 

@@ -18,11 +18,7 @@ bsc::bsc(QWidget *parent) :
     thread = new QThread();
     ACQ = new acquistion();
 
-    ACQ->moveToThread(thread);
-    connect(ACQ, SIGNAL(runIndexChanged()), ui->label, SLOT(setText("something happened")));
-    connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
-    connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
-    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+
 
     // Load up defaults here
     // Default parent directory
@@ -46,7 +42,7 @@ bsc::bsc(QWidget *parent) :
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquistion()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
-    connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
+   // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
 }
@@ -59,9 +55,29 @@ void bsc::startAcquistion(void)
     getParameters();
     if (ui->planar->isChecked())
     {
+        ACQ->moveToThread(thread);
+        connect(ACQ, SIGNAL(runIndexChanged()), ui->label, SLOT(setText("something happened")));
+        connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
+        connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
+        connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+        QApplication::processEvents();
+        if (ui->killMotor->isFlat() == true)
+        {
+            thread->quit();
+            ACQ->stopAcquistion();
+            thread->wait();
+        }
+       // connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()), Qt::DirectConnection);
+       // connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()), Qt::DirectConnection);
+
         ui->statusMsg->setText("Acquiring Planar data...");
-        ACQ->stopAcquistion();
-        thread->wait();
+
+        if (abort)
+        {
+            if (thread->isRunning()) ACQ->finishIt();
+            ACQ->stopAcquistion();
+            thread->wait();
+        }
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
         ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
         ui->statusMsg->setText(ACQ->getSaveDir());
@@ -72,6 +88,15 @@ void bsc::startAcquistion(void)
 void bsc::stopAcquistion(void)
 {
     abort = true;
+    ACQ->stopAcquistion();
+    //thread->quit();
+    thread->quit();
+    delete thread;
+    delete ACQ;
+    //ACQ->deleteLater();
+    //thread->deleteLater();
+   // delete ACQ;
+   // delete thread;
     ui->statusMsg->setText("Ready!");
 }
 

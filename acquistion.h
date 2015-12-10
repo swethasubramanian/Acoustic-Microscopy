@@ -21,6 +21,13 @@ class acquistion : public QObject
             return saveDir;
         }
         int runIndex();
+        void finishIt()
+        {
+            mutex.lock();
+            if (acquiring) abort = true;
+            mutex.unlock();
+            emit finished();
+        }
 
     protected:
     private:
@@ -36,9 +43,11 @@ class acquistion : public QObject
         int index=0;
         QString saveDir;
 
+
     public slots:
         void getPlanarData();
         void getSampleData();
+
 
     signals:
         void workRequested();
