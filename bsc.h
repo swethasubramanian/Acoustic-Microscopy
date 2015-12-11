@@ -24,20 +24,6 @@ public:
     QString qFilename;
     scope SCOPE;
     motor MOTOR;
-    bool getAbort()
-    {
-        mutex.lock();
-        bool _threadAbort = threadAbort;
-        mutex.unlock();
-        if (_threadAbort) {return true;}
-        return false;
-    }
-    void setAbort(bool b)
-    {
-        mutex.lock();
-        threadAbort = b;
-        mutex.unlock();
-    }
     ~bsc();
 
 private:
