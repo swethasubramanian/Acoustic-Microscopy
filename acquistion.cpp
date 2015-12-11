@@ -3,6 +3,7 @@
 #include "scope.h"
 #include "settingsMotorScope.h"
 #include <QtGui>
+#include "bsc.h"
 
 
 acquistion::acquistion(QObject *parent):
@@ -26,10 +27,10 @@ void acquistion::requestWork(const QString &param, const SCOPESETTINGS& scopeSet
     emit workRequested();
 }
 
+
 void acquistion::getPlanarData()
 {
     // Create a directory for saving planar data
-   acquiring = true;
    savePath = saveDir+"/Planar";
    QDir dir(savePath);
    if(!dir.exists()) dir.mkpath(".");
@@ -39,17 +40,20 @@ void acquistion::getPlanarData()
    for (int k=1; k<Nx*Ny; k++)
     {
         // Checks if the process should be aborted
-        index = k;
-        getDataFromScope(k);
-
         mutex.lock();
-        if (abort) break;
+        bool _abort = abort;
         mutex.unlock();
+
+
+        if (_abort) break;
 
         // This will stupidly wait 1 sec doing nothing...
         QEventLoop loop;
         QTimer::singleShot(1000, &loop, SLOT(quit()));
         loop.exec();
+
+        index = k;
+        getDataFromScope(k);
 
         emit runIndexChanged();
     }
@@ -132,12 +136,16 @@ void acquistion::getSampleData()
 
 void acquistion::getDataFromScope(int k)
 {
-    //if (!abort) stopAcquistion();
-  //  QApplication::processEvents();
+
+        // This will stupidly wait 1 sec doing nothing...
+        QEventLoop loop;
+        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        loop.exec();
+   // if (BSC->getAbort()) emit finished();
+
     qFilename = savePath + QString("//%1.dat").arg(k) ;
     std::string filename = qFilename.toUtf8().constData();
     SCOPE.getScopeData(filename.c_str(), scopeSettings);
-//    ui->statusMsg->setText("saving to: " + qFilename);
 }
 
 void acquistion::stopAcquistion(void)

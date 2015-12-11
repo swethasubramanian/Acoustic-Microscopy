@@ -1,13 +1,12 @@
 #ifndef ACQUISTION_H
 #define ACQUISTION_H
-
 #include <QObject>
-
 
 #include "motor.h"
 #include "scope.h"
+//#include "bsc.h"
 #include "settingsMotorScope.h"
-
+class bsc; // forward declaration
 class acquistion : public QObject
 {
     Q_OBJECT
@@ -42,7 +41,6 @@ class acquistion : public QObject
         QString savePath, qFilename;
         int index=0;
         QString saveDir;
-
 
     public slots:
         void getPlanarData();

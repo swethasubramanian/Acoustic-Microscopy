@@ -18,8 +18,6 @@ bsc::bsc(QWidget *parent) :
     thread = new QThread();
     ACQ = new acquistion();
 
-
-
     // Load up defaults here
     // Default parent directory
     QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
@@ -42,6 +40,7 @@ bsc::bsc(QWidget *parent) :
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquistion()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
+    //connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(setAbort()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
@@ -50,7 +49,7 @@ bsc::bsc(QWidget *parent) :
 void bsc::startAcquistion(void)
 {
     ui->statusMsg->setText("Starting Acquistion...");
-
+    setAbort(false);
     // setup scan settings
     getParameters();
     if (ui->planar->isChecked())
@@ -61,23 +60,11 @@ void bsc::startAcquistion(void)
         connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
         connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
         QApplication::processEvents();
-        if (ui->killMotor->isFlat() == true)
-        {
-            thread->quit();
-            ACQ->stopAcquistion();
-            thread->wait();
-        }
        // connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()), Qt::DirectConnection);
        // connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()), Qt::DirectConnection);
-
         ui->statusMsg->setText("Acquiring Planar data...");
 
-        if (abort)
-        {
-            if (thread->isRunning()) ACQ->finishIt();
-            ACQ->stopAcquistion();
-            thread->wait();
-        }
+
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
         ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
         ui->statusMsg->setText(ACQ->getSaveDir());
@@ -88,15 +75,10 @@ void bsc::startAcquistion(void)
 void bsc::stopAcquistion(void)
 {
     abort = true;
-    ACQ->stopAcquistion();
-    //thread->quit();
+    setAbort(true);
     thread->quit();
-    delete thread;
-    delete ACQ;
-    //ACQ->deleteLater();
-    //thread->deleteLater();
-   // delete ACQ;
-   // delete thread;
+    ACQ->stopAcquistion();
+    thread->wait();
     ui->statusMsg->setText("Ready!");
 }
 
