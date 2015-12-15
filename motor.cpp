@@ -88,7 +88,7 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dis
     if (!strcmp(motID,"X")) sprintf(idx, "2");
     else if (!strcmp(motID, "Y")) sprintf(idx, "1");
     else if (!strcmp(motID, "Z")) sprintf(idx, "3");
-    int distInSteps = (int) dist*motorSettings.pitch;
+    int distInSteps = (int) (motorSettings.pitch*dist);
 
     // calculate pausetime
     int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 2000;

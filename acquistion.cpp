@@ -134,7 +134,7 @@ void acquistion::getSampleData()
                 }
             }
         }
-        else
+        if (i%2==1)
         {
             for (j=0; j<=Ny; j++)
             {
@@ -165,7 +165,7 @@ void acquistion::getSampleData()
     // Move motor back to center of the ROI
     MOTOR.mov(motorSettings, "X", -windowX/2);
     if (i%2==0) MOTOR.mov(motorSettings, "Y", -windowY/2);
-    else MOTOR.mov(motorSettings, "Y", windowY/2);
+    if (i%2==1) MOTOR.mov(motorSettings, "Y", windowY/2);
     MOTOR.closeMotor();
     SCOPE.closeScope();
     // Set acquiring to false, meaning the process can't be aborted anymore.

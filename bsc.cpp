@@ -12,7 +12,7 @@ bsc::bsc(QWidget *parent) :
     ui(new Ui::bsc)
 {
     ui->setupUi(this);
-    abort = false;
+    //abort = false;
 
     // The thread and the worker are created in the constructor so it is always safe to delete them.
     thread = new QThread();
