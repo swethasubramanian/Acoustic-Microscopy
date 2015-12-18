@@ -13,6 +13,7 @@ class motor
         void closeMotor(void);
         void killMotor(void);
         QString getX(void);
+        void setZero(void);
        // initializeMotor(const struct &MOTORSETTINGS);
        // mov(const struct &MOTORSETTINGS);
     private:

@@ -46,12 +46,11 @@ class acquistion : public QObject
         void getPlanarData();
         void getSampleData();
 
-
     signals:
         void workRequested();
         void runIndexChanged();
         void finished();
-        //void error(QString err);
+        void statusChanged(const QString &status);
 };
 
 #endif // ACQUISTION_H

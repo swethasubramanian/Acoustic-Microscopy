@@ -28,13 +28,14 @@ bsc::bsc(QWidget *parent) :
     ui->expName->setText(timeStamp);
 
     // Setting default motor and ocilloscope settings
-    ui->stepSizeX->setText("3");
-    ui->stepSizeY->setText("3");
+    ui->stepSizeX->setText("2");
+    ui->stepSizeY->setText("2");
     ui->windowSizeX->setText("18");
     ui->windowSizeY->setText("18");
-    ui->numOfAverages->setText("1000");
+    ui->numOfAverages->setText("2048");
     ui->numOfPoints->setText("1000");
     ui->displacement->setText("1");
+    ui->motorSpeed->setText("1.25");
 
     ui->planar->setChecked(true);
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
@@ -43,14 +44,16 @@ bsc::bsc(QWidget *parent) :
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
+
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
 }
 
 void bsc::startAcquistion(void)
 {
-    ui->statusMsg->setText("Starting Acquistion...");
+    ui->statusMsg->setText("Starting Acquisition...");
     ACQ->moveToThread(thread);
-    connect(ACQ, SIGNAL(runIndexChanged()), ui->label, SLOT(setText("something happened")));
+    connect(ACQ, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
+    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
     connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
     connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
     // setup scan settings
@@ -59,29 +62,24 @@ void bsc::startAcquistion(void)
     {
         connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
         QApplication::processEvents();
-       // connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()), Qt::DirectConnection);
-       // connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()), Qt::DirectConnection);
         ui->statusMsg->setText("Acquiring Planar data...");
-
-
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
-        ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
-        ui->statusMsg->setText(ACQ->getSaveDir());
     }
     if (ui->sample->isChecked())
     {
         connect(thread, SIGNAL(started()), ACQ, SLOT(getSampleData()));
         QApplication::processEvents();
-       // connect(ACQ, SIGNAL(finished()), ACQ, SLOT(deleteLater()), Qt::DirectConnection);
-       // connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()), Qt::DirectConnection);
-        ui->statusMsg->setText("Acquiring Planar data...");
-
-
+        ui->statusMsg->setText("Acquiring Sample data...");
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
-        ui->statusMsg->setText(QString("Run #: %1").arg(ACQ->runIndex()));
-        ui->statusMsg->setText(ACQ->getSaveDir());
     }
 }
+
+void bsc::getCurrentRun()
+{
+    ui->statusMsg->setText("Saved to:" + ACQ->getSaveDir() + QString("//%1.dat").arg(ACQ->runIndex()));
+}
+
+
 
 void bsc::stopAcquistion(void)
 {
@@ -139,6 +137,7 @@ void bsc::killMotor(void)
 void bsc::getParameters(void)
 {
     QString tmp;
+    double motorVel;
     tmp = ui->stepSizeX->text();
     motorSettings.stepSizeX = tmp.toDouble();
     tmp = ui->stepSizeY->text();
@@ -147,6 +146,12 @@ void bsc::getParameters(void)
     motorSettings.windowSizeX = tmp.toDouble();
     tmp = ui->windowSizeY->text();
     motorSettings.windowSizeY = tmp.toDouble();
+    tmp = ui->motorSpeed->text();
+    motorVel = tmp.toDouble(); // mm/s
+    // convert mm/s to steps/2sec
+    motorSettings.velX = (int) motorSettings.pitch*motorVel*2;
+    motorSettings.velY = (int) motorSettings.pitch*motorVel*2;
+    motorSettings.velZ = (int) motorSettings.pitch*motorVel*2;
 
     // Oscilloscope Settings
     tmp = ui->numOfAverages->text();

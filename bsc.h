@@ -45,6 +45,7 @@ public slots:
     void movMotor();
     void killMotor();
     void stopAcquistion();
+    void getCurrentRun();
 
 signals:
     void planarDataRequested();//, const struct SCOPESETTINGS&);

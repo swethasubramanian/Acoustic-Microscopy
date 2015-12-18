@@ -74,6 +74,8 @@ void motor::openMotor(const MOTORSETTINGS& motorSettings)
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     sprintf(foo, "C S2M%d,R", motorSettings.velX); // X dir
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
+    sprintf(foo, "C S3M%d,R", motorSettings.velZ); // Z dir
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     if (!fSuccess)
     {
         printf ("fail WriteFile: %d\n", GetLastError ());
@@ -117,6 +119,12 @@ void motor::killMotor(void)
     sprintf(foo, "K"); // sends kill command to motor
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     closeMotor();
+}
+
+void motor::setZero(void)
+{
+    sprintf(foo, "N");
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
 }
 
 QString motor::getX(void)

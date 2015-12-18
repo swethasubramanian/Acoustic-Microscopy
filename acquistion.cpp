@@ -36,7 +36,7 @@ void acquistion::getPlanarData()
 
     //Set up scan
    SCOPE.initializeScope(scopeSettings);
-   for (int k=1; k<Nx*Ny; k++)
+   for (int k=1; k<=(Nx+1)*(Ny+1); k++)
     {
         // Checks if the process should be aborted
         mutex.lock();
@@ -48,6 +48,9 @@ void acquistion::getPlanarData()
         QEventLoop loop;
         QTimer::singleShot(1000, &loop, SLOT(quit()));
         loop.exec();
+
+        QString statusMsg = QString("Acquiring planar data set #%1 ...").arg(k);
+        emit statusChanged(statusMsg);
 
         index = k;
         getDataFromScope(k);
@@ -90,7 +93,10 @@ void acquistion::getSampleData()
     MOTOR.mov(motorSettings, "Y", windowY/2); //(minus is up)
     int k=1;
     int i,j;
+    index = k;
+    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
     getDataFromScope(k);
+    emit runIndexChanged();
 
     for (int i=0; i<=Nx; i++)
     {
@@ -109,7 +115,9 @@ void acquistion::getSampleData()
             MOTOR.mov(motorSettings, "X", stepXmm);
             k++;
             index = k;
+            emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
             getDataFromScope(k);
+            emit runIndexChanged();
         }
         if (i%2 == 0)
         {
@@ -130,7 +138,9 @@ void acquistion::getSampleData()
                     MOTOR.mov(motorSettings, "Y", -stepYmm);
                     k++;
                     index = k;
+                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
                     getDataFromScope(k);
+                    emit runIndexChanged();
                 }
             }
         }
@@ -153,25 +163,36 @@ void acquistion::getSampleData()
                     MOTOR.mov(motorSettings, "Y", stepYmm);
                     k++;
                     index = k;
+                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
                     getDataFromScope(k);
+                    emit runIndexChanged();
                 }
             }
         }
+        if (_abort) break;
     }
-    // This will stupidly wait 1 sec doing nothing...
-    QTimer::singleShot(1000, &loop, SLOT(quit()));
-    loop.exec();
-
+    Sleep(1000);
+    emit statusChanged("Data acquisition complete. Moving back to center of ROI ...");
     // Move motor back to center of the ROI
     MOTOR.mov(motorSettings, "X", -windowX/2);
-    if (i%2==0) MOTOR.mov(motorSettings, "Y", -windowY/2);
-    if (i%2==1) MOTOR.mov(motorSettings, "Y", windowY/2);
+    // This will stupidly wait 1 sec doing nothing...
+    Sleep(1000);
+    if (Ny%2==0)
+    {
+        MOTOR.mov(motorSettings, "Y", -windowY/2);
+    }
+    else
+    {
+        MOTOR.mov(motorSettings, "Y", windowY/2);
+    }
     MOTOR.closeMotor();
     SCOPE.closeScope();
     // Set acquiring to false, meaning the process can't be aborted anymore.
     mutex.lock();
     acquiring = false;
     mutex.unlock();
+    emit statusChanged("Done!");
+
     emit finished();
 }
 

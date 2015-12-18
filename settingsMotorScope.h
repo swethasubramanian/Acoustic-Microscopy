@@ -9,8 +9,9 @@
         double windowSizeX;
         double windowSizeY;
         int pitch = 400;
-        int velX = 1000;
-        int velY = 1000;
+        int velX;
+        int velY;
+        int velZ;
     };
 
     struct SCOPESETTINGS

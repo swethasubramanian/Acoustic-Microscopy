@@ -39,10 +39,10 @@ void scope::initializeScope(const SCOPESETTINGS& scopeSettings)
     viOpen(defaultRM, RESOURCE, VI_NULL, VI_NULL, &vi);
 
     // Set probe attenuation setting
-    sprintf(foo, ":CHAN1:PROBE %s\n", scopeSettings.probeAttn);
-    viPrintf(vi, foo);
-    sprintf(foo, ":CHAN1:COUPLING %s\n", scopeSettings.coupling);
-    viPrintf(vi, foo);
+    //sprintf(foo, ":CHAN1:PROBE %s\n", scopeSettings.probeAttn);
+    //viPrintf(vi, foo);
+    //sprintf(foo, ":CHAN1:COUPLING %s\n", scopeSettings.coupling);
+    //viPrintf(vi, foo);
 }
 
 // Get data from the oscilloscope
@@ -102,8 +102,9 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     //Read data from the scope
     viPrintf(vi, ":WAVEFORM:DATA?\n");
-    Sleep(1000);
+    Sleep(2000);
     viScanf(vi, "%#b\n", &waveform_size, waveform_data);
+    Sleep(2000);
     if (waveform_size == WAVE_DATA_SIZE)
     {
         printf("Waveform data buffer full:");
@@ -123,7 +124,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
         {
             voltage[i] = ((float)waveform_data[i] -preamble[9])*preamble[7] + preamble[8];
             t[i] = ((float)i - preamble[6])*preamble[4] + preamble[5];
-            fprintf(fp, "%12.6f\t%12.8f\n", voltage[i], t[i]);
+            fprintf(fp, "%12.24f\t%0.24f\n", voltage[i], t[i]);
         }
         fclose(fp);
     }
