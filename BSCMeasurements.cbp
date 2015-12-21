@@ -21,7 +21,7 @@
 				</Linker>
 				<ExtraCommands>
 					<Add before="moc bsc.h -o moc_bsc.cpp" />
-					<Add before="moc acquistion.h -o moc_acquistion.cpp" />
+					<Add before="moc acquisition.h -o moc_acquisition.cpp" />
 				</ExtraCommands>
 			</Target>
 			<Target title="Release">
@@ -59,15 +59,18 @@
 			<Add directory="C:/Qt/5.5/mingw492_32/lib" />
 			<Add directory="C:/Qt/5.5/mingw492_32/lib/cmake" />
 		</Linker>
-		<Unit filename="acquistion.cpp" />
-		<Unit filename="acquistion.h" />
+		<ExtraCommands>
+			<Add before="moc bsc.h -o moc_bsc.cpp" />
+			<Add before="moc acquisition.h -o moc_acquisition.cpp" />
+		</ExtraCommands>
+		<Unit filename="acquisition.cpp" />
+		<Unit filename="acquisition.h" />
 		<Unit filename="bsc.cpp" />
 		<Unit filename="bsc.h" />
-		<Unit filename="bsc.ui" />
 		<Unit filename="main.c">
 			<Option compilerVar="CPP" />
 		</Unit>
-		<Unit filename="moc_acquistion.cpp" />
+		<Unit filename="moc_acquisition.cpp" />
 		<Unit filename="moc_bsc.cpp" />
 		<Unit filename="motor.cpp" />
 		<Unit filename="motor.h" />

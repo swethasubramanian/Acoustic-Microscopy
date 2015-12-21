@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_bsc_t {
     QByteArrayData data[10];
-    char stringdata[122];
+    char stringdata[124];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,17 +33,17 @@ QT_MOC_LITERAL(0, 0, 3), // "bsc"
 QT_MOC_LITERAL(1, 4, 19), // "planarDataRequested"
 QT_MOC_LITERAL(2, 24, 0), // ""
 QT_MOC_LITERAL(3, 25, 19), // "sampleDataRequested"
-QT_MOC_LITERAL(4, 45, 15), // "startAcquistion"
-QT_MOC_LITERAL(5, 61, 12), // "getParentDir"
-QT_MOC_LITERAL(6, 74, 8), // "movMotor"
-QT_MOC_LITERAL(7, 83, 9), // "killMotor"
-QT_MOC_LITERAL(8, 93, 14), // "stopAcquistion"
-QT_MOC_LITERAL(9, 108, 13) // "getCurrentRun"
+QT_MOC_LITERAL(4, 45, 16), // "startAcquisition"
+QT_MOC_LITERAL(5, 62, 12), // "getParentDir"
+QT_MOC_LITERAL(6, 75, 8), // "movMotor"
+QT_MOC_LITERAL(7, 84, 9), // "killMotor"
+QT_MOC_LITERAL(8, 94, 15), // "stopAcquisition"
+QT_MOC_LITERAL(9, 110, 13) // "getCurrentRun"
 
     },
     "bsc\0planarDataRequested\0\0sampleDataRequested\0"
-    "startAcquistion\0getParentDir\0movMotor\0"
-    "killMotor\0stopAcquistion\0getCurrentRun"
+    "startAcquisition\0getParentDir\0movMotor\0"
+    "killMotor\0stopAcquisition\0getCurrentRun"
 };
 #undef QT_MOC_LITERAL
 
@@ -94,11 +94,11 @@ void bsc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **
         switch (_id) {
         case 0: _t->planarDataRequested(); break;
         case 1: _t->sampleDataRequested(); break;
-        case 2: _t->startAcquistion(); break;
+        case 2: _t->startAcquisition(); break;
         case 3: _t->getParentDir(); break;
         case 4: _t->movMotor(); break;
         case 5: _t->killMotor(); break;
-        case 6: _t->stopAcquistion(); break;
+        case 6: _t->stopAcquisition(); break;
         case 7: _t->getCurrentRun(); break;
         default: ;
         }

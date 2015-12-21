@@ -5,7 +5,7 @@
 #include "settingsMotorScope.h"
 #include "scope.h"
 #include "motor.h"
-#include "acquistion.h"
+#include "acquisition.h"
 
 namespace Ui {
 class bsc;
@@ -32,7 +32,7 @@ private:
     SCOPESETTINGS scopeSettings;
     bool abort;
     QThread *thread;
-    acquistion *ACQ;
+    acquisition *ACQ;
     bool threadAbort;
     QMutex mutex;
 
@@ -40,11 +40,11 @@ private:
 
 
 public slots:
-    void startAcquistion();
+    void startAcquisition();
     void getParentDir();
     void movMotor();
     void killMotor();
-    void stopAcquistion();
+    void stopAcquisition();
     void getCurrentRun();
 
 signals:

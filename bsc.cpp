@@ -16,7 +16,7 @@ bsc::bsc(QWidget *parent) :
 
     // The thread and the worker are created in the constructor so it is always safe to delete them.
     thread = new QThread();
-    ACQ = new acquistion();
+    ACQ = new acquisition();
 
     // Load up defaults here
     // Default parent directory
@@ -39,16 +39,16 @@ bsc::bsc(QWidget *parent) :
 
     ui->planar->setChecked(true);
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
-    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquistion()));
+    connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquisition()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
-    connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquistion()));
+    connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
 
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
 }
 
-void bsc::startAcquistion(void)
+void bsc::startAcquisition(void)
 {
     ui->statusMsg->setText("Starting Acquisition...");
     ACQ->moveToThread(thread);
@@ -65,7 +65,7 @@ void bsc::startAcquistion(void)
         ui->statusMsg->setText("Acquiring Planar data...");
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
     }
-    if (ui->sample->isChecked())
+    else if (ui->sample->isChecked())
     {
         connect(thread, SIGNAL(started()), ACQ, SLOT(getSampleData()));
         QApplication::processEvents();
@@ -81,11 +81,11 @@ void bsc::getCurrentRun()
 
 
 
-void bsc::stopAcquistion(void)
+void bsc::stopAcquisition(void)
 {
     abort = true;
     thread->quit();
-    ACQ->stopAcquistion();
+    ACQ->stopAcquisition();
     thread->wait();
     ui->statusMsg->setText("Ready!");
 }
@@ -119,7 +119,7 @@ void bsc::movMotor(void)
             ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         }
         MOTOR.closeMotor();
-        stopAcquistion();
+        stopAcquisition();
     }
 }
 
@@ -128,7 +128,7 @@ void bsc::killMotor(void)
 {
     abort = true;
     thread->quit();
-    ACQ->stopAcquistion();
+    ACQ->stopAcquisition();
     thread->wait();
     ui->statusMsg->setText("Ready!");
 }
@@ -189,7 +189,7 @@ QString bsc::saveDir()
 
 bsc::~bsc()
 {
-    ACQ->stopAcquistion();
+    ACQ->stopAcquisition();
     thread->wait();
     delete thread;
     delete ACQ;
