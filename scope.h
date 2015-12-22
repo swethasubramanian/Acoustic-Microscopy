@@ -8,6 +8,7 @@ class scope
         void closeScope();
         void initializeScope(const struct SCOPESETTINGS&);
         void getScopeData(const char* x, const struct SCOPESETTINGS&);
+        void setTriggerLevel(double value);
 };
 
 #endif // SCOPE_H

@@ -130,6 +130,13 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
 }
 
+void scope::setTriggerLevel(double triggerLevel)
+{
+    char foo[100];
+    sprintf(foo, ":TRIGGER:LEVEL %f\n", triggerLevel);
+    viPrintf(vi, foo);
+}
+
 
 
 
