@@ -20,11 +20,11 @@ bsc::bsc(QWidget *parent) :
 
     // Load up defaults here
     // Default parent directory
-    QString parentDir = "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/";
+    QString parentDir = "C:/Data/";
     ui->dirName->setText(parentDir);
 
     // Set default experiment name (timestamp)
-    QString timeStamp = QDateTime::currentDateTime().toString("MMddyyyy_hhmmss");
+    QString timeStamp = QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss");
     ui->expName->setText(timeStamp);
 
     // Setting default motor and ocilloscope settings

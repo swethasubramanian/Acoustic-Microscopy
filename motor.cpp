@@ -48,11 +48,11 @@ void motor::openMotor(const MOTORSETTINGS& motorSettings)
 
 
     COMMTIMEOUTS timeouts;
-    timeouts.ReadIntervalTimeout = 1;
-    timeouts.ReadTotalTimeoutMultiplier = 1;
-    timeouts.ReadTotalTimeoutConstant = 1;
-    timeouts.WriteTotalTimeoutMultiplier = 1;
-    timeouts.WriteTotalTimeoutConstant = 1;
+    timeouts.ReadIntervalTimeout = 50;
+    timeouts.ReadTotalTimeoutMultiplier = 50;
+    timeouts.ReadTotalTimeoutConstant = 10;
+    timeouts.WriteTotalTimeoutMultiplier = 50;
+    timeouts.WriteTotalTimeoutConstant = 10;
     fSuccess = SetCommTimeouts(hCom, &timeouts);
 
     if (!fSuccess)
