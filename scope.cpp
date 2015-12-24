@@ -5,7 +5,6 @@
 #include <visa.h> # Agilent stuff
 #include <windows.h>
 
-
 #define RESOURCE "GPIB0::7::INSTR"
 #define WAVE_DATA_SIZE 5000
 #define TIMEOUT 5000
@@ -20,7 +19,6 @@ double preamble[10];
 
 scope::scope()
 {
-//
 }
 
 void scope::closeScope(void)
@@ -120,15 +118,20 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
         // Write data
         //fwrite(waveform_data, sizeof(waveform_data[0]), (int)preamble[2], fp);
         int i;
+        volts.resize(scopeSettings.numOfPoints);
+        time.resize(scopeSettings.numOfPoints);
         for (i=0; i<waveform_size; i++)
         {
             voltage[i] = ((float)waveform_data[i] -preamble[9])*preamble[7] + preamble[8];
             t[i] = ((float)i - preamble[6])*preamble[4] + preamble[5];
+            volts[i] = voltage[i];
+            time[i] = t[i];
             fprintf(fp, "%12.24f\t%0.24f\n", voltage[i], t[i]);
         }
         fclose(fp);
     }
 }
+
 
 void scope::setTriggerLevel(double triggerLevel)
 {
@@ -136,6 +139,8 @@ void scope::setTriggerLevel(double triggerLevel)
     sprintf(foo, ":TRIGGER:LEVEL %f\n", triggerLevel);
     viPrintf(vi, foo);
 }
+
+
 
 
 

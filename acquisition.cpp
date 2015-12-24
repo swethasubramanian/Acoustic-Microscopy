@@ -27,6 +27,16 @@ void acquisition::requestWork(const QString &param, const SCOPESETTINGS& scopeSe
     emit workRequested();
 }
 
+void acquisition::requestWaveformUpdate(const SCOPESETTINGS& scopeSet)
+{
+    mutex.lock();
+    acquiring = true;
+    abort = false;
+    scopeSettings = scopeSet;
+    mutex.unlock();
+    emit waveformUpdateRequested();
+}
+
 void acquisition::getPlanarData()
 {
     // Create a directory for saving planar data
@@ -210,6 +220,20 @@ void acquisition::getDataFromScope(int k)
     qFilename = savePath + QString("//%1.dat").arg(k) ;
     std::string filename = qFilename.toUtf8().constData();
     SCOPE.getScopeData(filename.c_str(), scopeSettings);
+   // emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+}
+
+void acquisition::acquire()
+{
+    // This will stupidly wait 1 sec doing nothing...
+    QEventLoop loop;
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+    std :: string filename = "tmp.dat";
+    SCOPE.initializeScope(scopeSettings);
+    SCOPE.getScopeData(filename.c_str(), scopeSettings);
+    SCOPE.closeScope();
+    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
 }
 
 void acquisition::stopAcquisition(void)

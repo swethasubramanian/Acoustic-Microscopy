@@ -15,6 +15,7 @@ class acquisition : public QObject
         void getDataFromScope(int value);
         void stopAcquisition();
         void requestWork(const QString &, const struct SCOPESETTINGS&, const struct MOTORSETTINGS&);
+        void requestWaveformUpdate(const struct SCOPESETTINGS&);
         QString getSaveDir()
         {
             return saveDir;
@@ -45,11 +46,14 @@ class acquisition : public QObject
     public slots:
         void getPlanarData();
         void getSampleData();
+        void acquire();
 
     signals:
         void workRequested();
+        void waveformUpdateRequested();
         void runIndexChanged();
         void finished();
         void statusChanged(const QString &status);
+        void waveformUpdated(const QVector<double> &, const QVector<double> &);
 };
 #endif // ACQUISTION_H

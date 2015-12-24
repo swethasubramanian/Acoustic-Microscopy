@@ -25,6 +25,7 @@ public:
     scope SCOPE;
     motor MOTOR;
     ~bsc();
+    void addRandomGraph();
 
 private:
     Ui::bsc *ui;
@@ -46,6 +47,8 @@ public slots:
     void killMotor();
     void stopAcquisition();
     void getCurrentRun();
+    void updateWaveform();
+    void displayWaveform(const QVector<double> &, const QVector<double> &);
 
 signals:
     void planarDataRequested();//, const struct SCOPESETTINGS&);

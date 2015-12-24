@@ -44,9 +44,56 @@ bsc::bsc(QWidget *parent) :
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
-
+   //connect(ACQ, SIGNAL())
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
+   // addRandomGraph();
+   //updateWaveform();
 }
+
+void bsc::displayWaveform(const QVector<double> &volts, const QVector<double> &time)
+{
+    ui->WaveformPlot->addGraph();
+    ui->WaveformPlot->graph()->setName(QString("New graph %1").arg(ui->WaveformPlot->graphCount()-1));
+    ui->WaveformPlot->graph()->setData(time, volts);
+    ui->WaveformPlot->graph()->setLineStyle((QCPGraph::LineStyle)(rand()%5+1));
+    QPen graphPen;
+    graphPen.setColor(QColor(rand()%245+10, rand()%245+10, rand()%245+10));
+    graphPen.setWidthF(rand()/(double)RAND_MAX*2+1);
+    ui->WaveformPlot->graph()->setPen(graphPen);
+    ui->WaveformPlot->replot();
+}
+
+void bsc::addRandomGraph()
+{
+      int n = 50; // number of points in graph
+      double xScale = (rand()/(double)RAND_MAX + 0.5)*2;
+      double yScale = (rand()/(double)RAND_MAX + 0.5)*2;
+      double xOffset = (rand()/(double)RAND_MAX - 0.5)*4;
+      double yOffset = (rand()/(double)RAND_MAX - 0.5)*5;
+      double r1 = (rand()/(double)RAND_MAX - 0.5)*2;
+      double r2 = (rand()/(double)RAND_MAX - 0.5)*2;
+      double r3 = (rand()/(double)RAND_MAX - 0.5)*2;
+      double r4 = (rand()/(double)RAND_MAX - 0.5)*2;
+      QVector<double> x(n), y(n);
+      for (int i=0; i<n; i++)
+      {
+        x[i] = (i/(double)n-0.5)*10.0*xScale + xOffset;
+        y[i] = (qSin(x[i]*r1*5)*qSin(qCos(x[i]*r2)*r4*3)+r3*qCos(qSin(x[i])*r4*2))*yScale + yOffset;
+      }
+
+      ui->WaveformPlot->addGraph();
+      ui->WaveformPlot->graph()->setName(QString("New graph %1").arg(ui->WaveformPlot->graphCount()-1));
+      ui->WaveformPlot->graph()->setData(x, y);
+      ui->WaveformPlot->graph()->setLineStyle((QCPGraph::LineStyle)(rand()%5+1));
+      if (rand()%100 > 50)
+        ui->WaveformPlot->graph()->setScatterStyle(QCPScatterStyle((QCPScatterStyle::ScatterShape)(rand()%14+1)));
+      QPen graphPen;
+      graphPen.setColor(QColor(rand()%245+10, rand()%245+10, rand()%245+10));
+      graphPen.setWidthF(rand()/(double)RAND_MAX*2+1);
+      ui->WaveformPlot->graph()->setPen(graphPen);
+      ui->WaveformPlot->replot();
+}
+
 
 void bsc::startAcquisition(void)
 {
@@ -186,6 +233,13 @@ QString bsc::saveDir()
     if(!dir.exists()) dir.mkpath(".");
     return savePath;
 }
+
+void bsc::updateWaveform()
+{
+    ACQ->acquire();
+}
+
+
 
 bsc::~bsc()
 {
