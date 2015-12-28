@@ -93,7 +93,7 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dis
     int distInSteps = (int) (motorSettings.pitch*dist);
 
     // calculate pausetime
-    int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 2000;
+    int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 3000;
 
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);

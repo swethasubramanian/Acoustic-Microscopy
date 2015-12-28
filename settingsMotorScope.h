@@ -20,7 +20,7 @@
         int numOfPoints;
         int numOfAverages;
         char channel[10] = "CHANNEL1";
-        char coupling[10] = "AC";
+        char coupling[10] = "DC";
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED

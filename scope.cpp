@@ -36,6 +36,15 @@ void scope::initializeScope(const SCOPESETTINGS& scopeSettings)
     viOpenDefaultRM(&defaultRM);
     viOpen(defaultRM, RESOURCE, VI_NULL, VI_NULL, &vi);
 
+    // Trigger settings
+    sprintf(foo, ":TRIGGER:EDGE:SOURCE CHANNEL1\n");
+    viPrintf(vi, foo);
+    viPrintf(vi, ":TRIGGER:MODE EDGE\n");
+    viPrintf(vi, ":TRIGGER:EDGE:SLOPE POSITIVE\n");
+   // viPrintf(vi, ":TRIGGER:EDGE:LEVEL 0.50\n");
+
+
+
     // Set probe attenuation setting
     //sprintf(foo, ":CHAN1:PROBE %s\n", scopeSettings.probeAttn);
     //viPrintf(vi, foo);
@@ -100,9 +109,9 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     //Read data from the scope
     viPrintf(vi, ":WAVEFORM:DATA?\n");
-    Sleep(2000);
+    Sleep(3000);
     viScanf(vi, "%#b\n", &waveform_size, waveform_data);
-    Sleep(2000);
+    Sleep(3000);
     if (waveform_size == WAVE_DATA_SIZE)
     {
         printf("Waveform data buffer full:");

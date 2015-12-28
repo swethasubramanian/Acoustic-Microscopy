@@ -42,6 +42,7 @@ bsc::bsc(QWidget *parent) :
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquisition()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
+    connect(ui->acquireWaveform, SIGNAL(clicked()), this, SLOT(updateWaveform()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
    //connect(ACQ, SIGNAL())
@@ -50,12 +51,69 @@ bsc::bsc(QWidget *parent) :
    //updateWaveform();
 }
 
+double bsc::maxVal(const QVector<double> &vect)
+{
+    const double *data = vect.constData();
+    double tmp = data[0];
+    for (int i=0; i<vect.length(); i++)
+    {
+        if (tmp < data[i]) tmp = data[i];
+    }
+    return tmp;
+}
+
+double bsc::minVal(const QVector<double> &vect)
+{
+    const double *data = vect.data();
+    double tmp = data[0];
+    for (int i=0; i<vect.length(); i++)
+    {
+        if (tmp > data[i]) tmp = data[i];
+    }
+    return tmp;
+}
+
+
+
 void bsc::displayWaveform(const QVector<double> &volts, const QVector<double> &time)
 {
     ui->WaveformPlot->addGraph();
+    ui->WaveformPlot->graph(0)->setData(time, volts);
+    ui->WaveformPlot->xAxis->setLabel("Time (s)");
+    ui->WaveformPlot->yAxis->setLabel("Voltage (V)");
+    ui->WaveformPlot->xAxis->setRange(minVal(time), maxVal(time));
+    ui->WaveformPlot->yAxis->setRange(minVal(volts),maxVal(volts));
+    ui->WaveformPlot->replot();
+
+    // get time duration
+   // ui->timeDuration->setText(QString("Time Duration (s) = %1").arg((maxVal(time)-minVal(time)));
+}
+
+
+void bsc::addRandomGraph()
+{
+    int n = 50; // number of points in graph
+    double xScale = (rand()/(double)RAND_MAX + 0.5)*2;
+    double yScale = (rand()/(double)RAND_MAX + 0.5)*2;
+    double xOffset = (rand()/(double)RAND_MAX - 0.5)*4;
+    double yOffset = (rand()/(double)RAND_MAX - 0.5)*5;
+    double r1 = (rand()/(double)RAND_MAX - 0.5)*2;
+    double r2 = (rand()/(double)RAND_MAX - 0.5)*2;
+    double r3 = (rand()/(double)RAND_MAX - 0.5)*2;
+    double r4 = (rand()/(double)RAND_MAX - 0.5)*2;
+    QVector<double> x(n), y(n);
+    for (int i=0; i<n; i++)
+    {
+        x[i] = (i/(double)n-0.5)*10.0*xScale + xOffset;
+        y[i] = (qSin(x[i]*r1*5)*qSin(qCos(x[i]*r2)*r4*3)+r3*qCos(qSin(x[i])*r4*2))*yScale + yOffset;
+    }
+
+    ui->WaveformPlot->addGraph();
     ui->WaveformPlot->graph()->setName(QString("New graph %1").arg(ui->WaveformPlot->graphCount()-1));
-    ui->WaveformPlot->graph()->setData(time, volts);
+    ui->WaveformPlot->graph()->setData(x, y);
     ui->WaveformPlot->graph()->setLineStyle((QCPGraph::LineStyle)(rand()%5+1));
+    if (rand()%100 > 50)
+    ui->WaveformPlot->graph()->setScatterStyle(QCPScatterStyle((QCPScatterStyle::ScatterShape)(rand()%14+1)));
     QPen graphPen;
     graphPen.setColor(QColor(rand()%245+10, rand()%245+10, rand()%245+10));
     graphPen.setWidthF(rand()/(double)RAND_MAX*2+1);
@@ -63,46 +121,20 @@ void bsc::displayWaveform(const QVector<double> &volts, const QVector<double> &t
     ui->WaveformPlot->replot();
 }
 
-void bsc::addRandomGraph()
-{
-      int n = 50; // number of points in graph
-      double xScale = (rand()/(double)RAND_MAX + 0.5)*2;
-      double yScale = (rand()/(double)RAND_MAX + 0.5)*2;
-      double xOffset = (rand()/(double)RAND_MAX - 0.5)*4;
-      double yOffset = (rand()/(double)RAND_MAX - 0.5)*5;
-      double r1 = (rand()/(double)RAND_MAX - 0.5)*2;
-      double r2 = (rand()/(double)RAND_MAX - 0.5)*2;
-      double r3 = (rand()/(double)RAND_MAX - 0.5)*2;
-      double r4 = (rand()/(double)RAND_MAX - 0.5)*2;
-      QVector<double> x(n), y(n);
-      for (int i=0; i<n; i++)
-      {
-        x[i] = (i/(double)n-0.5)*10.0*xScale + xOffset;
-        y[i] = (qSin(x[i]*r1*5)*qSin(qCos(x[i]*r2)*r4*3)+r3*qCos(qSin(x[i])*r4*2))*yScale + yOffset;
-      }
-
-      ui->WaveformPlot->addGraph();
-      ui->WaveformPlot->graph()->setName(QString("New graph %1").arg(ui->WaveformPlot->graphCount()-1));
-      ui->WaveformPlot->graph()->setData(x, y);
-      ui->WaveformPlot->graph()->setLineStyle((QCPGraph::LineStyle)(rand()%5+1));
-      if (rand()%100 > 50)
-        ui->WaveformPlot->graph()->setScatterStyle(QCPScatterStyle((QCPScatterStyle::ScatterShape)(rand()%14+1)));
-      QPen graphPen;
-      graphPen.setColor(QColor(rand()%245+10, rand()%245+10, rand()%245+10));
-      graphPen.setWidthF(rand()/(double)RAND_MAX*2+1);
-      ui->WaveformPlot->graph()->setPen(graphPen);
-      ui->WaveformPlot->replot();
-}
-
 
 void bsc::startAcquisition(void)
 {
+    qRegisterMetaType<QVector<double> >("QVector<double>");
     ui->statusMsg->setText("Starting Acquisition...");
     ACQ->moveToThread(thread);
     connect(ACQ, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
     connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
     connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
     connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+    connect(ACQ,
+        SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
+        this,
+        SLOT(displayWaveform(QVector<double>, QVector<double>)));
     // setup scan settings
     getParameters();
     if (ui->planar->isChecked())
@@ -112,7 +144,7 @@ void bsc::startAcquisition(void)
         ui->statusMsg->setText("Acquiring Planar data...");
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
     }
-    else if (ui->sample->isChecked())
+    if (ui->sample->isChecked())
     {
         connect(thread, SIGNAL(started()), ACQ, SLOT(getSampleData()));
         QApplication::processEvents();
@@ -125,7 +157,6 @@ void bsc::getCurrentRun()
 {
     ui->statusMsg->setText("Saved to:" + ACQ->getSaveDir() + QString("//%1.dat").arg(ACQ->runIndex()));
 }
-
 
 
 void bsc::stopAcquisition(void)
@@ -236,10 +267,27 @@ QString bsc::saveDir()
 
 void bsc::updateWaveform()
 {
-    ACQ->acquire();
+    qRegisterMetaType<QVector<double> >("QVector<double>");
+     // for signals and slots to work with QVector
+    ACQ->moveToThread(thread);
+    connect(ACQ, SIGNAL(waveformUpdateRequested()), thread, SLOT(start()));
+    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+    connect(thread, SIGNAL(started()), ACQ, SLOT(acquire()));
+    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+    connect(ACQ,
+            SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
+            this,
+            SLOT(displayWaveform(QVector<double>, QVector<double>)));
+   // connect(ACQ, SIGNAL(finished()), ui->statusMsg, SLOT(setText("fuck this!")));
+   //connect(ACQ, SIGNAL(finished()), this, SLOT(addRandomGraph()));
+
+
+
+    getParameters();
+    ACQ->requestWaveformUpdate(scopeSettings);
+    //addRandomGraph();
+
 }
-
-
 
 bsc::~bsc()
 {

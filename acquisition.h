@@ -55,5 +55,6 @@ class acquisition : public QObject
         void finished();
         void statusChanged(const QString &status);
         void waveformUpdated(const QVector<double> &, const QVector<double> &);
+        void somethingHappened();
 };
 #endif // ACQUISTION_H

@@ -66,6 +66,7 @@ void acquisition::getPlanarData()
         getDataFromScope(k);
 
         emit runIndexChanged();
+        emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
     }
    SCOPE.closeScope();
 
@@ -108,6 +109,7 @@ void acquisition::getSampleData()
     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
     getDataFromScope(k);
     emit runIndexChanged();
+    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
 
     for (int i=0; i<=Nx; i++)
     {
@@ -129,6 +131,7 @@ void acquisition::getSampleData()
             emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
             getDataFromScope(k);
             emit runIndexChanged();
+            emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
         }
         if (i%2 == 0)
         {
@@ -152,6 +155,7 @@ void acquisition::getSampleData()
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
                     getDataFromScope(k);
                     emit runIndexChanged();
+                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
                 }
             }
             if (_abort) break;
@@ -178,6 +182,7 @@ void acquisition::getSampleData()
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
                     getDataFromScope(k);
                     emit runIndexChanged();
+                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
                 }
             }
             if (_abort) break;
@@ -232,8 +237,12 @@ void acquisition::acquire()
     std :: string filename = "tmp.dat";
     SCOPE.initializeScope(scopeSettings);
     SCOPE.getScopeData(filename.c_str(), scopeSettings);
-    SCOPE.closeScope();
+    emit statusChanged("got data!");
     emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+    SCOPE.closeScope();
+    emit finished();
+
+
 }
 
 void acquisition::stopAcquisition(void)

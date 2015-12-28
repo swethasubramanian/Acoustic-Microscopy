@@ -25,7 +25,7 @@ public:
     scope SCOPE;
     motor MOTOR;
     ~bsc();
-    void addRandomGraph();
+
 
 private:
     Ui::bsc *ui;
@@ -36,9 +36,8 @@ private:
     acquisition *ACQ;
     bool threadAbort;
     QMutex mutex;
-
-
-
+    double maxVal(const QVector<double> &);
+    double minVal(const QVector<double> &);
 
 public slots:
     void startAcquisition();
@@ -49,6 +48,8 @@ public slots:
     void getCurrentRun();
     void updateWaveform();
     void displayWaveform(const QVector<double> &, const QVector<double> &);
+    void addRandomGraph();
+
 
 signals:
     void planarDataRequested();//, const struct SCOPESETTINGS&);

@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_acquisition_t {
-    QByteArrayData data[13];
-    char stringdata0[165];
+    QByteArrayData data[14];
+    char stringdata0[183];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,16 +40,18 @@ QT_MOC_LITERAL(6, 76, 13), // "statusChanged"
 QT_MOC_LITERAL(7, 90, 6), // "status"
 QT_MOC_LITERAL(8, 97, 15), // "waveformUpdated"
 QT_MOC_LITERAL(9, 113, 15), // "QVector<double>"
-QT_MOC_LITERAL(10, 129, 13), // "getPlanarData"
-QT_MOC_LITERAL(11, 143, 13), // "getSampleData"
-QT_MOC_LITERAL(12, 157, 7) // "acquire"
+QT_MOC_LITERAL(10, 129, 17), // "somethingHappened"
+QT_MOC_LITERAL(11, 147, 13), // "getPlanarData"
+QT_MOC_LITERAL(12, 161, 13), // "getSampleData"
+QT_MOC_LITERAL(13, 175, 7) // "acquire"
 
     },
     "acquisition\0workRequested\0\0"
     "waveformUpdateRequested\0runIndexChanged\0"
     "finished\0statusChanged\0status\0"
     "waveformUpdated\0QVector<double>\0"
-    "getPlanarData\0getSampleData\0acquire"
+    "somethingHappened\0getPlanarData\0"
+    "getSampleData\0acquire"
 };
 #undef QT_MOC_LITERAL
 
@@ -59,25 +61,26 @@ static const uint qt_meta_data_acquisition[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       6,       // signalCount
+       7,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   59,    2, 0x06 /* Public */,
-       3,    0,   60,    2, 0x06 /* Public */,
-       4,    0,   61,    2, 0x06 /* Public */,
-       5,    0,   62,    2, 0x06 /* Public */,
-       6,    1,   63,    2, 0x06 /* Public */,
-       8,    2,   66,    2, 0x06 /* Public */,
+       1,    0,   64,    2, 0x06 /* Public */,
+       3,    0,   65,    2, 0x06 /* Public */,
+       4,    0,   66,    2, 0x06 /* Public */,
+       5,    0,   67,    2, 0x06 /* Public */,
+       6,    1,   68,    2, 0x06 /* Public */,
+       8,    2,   71,    2, 0x06 /* Public */,
+      10,    0,   76,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      10,    0,   71,    2, 0x0a /* Public */,
-      11,    0,   72,    2, 0x0a /* Public */,
-      12,    0,   73,    2, 0x0a /* Public */,
+      11,    0,   77,    2, 0x0a /* Public */,
+      12,    0,   78,    2, 0x0a /* Public */,
+      13,    0,   79,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -86,6 +89,7 @@ static const uint qt_meta_data_acquisition[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,    7,
     QMetaType::Void, 0x80000000 | 9, 0x80000000 | 9,    2,    2,
+    QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void,
@@ -107,9 +111,10 @@ void acquisition::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 3: _t->finished(); break;
         case 4: _t->statusChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 5: _t->waveformUpdated((*reinterpret_cast< const QVector<double>(*)>(_a[1])),(*reinterpret_cast< const QVector<double>(*)>(_a[2]))); break;
-        case 6: _t->getPlanarData(); break;
-        case 7: _t->getSampleData(); break;
-        case 8: _t->acquire(); break;
+        case 6: _t->somethingHappened(); break;
+        case 7: _t->getPlanarData(); break;
+        case 8: _t->getSampleData(); break;
+        case 9: _t->acquire(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -163,6 +168,12 @@ void acquisition::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
                 *result = 5;
             }
         }
+        {
+            typedef void (acquisition::*_t)();
+            if (*reinterpret_cast<_t *>(func) == static_cast<_t>(&acquisition::somethingHappened)) {
+                *result = 6;
+            }
+        }
     }
 }
 
@@ -191,13 +202,13 @@ int acquisition::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }
@@ -238,5 +249,11 @@ void acquisition::waveformUpdated(const QVector<double> & _t1, const QVector<dou
 {
     void *_a[] = { Q_NULLPTR, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
     QMetaObject::activate(this, &staticMetaObject, 5, _a);
+}
+
+// SIGNAL 6
+void acquisition::somethingHappened()
+{
+    QMetaObject::activate(this, &staticMetaObject, 6, Q_NULLPTR);
 }
 QT_END_MOC_NAMESPACE
