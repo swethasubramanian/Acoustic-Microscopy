@@ -37,10 +37,10 @@ void scope::initializeScope(const SCOPESETTINGS& scopeSettings)
     viOpen(defaultRM, RESOURCE, VI_NULL, VI_NULL, &vi);
 
     // Trigger settings
-    sprintf(foo, ":TRIGGER:EDGE:SOURCE CHANNEL1\n");
-    viPrintf(vi, foo);
-    viPrintf(vi, ":TRIGGER:MODE EDGE\n");
-    viPrintf(vi, ":TRIGGER:EDGE:SLOPE POSITIVE\n");
+    //sprintf(foo, ":TRIGGER:EDGE:SOURCE CHANNEL1\n");
+    //viPrintf(vi, foo);
+    //viPrintf(vi, ":TRIGGER:MODE EDGE\n");
+    //viPrintf(vi, ":TRIGGER:EDGE:SLOPE POSITIVE\n");
    // viPrintf(vi, ":TRIGGER:EDGE:LEVEL 0.50\n");
 
 
@@ -146,6 +146,13 @@ void scope::setTriggerLevel(double triggerLevel)
 {
     char foo[100];
     sprintf(foo, ":TRIGGER:LEVEL %f\n", triggerLevel);
+    viPrintf(vi, foo);
+}
+
+void scope::setTimeDelay(double timeDelay)
+{
+    char foo[100];
+    sprintf(foo, "TIMEBASE:DELAY %f\n", timeDelay);
     viPrintf(vi, foo);
 }
 

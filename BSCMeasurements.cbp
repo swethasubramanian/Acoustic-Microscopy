@@ -9,7 +9,7 @@
 			<Target title="Debug">
 				<Option output="bin/Debug/BSCMeasurements" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
-				<Option external_deps="C:/Program Files/IVI Foundation/VISA/WinNT/lib/msc/visa32.lib;" />
+				<Option external_deps="C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc/visa32.lib;C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc/visa64.lib;" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -41,8 +41,8 @@
 			<Add directory="C:/Qt/5.5/mingw492_32/include/QtWidgets" />
 			<Add directory="C:/Qt/5.5/mingw492_32/include/QtCore" />
 			<Add directory="C:/Qt/5.5/mingw492_32/include/QtPrintSupport" />
-			<Add directory="C:/Program Files/IVI Foundation/VISA/Win64/Include" />
-			<Add directory="C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc" />
+			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc" />
+			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include" />
 		</Compiler>
 		<Linker>
 			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Gui.a" />
@@ -51,11 +51,11 @@
 			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Widgets.a" />
 			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5PrintSupport.a" />
 			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5PrintSupportd.a" />
-			<Add library="C:\Program Files\IVI Foundation\VISA\Win64\Lib_x64\msc\visa32.lib" />
+			<Add library="C:\Program Files (x86)\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
 			<Add directory="C:/Qt/5.5/mingw492_32/lib" />
 			<Add directory="C:/Qt/5.5/mingw492_32/lib/cmake" />
-			<Add directory="C:/Program Files/IVI Foundation/VISA/Win64/Include" />
-			<Add directory="C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc" />
+			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include" />
+			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc" />
 		</Linker>
 		<ExtraCommands>
 			<Add before="moc bsc.h -o moc_bsc.cpp" />
@@ -71,8 +71,11 @@
 		</Unit>
 		<Unit filename="moc_acquisition.cpp" />
 		<Unit filename="moc_bsc.cpp" />
+		<Unit filename="moc_qcustomplot.cpp" />
 		<Unit filename="motor.cpp" />
 		<Unit filename="motor.h" />
+		<Unit filename="qcustomplot.cpp" />
+		<Unit filename="qcustomplot.h" />
 		<Unit filename="scope.cpp" />
 		<Unit filename="scope.h" />
 		<Unit filename="settings.txt" />

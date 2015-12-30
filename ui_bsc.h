@@ -93,37 +93,35 @@ public:
     QRadioButton *YDir;
     QRadioButton *ZDir;
     QPushButton *moveMotor;
-    QPushButton *pushButton;
     QCustomPlot *WaveformPlot;
-    QLabel *timeDuration;
     QLabel *label_23;
     QPushButton *acquireWaveform;
-    QLineEdit *lineEdit_5;
     QLabel *label_15;
-    QWidget *widget;
+    QWidget *layoutWidget8;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_14;
     QLabel *label_17;
     QLabel *label_19;
-    QLineEdit *lineEdit;
+    QLineEdit *waterTemperature;
     QHBoxLayout *horizontalLayout_12;
     QLabel *label_21;
-    QLineEdit *lineEdit_3;
+    QLineEdit *cWater;
     QHBoxLayout *horizontalLayout_13;
     QLabel *label_22;
-    QLineEdit *lineEdit_2;
+    QLineEdit *cSample;
     QHBoxLayout *horizontalLayout_15;
     QLabel *label_18;
-    QLineEdit *lineEdit_4;
-    QWidget *widget1;
+    QLineEdit *timeDelay;
+    QWidget *layoutWidget9;
     QHBoxLayout *horizontalLayout_16;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton_3;
+    QPushButton *calTimeDelay;
+    QPushButton *setTimeDelay;
+    QLabel *timeDuration;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
-    QButtonGroup *buttonGroup;
     QButtonGroup *buttonGroup_2;
+    QButtonGroup *buttonGroup;
 
     void setupUi(QMainWindow *bsc)
     {
@@ -415,31 +413,22 @@ public:
 
         verticalLayout_2->addLayout(horizontalLayout_8);
 
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(180, 470, 101, 23));
         WaveformPlot = new QCustomPlot(centralWidget);
         WaveformPlot->setObjectName(QStringLiteral("WaveformPlot"));
-        WaveformPlot->setGeometry(QRect(10, 180, 481, 261));
-        timeDuration = new QLabel(WaveformPlot);
-        timeDuration->setObjectName(QStringLiteral("timeDuration"));
-        timeDuration->setGeometry(QRect(200, 0, 199, 13));
+        WaveformPlot->setGeometry(QRect(10, 200, 481, 261));
         label_23 = new QLabel(centralWidget);
         label_23->setObjectName(QStringLiteral("label_23"));
         label_23->setGeometry(QRect(570, 240, 131, 16));
         acquireWaveform = new QPushButton(centralWidget);
         acquireWaveform->setObjectName(QStringLiteral("acquireWaveform"));
         acquireWaveform->setGeometry(QRect(20, 470, 121, 23));
-        lineEdit_5 = new QLineEdit(centralWidget);
-        lineEdit_5->setObjectName(QStringLiteral("lineEdit_5"));
-        lineEdit_5->setGeometry(QRect(320, 470, 113, 20));
         label_15 = new QLabel(centralWidget);
         label_15->setObjectName(QStringLiteral("label_15"));
         label_15->setGeometry(QRect(40, 180, 181, 16));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(517, 280, 241, 108));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget8 = new QWidget(centralWidget);
+        layoutWidget8->setObjectName(QStringLiteral("layoutWidget8"));
+        layoutWidget8->setGeometry(QRect(517, 280, 241, 108));
+        verticalLayout = new QVBoxLayout(layoutWidget8);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
@@ -447,20 +436,20 @@ public:
         horizontalLayout_14 = new QHBoxLayout();
         horizontalLayout_14->setSpacing(6);
         horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
-        label_17 = new QLabel(widget);
+        label_17 = new QLabel(layoutWidget8);
         label_17->setObjectName(QStringLiteral("label_17"));
 
         horizontalLayout_14->addWidget(label_17);
 
-        label_19 = new QLabel(widget);
+        label_19 = new QLabel(layoutWidget8);
         label_19->setObjectName(QStringLiteral("label_19"));
 
         horizontalLayout_14->addWidget(label_19);
 
-        lineEdit = new QLineEdit(widget);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        waterTemperature = new QLineEdit(layoutWidget8);
+        waterTemperature->setObjectName(QStringLiteral("waterTemperature"));
 
-        horizontalLayout_14->addWidget(lineEdit);
+        horizontalLayout_14->addWidget(waterTemperature);
 
 
         verticalLayout->addLayout(horizontalLayout_14);
@@ -468,15 +457,15 @@ public:
         horizontalLayout_12 = new QHBoxLayout();
         horizontalLayout_12->setSpacing(6);
         horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
-        label_21 = new QLabel(widget);
+        label_21 = new QLabel(layoutWidget8);
         label_21->setObjectName(QStringLiteral("label_21"));
 
         horizontalLayout_12->addWidget(label_21);
 
-        lineEdit_3 = new QLineEdit(widget);
-        lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
+        cWater = new QLineEdit(layoutWidget8);
+        cWater->setObjectName(QStringLiteral("cWater"));
 
-        horizontalLayout_12->addWidget(lineEdit_3);
+        horizontalLayout_12->addWidget(cWater);
 
 
         verticalLayout->addLayout(horizontalLayout_12);
@@ -484,15 +473,15 @@ public:
         horizontalLayout_13 = new QHBoxLayout();
         horizontalLayout_13->setSpacing(6);
         horizontalLayout_13->setObjectName(QStringLiteral("horizontalLayout_13"));
-        label_22 = new QLabel(widget);
+        label_22 = new QLabel(layoutWidget8);
         label_22->setObjectName(QStringLiteral("label_22"));
 
         horizontalLayout_13->addWidget(label_22);
 
-        lineEdit_2 = new QLineEdit(widget);
-        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
+        cSample = new QLineEdit(layoutWidget8);
+        cSample->setObjectName(QStringLiteral("cSample"));
 
-        horizontalLayout_13->addWidget(lineEdit_2);
+        horizontalLayout_13->addWidget(cSample);
 
 
         verticalLayout->addLayout(horizontalLayout_13);
@@ -500,38 +489,43 @@ public:
         horizontalLayout_15 = new QHBoxLayout();
         horizontalLayout_15->setSpacing(6);
         horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
-        label_18 = new QLabel(widget);
+        label_18 = new QLabel(layoutWidget8);
         label_18->setObjectName(QStringLiteral("label_18"));
 
         horizontalLayout_15->addWidget(label_18);
 
-        lineEdit_4 = new QLineEdit(widget);
-        lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
+        timeDelay = new QLineEdit(layoutWidget8);
+        timeDelay->setObjectName(QStringLiteral("timeDelay"));
 
-        horizontalLayout_15->addWidget(lineEdit_4);
+        horizontalLayout_15->addWidget(timeDelay);
 
 
         verticalLayout->addLayout(horizontalLayout_15);
 
-        widget1 = new QWidget(centralWidget);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        widget1->setGeometry(QRect(540, 390, 194, 25));
-        horizontalLayout_16 = new QHBoxLayout(widget1);
+        layoutWidget9 = new QWidget(centralWidget);
+        layoutWidget9->setObjectName(QStringLiteral("layoutWidget9"));
+        layoutWidget9->setGeometry(QRect(540, 390, 194, 25));
+        horizontalLayout_16 = new QHBoxLayout(layoutWidget9);
         horizontalLayout_16->setSpacing(6);
         horizontalLayout_16->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_16->setObjectName(QStringLiteral("horizontalLayout_16"));
         horizontalLayout_16->setContentsMargins(0, 0, 0, 0);
-        pushButton_2 = new QPushButton(widget1);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        calTimeDelay = new QPushButton(layoutWidget9);
+        calTimeDelay->setObjectName(QStringLiteral("calTimeDelay"));
 
-        horizontalLayout_16->addWidget(pushButton_2);
+        horizontalLayout_16->addWidget(calTimeDelay);
 
-        pushButton_3 = new QPushButton(widget1);
-        pushButton_3->setObjectName(QStringLiteral("pushButton_3"));
+        setTimeDelay = new QPushButton(layoutWidget9);
+        setTimeDelay->setObjectName(QStringLiteral("setTimeDelay"));
 
-        horizontalLayout_16->addWidget(pushButton_3);
+        horizontalLayout_16->addWidget(setTimeDelay);
 
+        timeDuration = new QLabel(centralWidget);
+        timeDuration->setObjectName(QStringLiteral("timeDuration"));
+        timeDuration->setGeometry(QRect(180, 180, 199, 13));
         bsc->setCentralWidget(centralWidget);
+        layoutWidget->raise();
+        layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
@@ -543,23 +537,11 @@ public:
         layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
-        pushButton->raise();
-        label_17->raise();
-        label_18->raise();
-        pushButton_2->raise();
-        pushButton_3->raise();
         WaveformPlot->raise();
-        label_19->raise();
-        lineEdit->raise();
-        label_21->raise();
-        label_22->raise();
-        lineEdit_2->raise();
-        lineEdit_3->raise();
-        lineEdit_4->raise();
         label_23->raise();
         acquireWaveform->raise();
-        lineEdit_5->raise();
         label_15->raise();
+        timeDuration->raise();
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 775, 21));
@@ -607,8 +589,6 @@ public:
         YDir->setText(QApplication::translate("bsc", " Y", 0));
         ZDir->setText(QApplication::translate("bsc", "Z", 0));
         moveMotor->setText(QApplication::translate("bsc", "Move ", 0));
-        pushButton->setText(QApplication::translate("bsc", "Set Trigger Level", 0));
-        timeDuration->setText(QApplication::translate("bsc", "Time Duration (us) =", 0));
         label_23->setText(QApplication::translate("bsc", "Sample waveform settings", 0));
         acquireWaveform->setText(QApplication::translate("bsc", "Update Waveform", 0));
         label_15->setText(QApplication::translate("bsc", "Vpp (V) =", 0));
@@ -617,8 +597,9 @@ public:
         label_21->setText(QApplication::translate("bsc", "Speed of Sound in Water (m/s)  ", 0));
         label_22->setText(QApplication::translate("bsc", "Speed of Sound in Sample (m/s) ", 0));
         label_18->setText(QApplication::translate("bsc", "Time Delay (ns) =                        ", 0));
-        pushButton_2->setText(QApplication::translate("bsc", "Calculate Time Delay", 0));
-        pushButton_3->setText(QApplication::translate("bsc", "Set Time Delay", 0));
+        calTimeDelay->setText(QApplication::translate("bsc", "Calculate Time Delay", 0));
+        setTimeDelay->setText(QApplication::translate("bsc", "Set Time Delay", 0));
+        timeDuration->setText(QApplication::translate("bsc", "Time Duration (us) =", 0));
     } // retranslateUi
 
 };

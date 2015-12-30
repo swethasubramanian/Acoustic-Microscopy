@@ -49,6 +49,7 @@ public slots:
     void updateWaveform();
     void displayWaveform(const QVector<double> &, const QVector<double> &);
     void addRandomGraph();
+    void calculateTimeDelay();
 
 
 signals:

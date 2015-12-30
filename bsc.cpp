@@ -45,6 +45,8 @@ bsc::bsc(QWidget *parent) :
     connect(ui->acquireWaveform, SIGNAL(clicked()), this, SLOT(updateWaveform()));
    // connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
+    connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
+
    //connect(ACQ, SIGNAL())
     //ui->statusMsg->setText(QString("ideal thread count is %1").arg(QThread::idealThreadCount()));
    // addRandomGraph();
@@ -71,6 +73,26 @@ double bsc::minVal(const QVector<double> &vect)
         if (tmp > data[i]) tmp = data[i];
     }
     return tmp;
+}
+
+void bsc::calculateTimeDelay(void)
+{
+    QString tmp;
+
+    tmp = ui->waterTemperature->text();
+    double Twater = tmp.toDouble();
+
+
+    tmp = ui->cSample->text();
+    double csample = tmp.toDouble();
+
+
+
+}
+
+double bsc::getSOSWater(double temperature)
+{
+
 }
 
 
