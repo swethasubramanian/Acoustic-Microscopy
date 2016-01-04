@@ -45,7 +45,7 @@ void acquisition::getPlanarData()
    if(!dir.exists()) dir.mkpath(".");
 
     //Set up scan
-   SCOPE.initializeScope(scopeSettings);
+   SCOPE.initializeScope();
    for (int k=1; k<=(Nx+1)*(Ny+1); k++)
     {
         // Checks if the process should be aborted
@@ -87,7 +87,7 @@ void acquisition::getSampleData()
     if(!dir.exists()) dir.mkpath(".");
 
     // Setup scan
-    SCOPE.initializeScope(scopeSettings);
+    SCOPE.initializeScope();
     double windowX = motorSettings.windowSizeX;
     double windowY = motorSettings.windowSizeY;
     double stepXmm = motorSettings.stepSizeX;
@@ -235,9 +235,9 @@ void acquisition::acquire()
     QTimer::singleShot(1000, &loop, SLOT(quit()));
     loop.exec();
     std :: string filename = "tmp.dat";
-    SCOPE.initializeScope(scopeSettings);
+    SCOPE.initializeScope();
     SCOPE.getScopeData(filename.c_str(), scopeSettings);
-    emit statusChanged("got data!");
+    emit statusChanged("data acquisition complete!");
     emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
     SCOPE.closeScope();
     emit finished();

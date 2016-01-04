@@ -87,13 +87,26 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dis
 {
     // convert dist to mm
     char idx[2];
-    if (!strcmp(motID,"X")) sprintf(idx, "2");
-    else if (!strcmp(motID, "Y")) sprintf(idx, "1");
-    else if (!strcmp(motID, "Z")) sprintf(idx, "3");
+    double vel;
+    if (!strcmp(motID,"X"))
+    {
+        sprintf(idx, "2");
+        vel = motorSettings.velX;
+    }
+    else if (!strcmp(motID, "Y"))
+    {
+        sprintf(idx, "1");
+        vel = motorSettings.velY;
+    }
+    else if (!strcmp(motID, "Z"))
+    {
+        sprintf(idx, "3");
+        vel = motorSettings.velZ;
+    }
     int distInSteps = (int) (motorSettings.pitch*dist);
 
     // calculate pausetime
-    int pausetime = (int) abs(2000*(distInSteps/motorSettings.velX)) + 3000;
+    int pausetime = (int) abs(2000*(distInSteps/vel)) + 3000;
 
     // Move the infernal motor
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);

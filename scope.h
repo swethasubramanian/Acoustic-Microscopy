@@ -8,7 +8,7 @@ class scope
     public:
         scope();
         void closeScope();
-        void initializeScope(const struct SCOPESETTINGS&);
+        void initializeScope();
         void getScopeData(const char* x, const struct SCOPESETTINGS&);
        // int getNumOfPoints(const struct SCOPESETTINGS&){return &SCOPESETTINGS.numOfPoints;}
         QVector<double> getVoltageData(){return volts;}
@@ -16,7 +16,6 @@ class scope
         void setTimeDelay(double value);
 
     private:
-        void setTriggerLevel(double value);
         QVector<double> volts;
         QVector<double> time;
 };

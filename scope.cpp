@@ -28,10 +28,9 @@ void scope::closeScope(void)
 }
 
 // Initialize oscilloscope
-void scope::initializeScope(const SCOPESETTINGS& scopeSettings)
+void scope::initializeScope(void)
 
 {
-    char foo[100];
     // Opens visa interface for communication with scope
     viOpenDefaultRM(&defaultRM);
     viOpen(defaultRM, RESOURCE, VI_NULL, VI_NULL, &vi);
@@ -109,9 +108,9 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     //Read data from the scope
     viPrintf(vi, ":WAVEFORM:DATA?\n");
-    Sleep(3000);
+    Sleep(2000);
     viScanf(vi, "%#b\n", &waveform_size, waveform_data);
-    Sleep(3000);
+    Sleep(2000);
     if (waveform_size == WAVE_DATA_SIZE)
     {
         printf("Waveform data buffer full:");
@@ -141,19 +140,14 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
 }
 
-
-void scope::setTriggerLevel(double triggerLevel)
-{
-    char foo[100];
-    sprintf(foo, ":TRIGGER:LEVEL %f\n", triggerLevel);
-    viPrintf(vi, foo);
-}
-
 void scope::setTimeDelay(double timeDelay)
 {
     char foo[100];
-    sprintf(foo, "TIMEBASE:DELAY %f\n", timeDelay);
+    viPrintf(vi, ":TIMEBASE:REFERENCE CENTER\n");
+    //viPrintf(vi, ":TIMEBASE:POSITION 20e-6\n");
+    sprintf(foo, ":TIMEBASE:POSITION %fe-9\n", timeDelay);
     viPrintf(vi, foo);
+
 }
 
 
