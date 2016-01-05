@@ -2,11 +2,10 @@
 
 ### Scan Tank GUI ###
 
-* communicates with oscilloscope to acquire RF echo data
+* Communicates with oscilloscope to acquire RF echo data
 * Controls the stepper motor to position the single element transducer within the scan tank
 
 
 ### Contact: ###
 
-* Swetha Subramanian
-* swethasubramanian@gmail.com
+* Swetha Subramanian (swethasubramanian@gmail.com)
