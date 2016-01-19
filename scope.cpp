@@ -6,7 +6,7 @@
 #include <windows.h>
 
 #define RESOURCE "GPIB0::7::INSTR"
-#define WAVE_DATA_SIZE 5000
+#define WAVE_DATA_SIZE 8000
 #define TIMEOUT 5000
 #define SETUP_STR_SIZE 3000
 #define IMG_SIZE 30000
@@ -34,6 +34,8 @@ void scope::initializeScope(void)
     // Opens visa interface for communication with scope
     viOpenDefaultRM(&defaultRM);
     viOpen(defaultRM, RESOURCE, VI_NULL, VI_NULL, &vi);
+    // set timeout to 15 sec
+    viSetAttribute(vi, VI_ATTR_TMO_VALUE, 15000);
 
     // Trigger settings
     //sprintf(foo, ":TRIGGER:EDGE:SOURCE CHANNEL1\n");
@@ -60,7 +62,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     int waveform_size = WAVE_DATA_SIZE;
     char foo[100];
 
-    // Acquistion settings
+    // Acquisition settings
     viPrintf(vi, ":ACQUIRE:TYPE AVERAGE\n");
     sprintf(foo, ":ACQUIRE:COUNT %d\n", scopeSettings.numOfAverages);
     viPrintf(vi, foo);
@@ -77,6 +79,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     // Get the preamble block
     viQueryf(vi, ":WAVEFORM:PREAMBLE?\n", "%,10lf\n", preamble);
+    //Sleep(1000);
     /* GET_PREAMBLE - The preamble contains all of the current WAVEFORM
     * settings returned in the form <preamble block><NL> where the
     * <preamble block> is:
@@ -108,9 +111,9 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
 
     //Read data from the scope
     viPrintf(vi, ":WAVEFORM:DATA?\n");
-    Sleep(2000);
+    Sleep(1000);
     viScanf(vi, "%#b\n", &waveform_size, waveform_data);
-    Sleep(2000);
+    Sleep(1000);
     if (waveform_size == WAVE_DATA_SIZE)
     {
         printf("Waveform data buffer full:");
@@ -147,7 +150,13 @@ void scope::setTimeDelay(double timeDelay)
     //viPrintf(vi, ":TIMEBASE:POSITION 20e-6\n");
     sprintf(foo, ":TIMEBASE:POSITION %fe-9\n", timeDelay);
     viPrintf(vi, foo);
+}
 
+double scope::getVpp(void)
+{
+    double vpp;
+    viQueryf(vi, ":MEASURE:VPP?\n", "%lf", &vpp);
+    return vpp;
 }
 
 

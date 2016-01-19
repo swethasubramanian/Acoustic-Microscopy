@@ -216,7 +216,6 @@ void acquisition::getSampleData()
 
 void acquisition::getDataFromScope(int k)
 {
-
     // This will stupidly wait 1 sec doing nothing...
     QEventLoop loop;
     QTimer::singleShot(1000, &loop, SLOT(quit()));

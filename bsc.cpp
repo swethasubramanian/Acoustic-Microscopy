@@ -77,6 +77,7 @@ double bsc::minVal(const QVector<double> &vect)
 
 void bsc::calculateTimeDelay(void)
 {
+    getSOSWater();
     QString tmp;
 
     tmp = ui->cSample->text();
@@ -102,7 +103,7 @@ void bsc::setTimeDelay(void)
     double timeDelay = tmp.toDouble();
 
     SCOPE.initializeScope();
-    SCOPE.setTimeDelay(timeDelay);
+    SCOPE.setTimeDelay(-timeDelay);
     SCOPE.closeScope();
     ui->statusMsg->setText("time delay set to");
 }
@@ -154,6 +155,7 @@ void bsc::startAcquisition(void)
         QApplication::processEvents();
         ui->statusMsg->setText("Acquiring Planar data...");
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
+        return;
     }
     if (ui->sample->isChecked())
     {
@@ -161,6 +163,7 @@ void bsc::startAcquisition(void)
         QApplication::processEvents();
         ui->statusMsg->setText("Acquiring Sample data...");
         ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
+        return;
     }
 }
 
@@ -193,21 +196,25 @@ void bsc::movMotor(void)
             Sleep(1000);
             MOTOR.mov(motorSettings, "X", dist);
             ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+            MOTOR.closeMotor();
+            return;
         }
-        if (ui->YDir->isChecked())
+        else if (ui->YDir->isChecked())
         {
             Sleep(1000);
             MOTOR.mov(motorSettings, "Y", dist);
             ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
+            MOTOR.closeMotor();
+            return;
         }
-        if (ui->ZDir->isChecked())
+        else if (ui->ZDir->isChecked())
         {
             Sleep(1000);
             MOTOR.mov(motorSettings, "Z", dist);
             ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
+            MOTOR.closeMotor();
+            return;
         }
-        MOTOR.closeMotor();
-        stopAcquisition();
     }
 }
 

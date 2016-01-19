@@ -14,6 +14,7 @@ class scope
         QVector<double> getVoltageData(){return volts;}
         QVector<double> getTimeData(){return time;}
         void setTimeDelay(double value);
+        double getVpp();
 
     private:
         QVector<double> volts;
