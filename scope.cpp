@@ -6,7 +6,7 @@
 #include <windows.h>
 
 #define RESOURCE "GPIB0::7::INSTR"
-#define WAVE_DATA_SIZE 8000
+#define WAVE_DATA_SIZE 16000
 #define TIMEOUT 5000
 #define SETUP_STR_SIZE 3000
 #define IMG_SIZE 30000
@@ -106,6 +106,7 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
    // printf("Preamble YREFERENCE: %e\n", preamble[9]);
 
     // Set number of points
+    //viPrintf(vi, ":WAVEFORM:POINTS:MODE NORMAL\n");
     sprintf(foo, ":WAVEFORM:POINTS %d\n", scopeSettings.numOfPoints);
     viPrintf(vi, foo);
 
@@ -158,6 +159,12 @@ double scope::getVpp(void)
     viQueryf(vi, ":MEASURE:VPP?\n", "%lf", &vpp);
     return vpp;
 }
+
+//double scope::getNumPoints(void)
+//{
+ //   double points;
+  //  viQuery(vi, "")
+//}
 
 
 
