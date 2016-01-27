@@ -13,6 +13,44 @@ acquisition::acquisition(QObject *parent):
     acquiring = false;
 }
 
+void acquisition::requestMotorMovement(const QString &whichMotor, double displacement, const MOTORSETTINGS& motorSet)
+{
+    mutex.lock();
+    motorSettings = motorSet;
+    motorID = whichMotor;
+    dist = displacement;
+    abort = false;
+    mutex.unlock();
+    emit motorMovementRequested();
+}
+
+void acquisition::moveMotor()
+{
+    mutex.lock();
+    bool _abort = abort;
+    mutex.unlock();
+
+    if (!_abort)
+    {
+        MOTOR.openMotor(motorSettings);
+        if (motorID == "X")
+            MOTOR.mov(motorSettings, "X", dist);
+        if (motorID == "Y")
+            MOTOR.mov(motorSettings, "Y", dist);
+        if (motorID == "Z")
+            MOTOR.mov(motorSettings, "Z", dist);
+        MOTOR.closeMotor();
+   // emit statusChanged("Movement completed!");
+        mutex.lock();
+        _abort = true;
+        abort = true;
+        mutex.unlock();
+        emit finished();
+    }
+    else
+        emit finished();
+}
+
 void acquisition::requestWork(const QString &param, const SCOPESETTINGS& scopeSet, const MOTORSETTINGS& motorSet)
 {
     mutex.lock();
@@ -92,6 +130,7 @@ void acquisition::getSampleData()
     double windowY = motorSettings.windowSizeY;
     double stepXmm = motorSettings.stepSizeX;
     double stepYmm = motorSettings.stepSizeY;
+
     MOTOR.openMotor(motorSettings);
 
     // This will stupidly wait 1 sec doing nothing...

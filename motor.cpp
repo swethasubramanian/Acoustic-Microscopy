@@ -112,16 +112,13 @@ int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dis
     sprintf(foo, "C I%sM%d,R", idx, distInSteps);
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     Sleep(pausetime);
-    if (!fSuccess)
-    {
-        printf ("fail WriteFile: %d\n", GetLastError ());
-        return 3;
-    }
     return 0;
 }
 
 void motor::closeMotor(void)
 {
+    sprintf(foo, "C"); // Close the offline mode so you can operate the dongle
+    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     sprintf(foo, "Q"); // Close the offline mode so you can operate the dongle
     fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
     CloseHandle(hCom);

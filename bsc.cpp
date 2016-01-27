@@ -184,37 +184,35 @@ void bsc::stopAcquisition(void)
 // Moving motor for aligning things
 void bsc::movMotor(void)
 {
-    if (abort)
+    QString tmp;
+    tmp = ui->displacement->text();
+    double dist = tmp.toDouble();
+
+    getParameters();
+
+    ACQ->moveToThread(thread);
+    connect(ACQ, SIGNAL(motorMovementRequested()), thread, SLOT(start()));
+    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
+    connect(thread, SIGNAL(started()), ACQ, SLOT(moveMotor()));
+    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+
+    if (ui->XDir->isChecked())
     {
-        abort = false;
-        QString tmp;
-        tmp = ui->displacement->text();
-        double dist = tmp.toDouble();
-        MOTOR.openMotor(motorSettings);
-        if (ui->XDir->isChecked())
-        {
-            Sleep(1000);
-            MOTOR.mov(motorSettings, "X", dist);
-            ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
-            MOTOR.closeMotor();
-            return;
-        }
-        else if (ui->YDir->isChecked())
-        {
-            Sleep(1000);
-            MOTOR.mov(motorSettings, "Y", dist);
-            ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
-            MOTOR.closeMotor();
-            return;
-        }
-        else if (ui->ZDir->isChecked())
-        {
-            Sleep(1000);
-            MOTOR.mov(motorSettings, "Z", dist);
-            ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
-            MOTOR.closeMotor();
-            return;
-        }
+        ACQ->requestMotorMovement("X", dist, motorSettings);
+        ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+        return;
+    }
+    if (ui->YDir->isChecked())
+    {
+        ACQ->requestMotorMovement("Y", dist, motorSettings);
+        ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
+        return;
+    }
+    if (ui->ZDir->isChecked())
+    {
+        ACQ->requestMotorMovement("Z", dist, motorSettings);
+        ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
+        return;
     }
 }
 
