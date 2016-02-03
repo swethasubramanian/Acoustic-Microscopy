@@ -19,6 +19,7 @@ public:
     explicit bsc(QWidget *parent = 0);
     void acquire();
     void getParameters();
+    void setMode();
     QString saveDir();
     QString savePath;
     QString qFilename;
@@ -27,14 +28,13 @@ public:
     ~bsc();
     void getSOSWater();
 
-
 private:
     Ui::bsc *ui;
     MOTORSETTINGS motorSettings;
     SCOPESETTINGS scopeSettings;
     bool abort;
-    QThread *thread;
-    acquisition *ACQ;
+    QThread *planarThread, *sampleThread;
+    acquisition *ACQp, *ACQs;
     bool threadAbort;
     QMutex mutex;
     double maxVal(const QVector<double> &);
@@ -51,7 +51,6 @@ public slots:
     void displayWaveform(const QVector<double> &, const QVector<double> &);
     void calculateTimeDelay();
     void setTimeDelay();
-
 
 signals:
     void planarDataRequested();//, const struct SCOPESETTINGS&);

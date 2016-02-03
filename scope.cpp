@@ -63,9 +63,17 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     char foo[100];
 
     // Acquisition settings
-    viPrintf(vi, ":ACQUIRE:TYPE AVERAGE\n");
-    sprintf(foo, ":ACQUIRE:COUNT %d\n", scopeSettings.numOfAverages);
-    viPrintf(vi, foo);
+    if (scopeSettings.mode == 1)
+    {
+        viPrintf(vi, ":ACQUIRE:TYPE AVERAGE\n");
+        sprintf(foo, ":ACQUIRE:COUNT %d\n", scopeSettings.numOfAverages);
+        viPrintf(vi, foo);
+    }
+    else
+    {
+        viPrintf(vi, ":ACQUIRE:TYPE NORMAL\n");
+    }
+
 
     //Write data out
     sprintf(foo, ":DIGITIZE %s\n", scopeSettings.channel);

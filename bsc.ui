@@ -265,46 +265,6 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>100</y>
-      <width>201</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_10">
-       <item>
-        <widget class="QLabel" name="label_6">
-         <property name="text">
-          <string>Number of Averages</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="numOfAverages"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_11">
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Number of Samples  </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="numOfPoints"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
       <x>560</x>
       <y>100</y>
       <width>201</width>
@@ -475,7 +435,7 @@
      <string>Time Duration (us) =</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>510</x>
@@ -589,7 +549,70 @@
      </item>
     </layout>
    </widget>
-   <zorder>layoutWidget</zorder>
+   <widget class="QComboBox" name="normOrAvg">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>100</y>
+      <width>101</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>Normal</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Averaged</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>120</y>
+      <width>199</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Number of Averages</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="numOfAverages"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>150</y>
+      <width>199</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Number of Samples  </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="numOfPoints"/>
+     </item>
+    </layout>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -607,13 +630,8 @@
    <zorder>acquireWaveform</zorder>
    <zorder>label_15</zorder>
    <zorder>timeDuration</zorder>
-   <zorder></zorder>
-   <zorder>label_20</zorder>
-   <zorder>t_focus</zorder>
-   <zorder>label_24</zorder>
-   <zorder>t_frontEdge</zorder>
-   <zorder>label_25</zorder>
-   <zorder>label_19</zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>normOrAvg</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -647,7 +665,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

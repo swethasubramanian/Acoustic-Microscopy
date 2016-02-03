@@ -21,6 +21,7 @@
         int numOfAverages;
         char channel[10] = "CHANNEL1";
         char coupling[10] = "DC";
+        int mode;
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED

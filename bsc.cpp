@@ -15,9 +15,11 @@ bsc::bsc(QWidget *parent) :
     ui->setupUi(this);
     //abort = false;
 
-    // The thread and the worker are created in the constructor so it is always safe to delete them.
-    thread = new QThread();
-    ACQ = new acquisition();
+    // The acq thread and the worker are created in the constructor so it is always safe to delete them.
+    planarThread = new QThread();
+    ACQp = new acquisition();
+    sampleThread = new QThread();
+    ACQs = new acquisition();
 
     // Load up defaults here
     // Default parent directory
@@ -41,6 +43,9 @@ bsc::bsc(QWidget *parent) :
     ui->cSample->setText("1540");
 
     ui->planar->setChecked(true);
+
+
+    QApplication::processEvents();
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquisition()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
@@ -49,9 +54,19 @@ bsc::bsc(QWidget *parent) :
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
     connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
     connect(ui->setTimeDelay, SIGNAL(clicked()), this, SLOT(setTimeDelay()));
-
+    //connect(ui->normOrAvg, SIGNAL(activated()), this, SLOT(setMode()));
     getSOSWater();
 }
+
+void bsc::setMode(void)
+{
+    if (ui->normOrAvg->currentIndex() == 1)
+        scopeSettings.mode = 1;
+    else
+        scopeSettings.mode = 2;
+}
+
+
 
 double bsc::maxVal(const QVector<double> &vect)
 {
@@ -135,50 +150,88 @@ void bsc::displayWaveform(const QVector<double> &volts, const QVector<double> &t
 
 void bsc::startAcquisition(void)
 {
+    QApplication::processEvents();
     qRegisterMetaType<QVector<double> >("QVector<double>");
     ui->statusMsg->setText("Starting Acquisition...");
 
-    ACQ->moveToThread(thread);
-    connect(ACQ, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
-    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
-    connect(ACQ, SIGNAL(workRequested()), thread, SLOT(start()));
-    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
-    connect(ACQ,
-        SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
-        this,
-        SLOT(displayWaveform(QVector<double>, QVector<double>)));
     // setup scan settings
     getParameters();
     if (ui->planar->isChecked())
     {
-        connect(thread, SIGNAL(started()), ACQ, SLOT(getPlanarData()));
-        QApplication::processEvents();
+        //QThread* planarThread = new QThread;
+        //acquisition* ACQp = new acquisition();
+
+        ACQp->moveToThread(planarThread);
+        connect(ACQp, SIGNAL(workRequested()), planarThread, SLOT(start()));
+        connect(ACQp, SIGNAL(finished()), planarThread, SLOT(quit()), Qt::DirectConnection);
+        connect(ACQp, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
+        connect(ACQp, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+        connect(ACQp,
+            SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
+            this,
+            SLOT(displayWaveform(QVector<double>, QVector<double>)));
+        connect(planarThread, SIGNAL(started()), ACQp, SLOT(getPlanarData()));
+       // connect(ui->quitProg, SIGNAL(clicked()), ACQp, SLOT(stopAcquisition()));
+        //connect(ACQp, SIGNAL(finished()), ACQp, SLOT (deleteLater()));
+        //connect(planarThread, SIGNAL (finished()), planarThread, SLOT (deleteLater()));
+
         ui->statusMsg->setText("Acquiring Planar data...");
-        ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
-        return;
+        QCoreApplication::processEvents();
+        ACQp->requestWork(saveDir(), scopeSettings, motorSettings);
     }
-    if (ui->sample->isChecked())
+    else if (ui->sample->isChecked())
     {
-        connect(thread, SIGNAL(started()), ACQ, SLOT(getSampleData()));
-        QApplication::processEvents();
+      //  QThread* sampleThread = new QThread;
+       // acquisition* ACQs = new acquisition();
+
+        ACQs->moveToThread(sampleThread);
+        connect(ACQs, SIGNAL(workRequested()), sampleThread, SLOT(start()));
+        connect(ACQs, SIGNAL(finished()), sampleThread, SLOT(quit()), Qt::DirectConnection);
+        connect(ACQs, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
+        connect(ACQs, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+        connect(ACQs,
+            SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
+            this,
+            SLOT(displayWaveform(QVector<double>, QVector<double>)));
+
+        connect(sampleThread, SIGNAL(started()), ACQs, SLOT(getSampleData()));
+       // connect(ui->quitProg, SIGNAL(clicked()), ACQs, SLOT(stopAcquisition()));
+        //connect(ACQs, SIGNAL(finished()), ACQs, SLOT (deleteLater()));
+        //connect(sampleThread, SIGNAL (finished()), sampleThread, SLOT (deleteLater()));
+
         ui->statusMsg->setText("Acquiring Sample data...");
-        ACQ->requestWork(saveDir(), scopeSettings, motorSettings);
-        return;
+        QCoreApplication::processEvents();
+        ACQs->requestWork(saveDir(), scopeSettings, motorSettings);
     }
 }
 
 void bsc::getCurrentRun()
 {
-    ui->statusMsg->setText("Saved to:" + ACQ->getSaveDir() + QString("//%1.dat").arg(ACQ->runIndex()));
+    if (ui-> planar->isChecked())
+        ui->statusMsg->setText("Saved to:" + ACQp->getSaveDir() + QString("//%1.dat").arg(ACQp->runIndex()));
+    else
+        ui->statusMsg->setText("Saved to:" + ACQs->getSaveDir() + QString("//%1.dat").arg(ACQs->runIndex()));
 }
 
 void bsc::stopAcquisition(void)
 {
     abort = true;
-    thread->quit();
-    ACQ->stopAcquisition();
-    thread->wait();
-    ui->statusMsg->setText("Ready!");
+    if(ui->planar->isChecked())
+    {
+        planarThread->quit();
+        ACQp->stopAcquisition();
+        planarThread->wait();
+        ui->statusMsg->setText("Ready!");
+        return;
+    }
+    else if (ui->sample->isChecked())
+    {
+        sampleThread->quit();
+        ACQs->stopAcquisition();
+        sampleThread->wait();
+        ui->statusMsg->setText("Ready!");
+        return;
+    }
 }
 
 // Moving motor for aligning things
@@ -188,29 +241,33 @@ void bsc::movMotor(void)
     tmp = ui->displacement->text();
     double dist = tmp.toDouble();
 
-    getParameters();
+    QThread* motorCtrlThread = new QThread;
+    acquisition* ACQ2 = new acquisition();
 
-    ACQ->moveToThread(thread);
-    connect(ACQ, SIGNAL(motorMovementRequested()), thread, SLOT(start()));
-    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
-    connect(thread, SIGNAL(started()), ACQ, SLOT(moveMotor()));
-    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+    getParameters();
+    ACQ2->moveToThread(motorCtrlThread);
+    connect(ACQ2, SIGNAL(motorMovementRequested()), motorCtrlThread, SLOT(start()));
+    connect(ACQ2, SIGNAL(finished()), motorCtrlThread, SLOT(quit()), Qt::DirectConnection);
+    connect(motorCtrlThread, SIGNAL(started()), ACQ2, SLOT(moveMotor()));
+    connect(ACQ2, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+    connect(ACQ2, SIGNAL (finished()), ACQ2, SLOT (deleteLater()));
+    connect(motorCtrlThread, SIGNAL (finished()), motorCtrlThread, SLOT (deleteLater()));
 
     if (ui->XDir->isChecked())
     {
-        ACQ->requestMotorMovement("X", dist, motorSettings);
+        ACQ2->requestMotorMovement("X", dist, motorSettings);
         ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
         return;
     }
     if (ui->YDir->isChecked())
     {
-        ACQ->requestMotorMovement("Y", dist, motorSettings);
+        ACQ2->requestMotorMovement("Y", dist, motorSettings);
         ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
         return;
     }
     if (ui->ZDir->isChecked())
     {
-        ACQ->requestMotorMovement("Z", dist, motorSettings);
+        ACQ2->requestMotorMovement("Z", dist, motorSettings);
         ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         return;
     }
@@ -219,16 +276,17 @@ void bsc::movMotor(void)
 // To kill motor movement
 void bsc::killMotor(void)
 {
-    abort = true;
-    thread->quit();
-    ACQ->stopAcquisition();
-    thread->wait();
-    ui->statusMsg->setText("Ready!");
+   // abort = true;
+   // thread->quit();
+    //ACQ->stopAcquisition();
+    //thread->wait();
+    //ui->statusMsg->setText("Ready!");
 }
 
 // Set up motor and scope settings
 void bsc::getParameters(void)
 {
+    setMode();
     QString tmp;
     double motorVel;
     tmp = ui->stepSizeX->text();
@@ -285,27 +343,33 @@ void bsc::updateWaveform()
 
     qRegisterMetaType<QVector<double> >("QVector<double>"); // for signals and slots to work with QVector
 
-    ACQ->moveToThread(thread);
-    connect(ACQ, SIGNAL(waveformUpdateRequested()), thread, SLOT(start()));
-    connect(ACQ, SIGNAL(finished()), thread, SLOT(quit()), Qt::DirectConnection);
-    connect(thread, SIGNAL(started()), ACQ, SLOT(acquire()));
-    connect(ACQ, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
-    connect(ACQ,
+    QThread* waveformUpdateThread = new QThread;
+    acquisition* ACQ1 = new acquisition();
+
+    ACQ1->moveToThread(waveformUpdateThread);
+    connect(ACQ1, SIGNAL(waveformUpdateRequested()), waveformUpdateThread, SLOT(start()));
+    connect(ACQ1, SIGNAL(finished()), waveformUpdateThread, SLOT(quit()), Qt::DirectConnection);
+    connect(waveformUpdateThread, SIGNAL(started()), ACQ1, SLOT(acquire()));
+    connect(ACQ1, SIGNAL (finished()), ACQ1, SLOT (deleteLater()));
+    connect(waveformUpdateThread, SIGNAL (finished()), waveformUpdateThread, SLOT (deleteLater()));
+    connect(ACQ1, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+    connect(ACQ1,
             SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
             this,
             SLOT(displayWaveform(QVector<double>, QVector<double>)));
 
     getParameters();
-    ACQ->requestWaveformUpdate(scopeSettings);
+    ACQ1->requestWaveformUpdate(scopeSettings);
     //addRandomGraph();
-
 }
 
 bsc::~bsc()
 {
-    ACQ->stopAcquisition();
-    thread->wait();
-    delete thread;
-    delete ACQ;
+    ACQp->stopAcquisition();
+    planarThread->wait();
+    ACQs->stopAcquisition();
+    sampleThread->wait();
+    delete planarThread, sampleThread;
+    delete ACQp, ACQs;
     delete ui;
 }
