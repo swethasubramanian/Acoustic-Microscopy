@@ -297,12 +297,6 @@ void bsc::getParameters(void)
     motorSettings.windowSizeX = tmp.toDouble();
     tmp = ui->windowSizeY->text();
     motorSettings.windowSizeY = tmp.toDouble();
-    tmp = ui->motorSpeed->text();
-    motorVel = tmp.toDouble(); // mm/s
-    // convert mm/s to steps/2sec
-    motorSettings.velX = (int) motorSettings.pitch*motorVel*2;
-    motorSettings.velY = (int) motorSettings.pitch*motorVel*2;
-    motorSettings.velZ = (int) motorSettings.pitch*motorVel*2;
 
     // Oscilloscope Settings
     tmp = ui->numOfAverages->text();

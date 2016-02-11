@@ -30,8 +30,8 @@ public:
 
 private:
     Ui::bsc *ui;
-    MOTORSETTINGS motorSettings;
     SCOPESETTINGS scopeSettings;
+    MOTORSETTINGS motorSettings;
     bool abort;
     QThread *planarThread, *sampleThread;
     acquisition *ACQp, *ACQs;

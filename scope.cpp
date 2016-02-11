@@ -2,11 +2,11 @@
 #include <string.h> // to make directories etc
 #include "scope.h" // includes a header file
 #include "settingsMotorScope.h"
-#include <visa.h> # Agilent stuff
+#include <visa.h> # Using Le Croy's shit NI_VISA VICP thing
 #include <windows.h>
 
-#define RESOURCE "GPIB0::7::INSTR"
-#define WAVE_DATA_SIZE 16000
+#define RESOURCE "VICP::172.25.1.2::INSTR"
+#define WAVE_DATA_SIZE 1600000
 #define TIMEOUT 5000
 #define SETUP_STR_SIZE 3000
 #define IMG_SIZE 30000
@@ -56,7 +56,6 @@ void scope::initializeScope(void)
 // Get data from the oscilloscope
 void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSettings)
 {
-
     // printf("something:%s", scopeSettings.probeAttn);
     float voltage[WAVE_DATA_SIZE], t[WAVE_DATA_SIZE];
     int waveform_size = WAVE_DATA_SIZE;
@@ -173,6 +172,7 @@ double scope::getVpp(void)
  //   double points;
   //  viQuery(vi, "")
 //}
+
 
 
 

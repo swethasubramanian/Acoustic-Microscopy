@@ -43,15 +43,17 @@
 			<Add directory="C:/Qt/5.5/mingw492_32/include/QtPrintSupport" />
 			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc" />
 			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include" />
+			<Add directory="C:/Qt/5.5/mingw492_32/include/QtNetwork" />
 		</Compiler>
 		<Linker>
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Gui.a" />
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Core.a" />
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5OpenGL.a" />
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5Widgets.a" />
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5PrintSupport.a" />
-			<Add library="C:\Qt\5.5\mingw492_32\lib\libQt5PrintSupportd.a" />
-			<Add library="C:\Program Files (x86)\IVI Foundation\VISA\WinNT\lib\msc\visa32.lib" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5Gui.a" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5Core.a" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5OpenGL.a" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5Widgets.a" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5PrintSupport.a" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5PrintSupportd.a" />
+			<Add library="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc/visa32.lib" />
+			<Add library="C:/Qt/5.5/mingw492_32/lib/libQt5Network.a" />
 			<Add directory="C:/Qt/5.5/mingw492_32/lib" />
 			<Add directory="C:/Qt/5.5/mingw492_32/lib/cmake" />
 			<Add directory="C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include" />

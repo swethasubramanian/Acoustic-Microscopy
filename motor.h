@@ -1,28 +1,21 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#include <windows.h>
-#include <QtGui>
-
-class motor
+#include <QObject>
+#include <QTcpSocket>
+#include <qDebug>
+class motor : public QObject
 {
+    Q_OBJECT;
     public:
-        motor();
-        void openMotor(const struct MOTORSETTINGS&);
-        int mov(const struct MOTORSETTINGS&, const char* motID, double dist);
+        explicit motor(QObject *parent = 0);
+        void openMotor();
+        void setup();
+        int mov(const char* motID, double dist);
         void closeMotor(void);
-        void killMotor(void);
-        QString getX(void);
-        void setZero(void);
-       // initializeMotor(const struct &MOTORSETTINGS);
-       // mov(const struct &MOTORSETTINGS);
+
     private:
-        DCB dcb;
-        HANDLE hCom;
-        BOOL fSuccess;
-        char *pcCommPort = "COM1";
-        DWORD buffer_size_w, buffer_size_r;
-        char foo[100];
+        QTcpSocket *motorSocket;
 };
 
 #endif // MOTOR_H

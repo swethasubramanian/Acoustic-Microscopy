@@ -1,12 +1,12 @@
 #ifndef ACQUISITION_H
 #define ACQUISITION_H
 #include <QObject>
+#include <QMutex>
 
 #include "motor.h"
 #include "scope.h"
 //#include "bsc.h"
 #include "settingsMotorScope.h"
-class bsc; // forward declaration
 class acquisition : public QObject
 {
     Q_OBJECT

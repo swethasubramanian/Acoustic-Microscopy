@@ -32,13 +32,13 @@ void acquisition::moveMotor()
 
     if (!_abort)
     {
-        MOTOR.openMotor(motorSettings);
+        MOTOR.openMotor();
         if (motorID == "X")
-            MOTOR.mov(motorSettings, "X", dist);
+            MOTOR.mov("X", dist);
         if (motorID == "Y")
-            MOTOR.mov(motorSettings, "Y", dist);
+            MOTOR.mov("Y", dist);
         if (motorID == "Z")
-            MOTOR.mov(motorSettings, "Z", dist);
+            MOTOR.mov("Z", dist);
         MOTOR.closeMotor();
    // emit statusChanged("Movement completed!");
         mutex.lock();
@@ -148,7 +148,7 @@ void acquisition::getSampleData()
     double stepXmm = motorSettings.stepSizeX;
     double stepYmm = motorSettings.stepSizeY;
 
-    MOTOR.openMotor(motorSettings);
+    MOTOR.openMotor();
 
     // This will stupidly wait 1 sec doing nothing...
     QEventLoop loop;
@@ -157,8 +157,8 @@ void acquisition::getSampleData()
 
     // move motor to bottom left of the ROI (from computer perspective) and get scope data
     emit statusChanged("Preparing for take off ...");
-    MOTOR.mov(motorSettings, "X", -windowX/2); //(minus is left)
-    MOTOR.mov(motorSettings, "Y", windowY/2); //(minus is up)
+    MOTOR.mov("X", -windowX/2); //(minus is left)
+    MOTOR.mov("Y", windowY/2); //(minus is up)
     int k=1;
     int i,j;
     index = k;
@@ -181,7 +181,7 @@ void acquisition::getSampleData()
 
         if (i>0)
         {
-            MOTOR.mov(motorSettings, "X", stepXmm);
+            MOTOR.mov("X", stepXmm);
             k++;
             index = k;
             emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
@@ -205,7 +205,7 @@ void acquisition::getSampleData()
 
                 if (j>0)
                 {
-                    MOTOR.mov(motorSettings, "Y", -stepYmm);
+                    MOTOR.mov("Y", -stepYmm);
                     k++;
                     index = k;
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
@@ -232,7 +232,7 @@ void acquisition::getSampleData()
 
                 if (j>0)
                 {
-                    MOTOR.mov(motorSettings, "Y", stepYmm);
+                    MOTOR.mov("Y", stepYmm);
                     k++;
                     index = k;
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
@@ -253,16 +253,16 @@ void acquisition::getSampleData()
         Sleep(1000);
         emit statusChanged("Data acquisition complete. Moving back to center of ROI ...");
         // Move motor back to center of the ROI
-        MOTOR.mov(motorSettings, "X", -windowX/2);
+        MOTOR.mov("X", -windowX/2);
         // This will stupidly wait 1 sec doing nothing...
         Sleep(1000);
         if ((Ny+1)%2==0)
         {
-            MOTOR.mov(motorSettings, "Y", -windowY/2);
+            MOTOR.mov("Y", -windowY/2);
         }
         else
         {
-            MOTOR.mov(motorSettings, "Y", windowY/2);
+            MOTOR.mov("Y", windowY/2);
         }
         MOTOR.closeMotor();
         SCOPE.closeScope();

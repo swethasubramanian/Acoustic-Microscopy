@@ -8,10 +8,6 @@
         double stepSizeY;
         double windowSizeX;
         double windowSizeY;
-        int pitch = 400;
-        int velX;
-        int velY;
-        int velZ;
     };
 
     struct SCOPESETTINGS

@@ -1,148 +1,158 @@
 #include "motor.h"
-//#include <boost/asio/serial_port.hpp>
-#include <windows.h>
 #include <stdio.h>
-#include <unistd.h>
 #include "settingsMotorScope.h"
 #include <QtGui>
-#include <iostream>
+#include <QTcpSocket>
 
 
-motor::motor()
+motor::motor(QObject *parent) : QObject(parent)
 {
-    DCB dcb;
-    HANDLE hCom;
-    BOOL fSuccess;
-    char *pcCommPort = "COM1";
-    DWORD buffer_size_w, buffer_size_r;
-    char foo[100];
+    motorSocket = new QTcpSocket(this);
 }
 
 
-void motor::openMotor(const MOTORSETTINGS& motorSettings)
+void motor::openMotor()
 {
-
-    hCom = CreateFile(pcCommPort,
-                      GENERIC_READ | GENERIC_WRITE,
-                      0,
-                      NULL,
-                      OPEN_EXISTING,
-                      0,
-                      NULL);
-    // Get communication state
-    fSuccess = GetCommState(hCom, &dcb);
-    if (!fSuccess)
+    motorSocket->connectToHost("172.25.1.3", 5002);
+    if (motorSocket->waitForConnected(3000))
     {
-      // Handle the error.
-      printf ("GetCommState failed with error %d.\n", GetLastError());
+        qDebug() << "Connected" ;
+        motorSocket->write("SETUP\r\n\r\n"); // Sets up pitch, velocities and pitch etc
     }
-
-    // Initialize DCB structure
-    dcb.BaudRate = CBR_9600;
-    dcb.Parity = EVENPARITY;
-    dcb.StopBits = 2;
-    dcb.ByteSize = 7;
-
-    // setup communication settings
-    fSuccess = SetCommState(hCom, &dcb);
-
-
-    COMMTIMEOUTS timeouts;
-    timeouts.ReadIntervalTimeout = 50;
-    timeouts.ReadTotalTimeoutMultiplier = 50;
-    timeouts.ReadTotalTimeoutConstant = 10;
-    timeouts.WriteTotalTimeoutMultiplier = 50;
-    timeouts.WriteTotalTimeoutConstant = 10;
-    fSuccess = SetCommTimeouts(hCom, &timeouts);
-
-    if (!fSuccess)
+    else
     {
-      // Handle the error.
-      printf ("SetCommState failed with error %d.\n", GetLastError());
-    }
-    printf ("Serial port %s successfully reconfigured.\n", pcCommPort);
-
-
-    // Enables On-line mode with Echo off and sets position to 0
-    sprintf(foo, "FN");
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    // Clears off previous commands, otherwise new command will just append to previous command
-    sprintf(foo, "C");
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    //Setup velocity in X, Y and Z directions
-    sprintf(foo, "C S1M%d,R", motorSettings.velY); // Y dir
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    sprintf(foo, "C S2M%d,R", motorSettings.velX); // X dir
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    sprintf(foo, "C S3M%d,R", motorSettings.velZ); // Z dir
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    if (!fSuccess)
-    {
-        printf ("fail WriteFile: %d\n", GetLastError ());
+        qDebug() << "Not Connected";
     }
 }
 
-
-int motor::mov(const MOTORSETTINGS& motorSettings, const char* motID, double dist)
+void motor::setup()
 {
-    // convert dist to mm
-    char idx[2];
-    double vel;
-    if (!strcmp(motID,"X"))
+     //copied from Janelle's code
+    if (motorSocket->waitForConnected(3000))
     {
-        sprintf(idx, "2");
-        vel = motorSettings.velX;
-    }
-    else if (!strcmp(motID, "Y"))
-    {
-        sprintf(idx, "1");
-        vel = motorSettings.velY;
-    }
-    else if (!strcmp(motID, "Z"))
-    {
-        sprintf(idx, "3");
-        vel = motorSettings.velZ;
-    }
-    int distInSteps = (int) (motorSettings.pitch*dist);
+        // Setup X Scans
+        motorSocket->write("DEL XSCAN\r\n\r\n");
+        motorSocket->write("DEF XSCAN\r\n\r\n");
+        motorSocket->write("DRIVE01000\r\n\r\n");
+        motorSocket->write("D0,(VAR4),0,0,0\r\n\r\n");
+        motorSocket->write("GO01000\r\n\r\n");
+        motorSocket->write("T2\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
 
-    // calculate pausetime
-    int pausetime = (int) abs(2000*(distInSteps/vel)) + 3000;
+        // Y axis
+        motorSocket->write("DEL YSCAN\r\n\r\n");
+        motorSocket->write("DEF YSCAN\r\n\r\n");
+        motorSocket->write("DRIVE10000\r\n\r\n");
+        motorSocket->write("D(VAR5),0,0,0,0\r\n\r\n");
+        motorSocket->write("GO10000\r\n\r\n");
+        motorSocket->write("T2\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
 
-    // Move the infernal motor
-    sprintf(foo, "C I%sM%d,R", idx, distInSteps);
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    Sleep(pausetime);
-    return 0;
+        // Z axis
+        motorSocket->write("DEL ZSCAN\r\n\r\n");
+        motorSocket->write("DEF ZSCAN\r\n\r\n");
+        motorSocket->write("DRIVE00100\r\n\r\n");
+        motorSocket->write("D0,0,(VAR3),0,0\r\n\r\n");
+        motorSocket->write("GO00100\r\n\r\n");
+        motorSocket->write("T2\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
+
+        // phi axis control
+        motorSocket->write("DEL PHISCAN\r\n\r\n");
+        motorSocket->write("DEF PHISCAN\r\n\r\n");
+        motorSocket->write("DRIVE00010\r\n\r\n");
+        motorSocket->write("D0,0,0,(VAR1),0\r\n\r\n");
+        motorSocket->write("GO00010\r\n\r\n");
+        motorSocket->write("T10\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
+
+        // theta axis
+        motorSocket->write("DEL THETASCAN\r\n\r\n");
+        motorSocket->write("DEF THETASCAN\r\n\r\n");
+        motorSocket->write("DRIVE00001\r\n\r\n");
+        motorSocket->write("D0,0,0,0,(VAR2)\r\n\r\n");
+        motorSocket->write("GO00001\r\n\r\n");
+        motorSocket->write("T10\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
+    }
+    else
+    {
+     qDebug() << "Not Connected";
+    }
+}
+
+int motor::mov(const char* motID, double dist)
+{
+    // convert dist
+    if (motID == "X")
+    {
+        if (motorSocket->waitForConnected(3000))
+        {
+            motorSocket->write("VAR4=-10\r\n\r\n");
+            motorSocket->write("XSCAN\r\n\r\n");
+        }
+        else qDebug() << "Not Connected";
+    }
+
+    else if (motID == "Y")
+    {
+        if (motorSocket->waitForConnected(3000))
+        {
+            motorSocket->write("VAR5=-10\r\n\r\n");
+            motorSocket->write("YSCAN\r\n\r\n");
+        }
+        else qDebug() << "Not Connected";
+    }
+
+    else if (motID == "Z")
+    {
+        if (motorSocket->waitForConnected(3000))
+        {
+            motorSocket->write("VAR3=-10\r\n\r\n");
+            motorSocket->write("ZSCAN\r\n\r\n");
+        }
+        else
+            qDebug() << "Not Connected";
+    }
+
+    else if (motID == "PHI")
+    {
+        if (motorSocket->waitForConnected(3000))
+        {
+            motorSocket->write("VAR1=-10\r\n\r\n");
+            motorSocket->write("PHISCAN\r\n\r\n");
+        }
+        else
+            qDebug() << "Not Connected";
+    }
+
+    else if (motID == "THETA")
+    {
+        if (motorSocket->waitForConnected(3000))
+        {
+            motorSocket->write("VAR2=-10\r\n\r\n");
+            motorSocket->write("THETASCAN\r\n\r\n");
+        }
+        else
+            qDebug() << "Not Connected";
+    }
 }
 
 void motor::closeMotor(void)
 {
-    sprintf(foo, "C"); // Close the offline mode so you can operate the dongle
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    sprintf(foo, "Q"); // Close the offline mode so you can operate the dongle
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    CloseHandle(hCom);
+    if (motorSocket->waitForConnected(3000))
+    {
+        motorSocket->close();
+        qDebug() << "disconnected";
+    }
+    else
+        qDebug() << "Not Connected";
 }
 
-void motor::killMotor(void)
-{
-    sprintf(foo, "K"); // sends kill command to motor
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    closeMotor();
-}
 
-void motor::setZero(void)
-{
-    sprintf(foo, "N");
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-}
 
-QString motor::getX(void)
-{
-    sprintf(foo, "X");
-    fSuccess = WriteFile(hCom, foo, strlen(foo), &buffer_size_w, 0);
-    char foobar[10];
-    fSuccess = ReadFile(hCom, &foobar, strlen(foobar), &buffer_size_r, 0);
-    std::string str(foobar);
-    return QString::fromStdString(str);
-}
