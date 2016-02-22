@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_bsc_t {
-    QByteArrayData data[15];
-    char stringdata0[203];
+    QByteArrayData data[13];
+    char stringdata0[171];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,17 +42,14 @@ QT_MOC_LITERAL(8, 94, 15), // "stopAcquisition"
 QT_MOC_LITERAL(9, 110, 13), // "getCurrentRun"
 QT_MOC_LITERAL(10, 124, 14), // "updateWaveform"
 QT_MOC_LITERAL(11, 139, 15), // "displayWaveform"
-QT_MOC_LITERAL(12, 155, 15), // "QVector<double>"
-QT_MOC_LITERAL(13, 171, 18), // "calculateTimeDelay"
-QT_MOC_LITERAL(14, 190, 12) // "setTimeDelay"
+QT_MOC_LITERAL(12, 155, 15) // "QVector<double>"
 
     },
     "bsc\0planarDataRequested\0\0sampleDataRequested\0"
     "startAcquisition\0getParentDir\0movMotor\0"
     "killMotor\0stopAcquisition\0getCurrentRun\0"
     "updateWaveform\0displayWaveform\0"
-    "QVector<double>\0calculateTimeDelay\0"
-    "setTimeDelay"
+    "QVector<double>"
 };
 #undef QT_MOC_LITERAL
 
@@ -62,7 +59,7 @@ static const uint qt_meta_data_bsc[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -70,20 +67,18 @@ static const uint qt_meta_data_bsc[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   74,    2, 0x06 /* Public */,
-       3,    0,   75,    2, 0x06 /* Public */,
+       1,    0,   64,    2, 0x06 /* Public */,
+       3,    0,   65,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   76,    2, 0x0a /* Public */,
-       5,    0,   77,    2, 0x0a /* Public */,
-       6,    0,   78,    2, 0x0a /* Public */,
-       7,    0,   79,    2, 0x0a /* Public */,
-       8,    0,   80,    2, 0x0a /* Public */,
-       9,    0,   81,    2, 0x0a /* Public */,
-      10,    0,   82,    2, 0x0a /* Public */,
-      11,    2,   83,    2, 0x0a /* Public */,
-      13,    0,   88,    2, 0x0a /* Public */,
-      14,    0,   89,    2, 0x0a /* Public */,
+       4,    0,   66,    2, 0x0a /* Public */,
+       5,    0,   67,    2, 0x0a /* Public */,
+       6,    0,   68,    2, 0x0a /* Public */,
+       7,    0,   69,    2, 0x0a /* Public */,
+       8,    0,   70,    2, 0x0a /* Public */,
+       9,    0,   71,    2, 0x0a /* Public */,
+      10,    0,   72,    2, 0x0a /* Public */,
+      11,    2,   73,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -98,8 +93,6 @@ static const uint qt_meta_data_bsc[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, 0x80000000 | 12, 0x80000000 | 12,    2,    2,
-    QMetaType::Void,
-    QMetaType::Void,
 
        0        // eod
 };
@@ -120,8 +113,6 @@ void bsc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **
         case 7: _t->getCurrentRun(); break;
         case 8: _t->updateWaveform(); break;
         case 9: _t->displayWaveform((*reinterpret_cast< const QVector<double>(*)>(_a[1])),(*reinterpret_cast< const QVector<double>(*)>(_a[2]))); break;
-        case 10: _t->calculateTimeDelay(); break;
-        case 11: _t->setTimeDelay(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -179,13 +170,13 @@ int bsc::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 10;
     }
     return _id;
 }

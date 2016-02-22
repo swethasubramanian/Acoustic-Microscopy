@@ -26,7 +26,6 @@ public:
     scope SCOPE;
     motor MOTOR;
     ~bsc();
-    void getSOSWater();
 
 private:
     Ui::bsc *ui;
@@ -49,8 +48,7 @@ public slots:
     void getCurrentRun();
     void updateWaveform();
     void displayWaveform(const QVector<double> &, const QVector<double> &);
-    void calculateTimeDelay();
-    void setTimeDelay();
+
 
 signals:
     void planarDataRequested();//, const struct SCOPESETTINGS&);

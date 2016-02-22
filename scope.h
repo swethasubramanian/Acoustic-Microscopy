@@ -13,8 +13,6 @@ class scope
        // int getNumOfPoints(const struct SCOPESETTINGS&){return &SCOPESETTINGS.numOfPoints;}
         QVector<double> getVoltageData(){return volts;}
         QVector<double> getTimeData(){return time;}
-        void setTimeDelay(double value);
-        double getVpp();
 
     private:
         QVector<double> volts;

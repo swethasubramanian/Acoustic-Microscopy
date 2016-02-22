@@ -63,6 +63,7 @@
 			<Add before="moc bsc.h -o moc_bsc.cpp" />
 			<Add before="moc acquisition.h -o moc_acquisition.cpp" />
 			<Add before="moc qcustomplot.h -o moc_qcustomplot.cpp" />
+			<Add before="moc motor.h -o moc_motor.cpp" />
 		</ExtraCommands>
 		<Unit filename="acquisition.cpp" />
 		<Unit filename="acquisition.h" />
@@ -73,6 +74,7 @@
 		</Unit>
 		<Unit filename="moc_acquisition.cpp" />
 		<Unit filename="moc_bsc.cpp" />
+		<Unit filename="moc_motor.cpp" />
 		<Unit filename="moc_qcustomplot.cpp" />
 		<Unit filename="motor.cpp" />
 		<Unit filename="motor.h" />

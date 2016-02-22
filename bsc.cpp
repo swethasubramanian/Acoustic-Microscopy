@@ -52,10 +52,6 @@ bsc::bsc(QWidget *parent) :
     connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->acquireWaveform, SIGNAL(clicked()), this, SLOT(updateWaveform()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
-    connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
-    connect(ui->setTimeDelay, SIGNAL(clicked()), this, SLOT(setTimeDelay()));
-    //connect(ui->normOrAvg, SIGNAL(activated()), this, SLOT(setMode()));
-    getSOSWater();
 }
 
 void bsc::setMode(void)
@@ -89,50 +85,6 @@ double bsc::minVal(const QVector<double> &vect)
     }
     return tmp;
 }
-
-void bsc::calculateTimeDelay(void)
-{
-    getSOSWater();
-    QString tmp;
-
-    tmp = ui->cSample->text();
-    double csample = tmp.toDouble();
-
-    tmp = ui->cWater->text();
-    double cwater = tmp.toDouble();
-
-    tmp = ui->t_focus->text();
-    double tdFocus = tmp.toDouble();
-
-    tmp = ui->t_frontEdge->text();
-    double tdSampleFrontEdge = tmp.toDouble();
-
-    double td_window = tdSampleFrontEdge + (tdFocus - tdSampleFrontEdge)*cwater/csample;
-    ui->timeDelay->setText(QString::number(td_window));
-}
-
-void bsc::setTimeDelay(void)
-{
-    QString tmp;
-    tmp = ui->timeDelay->text();
-    double timeDelay = tmp.toDouble();
-
-    SCOPE.initializeScope();
-    SCOPE.setTimeDelay(-timeDelay);
-    SCOPE.closeScope();
-    ui->statusMsg->setText("time delay set to");
-}
-
-void bsc::getSOSWater(void)
-{
-    QString tmp = ui->waterTemperature->text();
-    double temperature = tmp.toDouble();
-    double cwater = 1.402385*pow(10,3) + 5.038813*temperature -
-    5.799136*pow(10,-2)*pow(temperature,2) + 3.287156*pow(10,-4)*pow(temperature,3) -
-    1.398845*pow(10,-6)*pow(temperature,4) + 2.787860*pow(10,-9)*pow(temperature, 5);
-    ui->cWater->setText(QString::number(cwater));
-}
-
 
 void bsc::displayWaveform(const QVector<double> &volts, const QVector<double> &time)
 {
