@@ -19,7 +19,6 @@ public:
     explicit bsc(QWidget *parent = 0);
     void acquire();
     void getParameters();
-    void setMode();
     QString saveDir();
     QString savePath;
     QString qFilename;

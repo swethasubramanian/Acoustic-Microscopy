@@ -13,7 +13,6 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
@@ -65,11 +64,9 @@ public:
     QWidget *layoutWidget4;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
-    QLabel *label_8;
     QLabel *label_13;
     QWidget *layoutWidget5;
     QHBoxLayout *horizontalLayout_7;
-    QPushButton *killMotor;
     QPushButton *quitProg;
     QPushButton *acquireData;
     QWidget *layoutWidget6;
@@ -87,46 +84,7 @@ public:
     QRadioButton *ZDir;
     QPushButton *moveMotor;
     QCustomPlot *WaveformPlot;
-    QLabel *label_23;
     QPushButton *acquireWaveform;
-    QLabel *label_15;
-    QWidget *layoutWidget7;
-    QHBoxLayout *horizontalLayout_16;
-    QPushButton *calTimeDelay;
-    QPushButton *setTimeDelay;
-    QLabel *timeDuration;
-    QWidget *layoutWidget8;
-    QVBoxLayout *verticalLayout;
-    QHBoxLayout *horizontalLayout_14;
-    QLabel *label_17;
-    QLabel *label_19;
-    QLineEdit *waterTemperature;
-    QHBoxLayout *horizontalLayout_17;
-    QLabel *label_20;
-    QLineEdit *t_focus;
-    QHBoxLayout *horizontalLayout_18;
-    QVBoxLayout *verticalLayout_4;
-    QLabel *label_24;
-    QLabel *label_25;
-    QLineEdit *t_frontEdge;
-    QHBoxLayout *horizontalLayout_12;
-    QLabel *label_21;
-    QLineEdit *cWater;
-    QHBoxLayout *horizontalLayout_13;
-    QLabel *label_22;
-    QLineEdit *cSample;
-    QHBoxLayout *horizontalLayout_15;
-    QLabel *label_18;
-    QLineEdit *timeDelay;
-    QComboBox *normOrAvg;
-    QWidget *widget;
-    QHBoxLayout *horizontalLayout_10;
-    QLabel *label_6;
-    QLineEdit *numOfAverages;
-    QWidget *widget1;
-    QHBoxLayout *horizontalLayout_11;
-    QLabel *label_7;
-    QLineEdit *numOfPoints;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -137,7 +95,7 @@ public:
     {
         if (bsc->objectName().isEmpty())
             bsc->setObjectName(QStringLiteral("bsc"));
-        bsc->resize(775, 834);
+        bsc->resize(692, 834);
         centralWidget = new QWidget(bsc);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         label_9 = new QLabel(centralWidget);
@@ -192,7 +150,7 @@ public:
 
         layoutWidget2 = new QWidget(centralWidget);
         layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(20, 560, 172, 19));
+        layoutWidget2->setGeometry(QRect(20, 560, 174, 19));
         horizontalLayout_3 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -214,7 +172,7 @@ public:
 
         layoutWidget3 = new QWidget(centralWidget);
         layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
-        layoutWidget3->setGeometry(QRect(10, 100, 181, 71));
+        layoutWidget3->setGeometry(QRect(90, 100, 181, 71));
         gridLayout = new QGridLayout(layoutWidget3);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -262,7 +220,7 @@ public:
 
         layoutWidget4 = new QWidget(centralWidget);
         layoutWidget4->setObjectName(QStringLiteral("layoutWidget4"));
-        layoutWidget4->setGeometry(QRect(50, 70, 701, 16));
+        layoutWidget4->setGeometry(QRect(140, 60, 411, 21));
         horizontalLayout_5 = new QHBoxLayout(layoutWidget4);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
@@ -273,11 +231,6 @@ public:
 
         horizontalLayout_5->addWidget(label_5);
 
-        label_8 = new QLabel(layoutWidget4);
-        label_8->setObjectName(QStringLiteral("label_8"));
-
-        horizontalLayout_5->addWidget(label_8);
-
         label_13 = new QLabel(layoutWidget4);
         label_13->setObjectName(QStringLiteral("label_13"));
 
@@ -285,17 +238,12 @@ public:
 
         layoutWidget5 = new QWidget(centralWidget);
         layoutWidget5->setObjectName(QStringLiteral("layoutWidget5"));
-        layoutWidget5->setGeometry(QRect(490, 710, 239, 25));
+        layoutWidget5->setGeometry(QRect(420, 710, 239, 25));
         horizontalLayout_7 = new QHBoxLayout(layoutWidget5);
         horizontalLayout_7->setSpacing(6);
         horizontalLayout_7->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_7->setObjectName(QStringLiteral("horizontalLayout_7"));
         horizontalLayout_7->setContentsMargins(0, 0, 0, 0);
-        killMotor = new QPushButton(layoutWidget5);
-        killMotor->setObjectName(QStringLiteral("killMotor"));
-
-        horizontalLayout_7->addWidget(killMotor);
-
         quitProg = new QPushButton(layoutWidget5);
         quitProg->setObjectName(QStringLiteral("quitProg"));
 
@@ -308,7 +256,7 @@ public:
 
         layoutWidget6 = new QWidget(centralWidget);
         layoutWidget6->setObjectName(QStringLiteral("layoutWidget6"));
-        layoutWidget6->setGeometry(QRect(560, 100, 201, 83));
+        layoutWidget6->setGeometry(QRect(380, 100, 201, 83));
         verticalLayout_2 = new QVBoxLayout(layoutWidget6);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -385,196 +333,10 @@ public:
 
         WaveformPlot = new QCustomPlot(centralWidget);
         WaveformPlot->setObjectName(QStringLiteral("WaveformPlot"));
-        WaveformPlot->setGeometry(QRect(10, 200, 481, 261));
-        label_23 = new QLabel(centralWidget);
-        label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setGeometry(QRect(570, 210, 131, 16));
+        WaveformPlot->setGeometry(QRect(40, 200, 571, 271));
         acquireWaveform = new QPushButton(centralWidget);
         acquireWaveform->setObjectName(QStringLiteral("acquireWaveform"));
-        acquireWaveform->setGeometry(QRect(20, 470, 121, 23));
-        label_15 = new QLabel(centralWidget);
-        label_15->setObjectName(QStringLiteral("label_15"));
-        label_15->setGeometry(QRect(40, 180, 181, 16));
-        layoutWidget7 = new QWidget(centralWidget);
-        layoutWidget7->setObjectName(QStringLiteral("layoutWidget7"));
-        layoutWidget7->setGeometry(QRect(540, 440, 194, 25));
-        horizontalLayout_16 = new QHBoxLayout(layoutWidget7);
-        horizontalLayout_16->setSpacing(6);
-        horizontalLayout_16->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_16->setObjectName(QStringLiteral("horizontalLayout_16"));
-        horizontalLayout_16->setContentsMargins(0, 0, 0, 0);
-        calTimeDelay = new QPushButton(layoutWidget7);
-        calTimeDelay->setObjectName(QStringLiteral("calTimeDelay"));
-
-        horizontalLayout_16->addWidget(calTimeDelay);
-
-        setTimeDelay = new QPushButton(layoutWidget7);
-        setTimeDelay->setObjectName(QStringLiteral("setTimeDelay"));
-
-        horizontalLayout_16->addWidget(setTimeDelay);
-
-        timeDuration = new QLabel(centralWidget);
-        timeDuration->setObjectName(QStringLiteral("timeDuration"));
-        timeDuration->setGeometry(QRect(180, 180, 199, 13));
-        layoutWidget8 = new QWidget(centralWidget);
-        layoutWidget8->setObjectName(QStringLiteral("layoutWidget8"));
-        layoutWidget8->setGeometry(QRect(510, 240, 241, 178));
-        verticalLayout = new QVBoxLayout(layoutWidget8);
-        verticalLayout->setSpacing(6);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        horizontalLayout_14 = new QHBoxLayout();
-        horizontalLayout_14->setSpacing(6);
-        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
-        label_17 = new QLabel(layoutWidget8);
-        label_17->setObjectName(QStringLiteral("label_17"));
-
-        horizontalLayout_14->addWidget(label_17);
-
-        label_19 = new QLabel(layoutWidget8);
-        label_19->setObjectName(QStringLiteral("label_19"));
-
-        horizontalLayout_14->addWidget(label_19);
-
-        waterTemperature = new QLineEdit(layoutWidget8);
-        waterTemperature->setObjectName(QStringLiteral("waterTemperature"));
-
-        horizontalLayout_14->addWidget(waterTemperature);
-
-
-        verticalLayout->addLayout(horizontalLayout_14);
-
-        horizontalLayout_17 = new QHBoxLayout();
-        horizontalLayout_17->setSpacing(6);
-        horizontalLayout_17->setObjectName(QStringLiteral("horizontalLayout_17"));
-        label_20 = new QLabel(layoutWidget8);
-        label_20->setObjectName(QStringLiteral("label_20"));
-
-        horizontalLayout_17->addWidget(label_20);
-
-        t_focus = new QLineEdit(layoutWidget8);
-        t_focus->setObjectName(QStringLiteral("t_focus"));
-
-        horizontalLayout_17->addWidget(t_focus);
-
-
-        verticalLayout->addLayout(horizontalLayout_17);
-
-        horizontalLayout_18 = new QHBoxLayout();
-        horizontalLayout_18->setSpacing(6);
-        horizontalLayout_18->setObjectName(QStringLiteral("horizontalLayout_18"));
-        verticalLayout_4 = new QVBoxLayout();
-        verticalLayout_4->setSpacing(6);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        label_24 = new QLabel(layoutWidget8);
-        label_24->setObjectName(QStringLiteral("label_24"));
-
-        verticalLayout_4->addWidget(label_24);
-
-        label_25 = new QLabel(layoutWidget8);
-        label_25->setObjectName(QStringLiteral("label_25"));
-
-        verticalLayout_4->addWidget(label_25);
-
-
-        horizontalLayout_18->addLayout(verticalLayout_4);
-
-        t_frontEdge = new QLineEdit(layoutWidget8);
-        t_frontEdge->setObjectName(QStringLiteral("t_frontEdge"));
-
-        horizontalLayout_18->addWidget(t_frontEdge);
-
-
-        verticalLayout->addLayout(horizontalLayout_18);
-
-        horizontalLayout_12 = new QHBoxLayout();
-        horizontalLayout_12->setSpacing(6);
-        horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
-        label_21 = new QLabel(layoutWidget8);
-        label_21->setObjectName(QStringLiteral("label_21"));
-
-        horizontalLayout_12->addWidget(label_21);
-
-        cWater = new QLineEdit(layoutWidget8);
-        cWater->setObjectName(QStringLiteral("cWater"));
-
-        horizontalLayout_12->addWidget(cWater);
-
-
-        verticalLayout->addLayout(horizontalLayout_12);
-
-        horizontalLayout_13 = new QHBoxLayout();
-        horizontalLayout_13->setSpacing(6);
-        horizontalLayout_13->setObjectName(QStringLiteral("horizontalLayout_13"));
-        label_22 = new QLabel(layoutWidget8);
-        label_22->setObjectName(QStringLiteral("label_22"));
-
-        horizontalLayout_13->addWidget(label_22);
-
-        cSample = new QLineEdit(layoutWidget8);
-        cSample->setObjectName(QStringLiteral("cSample"));
-
-        horizontalLayout_13->addWidget(cSample);
-
-
-        verticalLayout->addLayout(horizontalLayout_13);
-
-        horizontalLayout_15 = new QHBoxLayout();
-        horizontalLayout_15->setSpacing(6);
-        horizontalLayout_15->setObjectName(QStringLiteral("horizontalLayout_15"));
-        label_18 = new QLabel(layoutWidget8);
-        label_18->setObjectName(QStringLiteral("label_18"));
-
-        horizontalLayout_15->addWidget(label_18);
-
-        timeDelay = new QLineEdit(layoutWidget8);
-        timeDelay->setObjectName(QStringLiteral("timeDelay"));
-
-        horizontalLayout_15->addWidget(timeDelay);
-
-
-        verticalLayout->addLayout(horizontalLayout_15);
-
-        normOrAvg = new QComboBox(centralWidget);
-        normOrAvg->setObjectName(QStringLiteral("normOrAvg"));
-        normOrAvg->setGeometry(QRect(280, 100, 101, 22));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(280, 120, 199, 32));
-        horizontalLayout_10 = new QHBoxLayout(widget);
-        horizontalLayout_10->setSpacing(6);
-        horizontalLayout_10->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
-        horizontalLayout_10->setContentsMargins(0, 0, 0, 0);
-        label_6 = new QLabel(widget);
-        label_6->setObjectName(QStringLiteral("label_6"));
-
-        horizontalLayout_10->addWidget(label_6);
-
-        numOfAverages = new QLineEdit(widget);
-        numOfAverages->setObjectName(QStringLiteral("numOfAverages"));
-
-        horizontalLayout_10->addWidget(numOfAverages);
-
-        widget1 = new QWidget(centralWidget);
-        widget1->setObjectName(QStringLiteral("widget1"));
-        widget1->setGeometry(QRect(280, 150, 199, 31));
-        horizontalLayout_11 = new QHBoxLayout(widget1);
-        horizontalLayout_11->setSpacing(6);
-        horizontalLayout_11->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
-        horizontalLayout_11->setContentsMargins(0, 0, 0, 0);
-        label_7 = new QLabel(widget1);
-        label_7->setObjectName(QStringLiteral("label_7"));
-
-        horizontalLayout_11->addWidget(label_7);
-
-        numOfPoints = new QLineEdit(widget1);
-        numOfPoints->setObjectName(QStringLiteral("numOfPoints"));
-
-        horizontalLayout_11->addWidget(numOfPoints);
-
+        acquireWaveform->setGeometry(QRect(20, 490, 121, 23));
         bsc->setCentralWidget(centralWidget);
         layoutWidget->raise();
         layoutWidget->raise();
@@ -586,18 +348,11 @@ public:
         layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
-        layoutWidget->raise();
-        layoutWidget->raise();
         WaveformPlot->raise();
-        label_23->raise();
         acquireWaveform->raise();
-        label_15->raise();
-        timeDuration->raise();
-        layoutWidget->raise();
-        normOrAvg->raise();
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 775, 21));
+        menuBar->setGeometry(QRect(0, 0, 692, 21));
         bsc->setMenuBar(menuBar);
         mainToolBar = new QToolBar(bsc);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -620,8 +375,8 @@ public:
         label_11->setText(QApplication::translate("bsc", "Experiment Name", 0));
         label_10->setText(QApplication::translate("bsc", "Select Directory   ", 0));
         getDirName->setText(QApplication::translate("bsc", "...", 0));
-        sample->setText(QApplication::translate("bsc", "Sample", 0));
-        planar->setText(QApplication::translate("bsc", "Planar (no motor)", 0));
+        sample->setText(QApplication::translate("bsc", "Raster", 0));
+        planar->setText(QApplication::translate("bsc", "No Motor", 0));
         label->setText(QApplication::translate("bsc", "X (mm)", 0));
         label_2->setText(QApplication::translate("bsc", "Y (mm)", 0));
         label_3->setText(QApplication::translate("bsc", "Step Size", 0));
@@ -629,9 +384,7 @@ public:
         stepSizeY->setText(QString());
         label_4->setText(QApplication::translate("bsc", "Window Size", 0));
         label_5->setText(QApplication::translate("bsc", "Motor Settings", 0));
-        label_8->setText(QApplication::translate("bsc", "               Oscilloscope Settings", 0));
         label_13->setText(QApplication::translate("bsc", "                           Motor Controls", 0));
-        killMotor->setText(QApplication::translate("bsc", "Kill Motors", 0));
         quitProg->setText(QApplication::translate("bsc", "Quit", 0));
         acquireData->setText(QApplication::translate("bsc", "Run", 0));
         label_14->setText(QApplication::translate("bsc", "Displacement (mm)  ", 0));
@@ -640,27 +393,7 @@ public:
         YDir->setText(QApplication::translate("bsc", " Y", 0));
         ZDir->setText(QApplication::translate("bsc", "Z", 0));
         moveMotor->setText(QApplication::translate("bsc", "Move ", 0));
-        label_23->setText(QApplication::translate("bsc", "Sample waveform settings", 0));
         acquireWaveform->setText(QApplication::translate("bsc", "Update Waveform", 0));
-        label_15->setText(QApplication::translate("bsc", "Vpp (V) =", 0));
-        calTimeDelay->setText(QApplication::translate("bsc", "Calculate Time Delay", 0));
-        setTimeDelay->setText(QApplication::translate("bsc", "Set Time Delay", 0));
-        timeDuration->setText(QApplication::translate("bsc", "Time Duration (us) =", 0));
-        label_17->setText(QString());
-        label_19->setText(QApplication::translate("bsc", "Water temperature =    ", 0));
-        label_20->setText(QApplication::translate("bsc", "Time delay at focus (ns) =", 0));
-        label_24->setText(QApplication::translate("bsc", "Time delay at front", 0));
-        label_25->setText(QApplication::translate("bsc", " edge of sample (ns)", 0));
-        label_21->setText(QApplication::translate("bsc", "Speed of Sound in Water (m/s) = ", 0));
-        label_22->setText(QApplication::translate("bsc", "Speed of Sound in Sample (m/s)= ", 0));
-        label_18->setText(QApplication::translate("bsc", "Time Delay (ns) =                        ", 0));
-        normOrAvg->clear();
-        normOrAvg->insertItems(0, QStringList()
-         << QApplication::translate("bsc", "Normal", 0)
-         << QApplication::translate("bsc", "Averaged", 0)
-        );
-        label_6->setText(QApplication::translate("bsc", "Number of Averages", 0));
-        label_7->setText(QApplication::translate("bsc", "Number of Samples  ", 0));
     } // retranslateUi
 
 };

@@ -35,12 +35,9 @@ bsc::bsc(QWidget *parent) :
     ui->stepSizeY->setText("2");
     ui->windowSizeX->setText("18");
     ui->windowSizeY->setText("18");
-    ui->numOfAverages->setText("2048");
-    ui->numOfPoints->setText("1000");
     ui->displacement->setText("1");
     ui->motorSpeed->setText("1.25");
-    ui->waterTemperature->setText("23");
-    ui->cSample->setText("1540");
+
 
     ui->planar->setChecked(true);
 
@@ -49,17 +46,8 @@ bsc::bsc(QWidget *parent) :
     //connect(ACQ, SIGNAL(error(QString)), ui->statusMsg, SLOT(ui->setText(errorString(QString))));
     connect(ui->acquireData, SIGNAL(clicked()), this, SLOT(startAcquisition()));
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
-    connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
     connect(ui->acquireWaveform, SIGNAL(clicked()), this, SLOT(updateWaveform()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
-}
-
-void bsc::setMode(void)
-{
-    if (ui->normOrAvg->currentIndex() == 1)
-        scopeSettings.mode = 1;
-    else
-        scopeSettings.mode = 2;
 }
 
 
@@ -238,7 +226,6 @@ void bsc::killMotor(void)
 // Set up motor and scope settings
 void bsc::getParameters(void)
 {
-    setMode();
     QString tmp;
     double motorVel;
     tmp = ui->stepSizeX->text();
@@ -249,12 +236,6 @@ void bsc::getParameters(void)
     motorSettings.windowSizeX = tmp.toDouble();
     tmp = ui->windowSizeY->text();
     motorSettings.windowSizeY = tmp.toDouble();
-
-    // Oscilloscope Settings
-    tmp = ui->numOfAverages->text();
-    scopeSettings.numOfAverages = tmp.toInt();
-    tmp = ui->numOfPoints->text();
-    scopeSettings.numOfPoints = tmp.toInt();
 }
 
 void bsc::getParentDir()
