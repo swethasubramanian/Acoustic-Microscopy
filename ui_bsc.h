@@ -50,6 +50,7 @@ public:
     QWidget *layoutWidget2;
     QHBoxLayout *horizontalLayout_3;
     QRadioButton *sample;
+    QRadioButton *threeD;
     QRadioButton *planar;
     QWidget *layoutWidget3;
     QGridLayout *gridLayout;
@@ -61,6 +62,9 @@ public:
     QLabel *label_4;
     QLineEdit *windowSizeX;
     QLineEdit *windowSizeY;
+    QLineEdit *stepSizeZ;
+    QLineEdit *windowSizeZ;
+    QLabel *label_6;
     QWidget *layoutWidget4;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
@@ -74,9 +78,6 @@ public:
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_14;
     QLineEdit *displacement;
-    QHBoxLayout *horizontalLayout_9;
-    QLabel *label_16;
-    QLineEdit *motorSpeed;
     QHBoxLayout *horizontalLayout_8;
     QHBoxLayout *horizontalLayout_4;
     QRadioButton *XDir;
@@ -178,7 +179,7 @@ public:
 
         layoutWidget2 = new QWidget(centralWidget);
         layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(20, 560, 172, 19));
+        layoutWidget2->setGeometry(QRect(20, 560, 193, 19));
         horizontalLayout_3 = new QHBoxLayout(layoutWidget2);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
@@ -192,6 +193,11 @@ public:
 
         horizontalLayout_3->addWidget(sample);
 
+        threeD = new QRadioButton(layoutWidget2);
+        threeD->setObjectName(QStringLiteral("threeD"));
+
+        horizontalLayout_3->addWidget(threeD);
+
         planar = new QRadioButton(layoutWidget2);
         buttonGroup->addButton(planar);
         planar->setObjectName(QStringLiteral("planar"));
@@ -200,7 +206,7 @@ public:
 
         layoutWidget3 = new QWidget(centralWidget);
         layoutWidget3->setObjectName(QStringLiteral("layoutWidget3"));
-        layoutWidget3->setGeometry(QRect(130, 100, 181, 71));
+        layoutWidget3->setGeometry(QRect(130, 100, 230, 71));
         gridLayout = new QGridLayout(layoutWidget3);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -246,6 +252,21 @@ public:
 
         gridLayout->addWidget(windowSizeY, 2, 2, 1, 1);
 
+        stepSizeZ = new QLineEdit(layoutWidget3);
+        stepSizeZ->setObjectName(QStringLiteral("stepSizeZ"));
+
+        gridLayout->addWidget(stepSizeZ, 1, 3, 1, 1);
+
+        windowSizeZ = new QLineEdit(layoutWidget3);
+        windowSizeZ->setObjectName(QStringLiteral("windowSizeZ"));
+
+        gridLayout->addWidget(windowSizeZ, 2, 3, 1, 1);
+
+        label_6 = new QLabel(layoutWidget3);
+        label_6->setObjectName(QStringLiteral("label_6"));
+
+        gridLayout->addWidget(label_6, 0, 3, 1, 1);
+
         layoutWidget4 = new QWidget(centralWidget);
         layoutWidget4->setObjectName(QStringLiteral("layoutWidget4"));
         layoutWidget4->setGeometry(QRect(50, 70, 701, 16));
@@ -284,7 +305,7 @@ public:
 
         layoutWidget6 = new QWidget(centralWidget);
         layoutWidget6->setObjectName(QStringLiteral("layoutWidget6"));
-        layoutWidget6->setGeometry(QRect(470, 100, 201, 83));
+        layoutWidget6->setGeometry(QRect(470, 100, 201, 71));
         verticalLayout_2 = new QVBoxLayout(layoutWidget6);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -305,22 +326,6 @@ public:
 
 
         verticalLayout_2->addLayout(horizontalLayout_6);
-
-        horizontalLayout_9 = new QHBoxLayout();
-        horizontalLayout_9->setSpacing(6);
-        horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
-        label_16 = new QLabel(layoutWidget6);
-        label_16->setObjectName(QStringLiteral("label_16"));
-
-        horizontalLayout_9->addWidget(label_16);
-
-        motorSpeed = new QLineEdit(layoutWidget6);
-        motorSpeed->setObjectName(QStringLiteral("motorSpeed"));
-
-        horizontalLayout_9->addWidget(motorSpeed);
-
-
-        verticalLayout_2->addLayout(horizontalLayout_9);
 
         horizontalLayout_8 = new QHBoxLayout();
         horizontalLayout_8->setSpacing(6);
@@ -547,7 +552,8 @@ public:
         label_11->setText(QApplication::translate("bsc", "Experiment Name", 0));
         label_10->setText(QApplication::translate("bsc", "Select Directory   ", 0));
         getDirName->setText(QApplication::translate("bsc", "...", 0));
-        sample->setText(QApplication::translate("bsc", "Sample", 0));
+        sample->setText(QApplication::translate("bsc", "2D", 0));
+        threeD->setText(QApplication::translate("bsc", "3D", 0));
         planar->setText(QApplication::translate("bsc", "Planar (no motor)", 0));
         label->setText(QApplication::translate("bsc", "X (mm)", 0));
         label_2->setText(QApplication::translate("bsc", "Y (mm)", 0));
@@ -555,12 +561,12 @@ public:
         stepSizeX->setText(QString());
         stepSizeY->setText(QString());
         label_4->setText(QApplication::translate("bsc", "Window Size", 0));
+        label_6->setText(QApplication::translate("bsc", "Z (mm)", 0));
         label_5->setText(QApplication::translate("bsc", "                                              Motor Settings", 0));
         label_13->setText(QApplication::translate("bsc", "                                            Motor Controls", 0));
         quitProg->setText(QApplication::translate("bsc", "Quit", 0));
         acquireData->setText(QApplication::translate("bsc", "Run", 0));
         label_14->setText(QApplication::translate("bsc", "Displacement (mm)  ", 0));
-        label_16->setText(QApplication::translate("bsc", "Motor Speed (mm/s)", 0));
         XDir->setText(QApplication::translate("bsc", "X ", 0));
         YDir->setText(QApplication::translate("bsc", " Y", 0));
         ZDir->setText(QApplication::translate("bsc", "Z", 0));

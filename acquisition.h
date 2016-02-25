@@ -40,7 +40,7 @@ class acquisition : public QObject
         bool abort;
         bool acquiring;
         QMutex mutex;
-        int Nx, Ny;
+        int Nx, Nz;
         QString savePath, qFilename;
         int index=0;
         QString saveDir;
@@ -50,6 +50,7 @@ class acquisition : public QObject
     public slots:
         void getPlanarData();
         void getSampleData();
+        void get3DData();
         void acquire();
         void moveMotor();
 

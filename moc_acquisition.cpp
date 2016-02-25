@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_acquisition_t {
-    QByteArrayData data[16];
-    char stringdata0[216];
+    QByteArrayData data[17];
+    char stringdata0[226];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -44,8 +44,9 @@ QT_MOC_LITERAL(10, 129, 17), // "somethingHappened"
 QT_MOC_LITERAL(11, 147, 22), // "motorMovementRequested"
 QT_MOC_LITERAL(12, 170, 13), // "getPlanarData"
 QT_MOC_LITERAL(13, 184, 13), // "getSampleData"
-QT_MOC_LITERAL(14, 198, 7), // "acquire"
-QT_MOC_LITERAL(15, 206, 9) // "moveMotor"
+QT_MOC_LITERAL(14, 198, 9), // "get3DData"
+QT_MOC_LITERAL(15, 208, 7), // "acquire"
+QT_MOC_LITERAL(16, 216, 9) // "moveMotor"
 
     },
     "acquisition\0workRequested\0\0"
@@ -53,8 +54,8 @@ QT_MOC_LITERAL(15, 206, 9) // "moveMotor"
     "finished\0statusChanged\0status\0"
     "waveformUpdated\0QVector<double>\0"
     "somethingHappened\0motorMovementRequested\0"
-    "getPlanarData\0getSampleData\0acquire\0"
-    "moveMotor"
+    "getPlanarData\0getSampleData\0get3DData\0"
+    "acquire\0moveMotor"
 };
 #undef QT_MOC_LITERAL
 
@@ -64,7 +65,7 @@ static const uint qt_meta_data_acquisition[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      13,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -72,20 +73,21 @@ static const uint qt_meta_data_acquisition[] = {
        8,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   74,    2, 0x06 /* Public */,
-       3,    0,   75,    2, 0x06 /* Public */,
-       4,    0,   76,    2, 0x06 /* Public */,
-       5,    0,   77,    2, 0x06 /* Public */,
-       6,    1,   78,    2, 0x06 /* Public */,
-       8,    2,   81,    2, 0x06 /* Public */,
-      10,    0,   86,    2, 0x06 /* Public */,
-      11,    0,   87,    2, 0x06 /* Public */,
+       1,    0,   79,    2, 0x06 /* Public */,
+       3,    0,   80,    2, 0x06 /* Public */,
+       4,    0,   81,    2, 0x06 /* Public */,
+       5,    0,   82,    2, 0x06 /* Public */,
+       6,    1,   83,    2, 0x06 /* Public */,
+       8,    2,   86,    2, 0x06 /* Public */,
+      10,    0,   91,    2, 0x06 /* Public */,
+      11,    0,   92,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      12,    0,   88,    2, 0x0a /* Public */,
-      13,    0,   89,    2, 0x0a /* Public */,
-      14,    0,   90,    2, 0x0a /* Public */,
-      15,    0,   91,    2, 0x0a /* Public */,
+      12,    0,   93,    2, 0x0a /* Public */,
+      13,    0,   94,    2, 0x0a /* Public */,
+      14,    0,   95,    2, 0x0a /* Public */,
+      15,    0,   96,    2, 0x0a /* Public */,
+      16,    0,   97,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -98,6 +100,7 @@ static const uint qt_meta_data_acquisition[] = {
     QMetaType::Void,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -122,8 +125,9 @@ void acquisition::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         case 7: _t->motorMovementRequested(); break;
         case 8: _t->getPlanarData(); break;
         case 9: _t->getSampleData(); break;
-        case 10: _t->acquire(); break;
-        case 11: _t->moveMotor(); break;
+        case 10: _t->get3DData(); break;
+        case 11: _t->acquire(); break;
+        case 12: _t->moveMotor(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
@@ -217,13 +221,13 @@ int acquisition::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 13)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 13;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 13)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 13;
     }
     return _id;
 }

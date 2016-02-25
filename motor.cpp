@@ -10,7 +10,6 @@ motor::motor(QObject *parent) : QObject(parent)
    // motorSocket->connectToHost("172.25.1.3", 5002);
 }
 
-
 QString motor::openMotor()
 {
     motorSocket->connectToHost("172.25.1.3", 5002);
@@ -28,6 +27,7 @@ QString motor::openMotor()
 QString motor::mov(const QString &motID, double dist)
 {
     QString errMsg;
+    char foo[100];
     if (motorSocket->waitForConnected(15000))
     {
         errMsg = "movConnected"+motID;
@@ -35,7 +35,8 @@ QString motor::mov(const QString &motID, double dist)
         if (motID == "X")
         {
             motorSocket->write("DRIVE01000\r\n\r\n");
-            motorSocket->write("D0,10,0,0,0\r\n\r\n");
+            sprintf(foo, "D0,%d,0,0,0\r\n\r\n", (int)dist);
+            motorSocket->write(foo);
             motorSocket->write("GO01000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
             Sleep(2000);
@@ -46,7 +47,8 @@ QString motor::mov(const QString &motID, double dist)
         {
 
             motorSocket->write("DRIVE10000\r\n\r\n");
-            motorSocket->write("D-10,0,0,0,0\r\n\r\n");
+            sprintf(foo, "D%d,0,0,0,0\r\n\r\n", (int)dist);
+            motorSocket->write(foo);
             motorSocket->write("GO10000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
             Sleep(2000);
@@ -56,7 +58,8 @@ QString motor::mov(const QString &motID, double dist)
         if (motID == "Z")
         {
             motorSocket->write("DRIVE00100\r\n\r\n");
-            motorSocket->write("D0,0,-10,0,0\r\n\r\n");
+            sprintf(foo, "D0,0,%d,0,0\r\n\r\n", (int)dist);
+            motorSocket->write(foo);
             motorSocket->write("GO00100\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
             Sleep(2000);
@@ -66,7 +69,8 @@ QString motor::mov(const QString &motID, double dist)
         if (motID == "PHI")
         {
             motorSocket->write("DRIVE00010\r\n\r\n");
-            motorSocket->write("D0,0,0,-10,0\r\n\r\n");
+            sprintf(foo, "D0,0,0,%d,0\r\n\r\n", (int)dist);
+            motorSocket->write(foo);
             motorSocket->write("GO00010\r\n\r\n");
             //motorSocket->write("T10\r\n\r\n");
             Sleep(10000);
@@ -76,7 +80,8 @@ QString motor::mov(const QString &motID, double dist)
         if (motID == "THETA")
         {
             motorSocket->write("DRIVE00001\r\n\r\n");
-            motorSocket->write("D0,0,0,0,-10\r\n\r\n");
+            sprintf(foo, "D0,0,0,0,%d\r\n\r\n", (int)dist);
+            motorSocket->write("D0,0,0,0,%d\r\n\r\n");
             motorSocket->write("GO00001\r\n\r\n");
             //motorSocket->write("T10\r\n\r\n");
             Sleep(10000);

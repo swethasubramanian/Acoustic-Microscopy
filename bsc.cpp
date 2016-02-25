@@ -36,7 +36,6 @@ bsc::bsc(QWidget *parent) :
     ui->windowSizeX->setText("18");
     ui->windowSizeY->setText("18");
     ui->displacement->setText("1");
-    ui->motorSpeed->setText("1.25");
     ui->waterTemperature->setText("23");
     ui->cSample->setText("1540");
 
@@ -292,10 +291,14 @@ void bsc::getParameters(void)
     motorSettings.stepSizeX = tmp.toDouble();
     tmp = ui->stepSizeY->text();
     motorSettings.stepSizeY = tmp.toDouble();
+    tmp = ui->stepSizeZ->text();
+    motorSettings.stepSizeZ = tmp.toDouble();
     tmp = ui->windowSizeX->text();
     motorSettings.windowSizeX = tmp.toDouble();
     tmp = ui->windowSizeY->text();
     motorSettings.windowSizeY = tmp.toDouble();
+    tmp = ui->windowSizeZ->text();
+    motorSettings.windowSizeZ = tmp.toDouble();
 }
 
 void bsc::getParentDir()

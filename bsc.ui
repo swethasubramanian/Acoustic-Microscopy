@@ -109,7 +109,7 @@
      <rect>
       <x>20</x>
       <y>560</y>
-      <width>172</width>
+      <width>193</width>
       <height>19</height>
      </rect>
     </property>
@@ -117,11 +117,18 @@
      <item>
       <widget class="QRadioButton" name="sample">
        <property name="text">
-        <string>Sample</string>
+        <string>2D</string>
        </property>
        <attribute name="buttonGroup">
         <string notr="true">buttonGroup</string>
        </attribute>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="threeD">
+       <property name="text">
+        <string>3D</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -141,7 +148,7 @@
      <rect>
       <x>130</x>
       <y>100</y>
-      <width>181</width>
+      <width>230</width>
       <height>71</height>
      </rect>
     </property>
@@ -193,6 +200,19 @@
      </item>
      <item row="2" column="2">
       <widget class="QLineEdit" name="windowSizeY"/>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="stepSizeZ"/>
+     </item>
+     <item row="2" column="3">
+      <widget class="QLineEdit" name="windowSizeZ"/>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Z (mm)</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -254,7 +274,7 @@
       <x>470</x>
       <y>100</y>
       <width>201</width>
-      <height>83</height>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -269,20 +289,6 @@
        </item>
        <item>
         <widget class="QLineEdit" name="displacement"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_9">
-       <item>
-        <widget class="QLabel" name="label_16">
-         <property name="text">
-          <string>Motor Speed (mm/s)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="motorSpeed"/>
        </item>
       </layout>
      </item>

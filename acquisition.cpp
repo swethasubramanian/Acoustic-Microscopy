@@ -47,9 +47,9 @@ void acquisition::moveMotor()
        // QEventLoop loop;
         QTimer::singleShot(1000, &loop, SLOT(quit()));
         loop.exec();
-        emit statusChanged("it moved");
+        emit statusChanged(statusMsg);
 
-        statusMsg =MOTOR.closeMotor();
+        statusMsg = MOTOR.closeMotor();
         //emit statusChanged(statusMsg);
        // emit statusChanged("Movement completed!");
         mutex.lock();
@@ -71,7 +71,7 @@ void acquisition::requestWork(const QString &param, const SCOPESETTINGS& scopeSe
     scopeSettings = scopeSet;
     motorSettings = motorSet;
     Nx = motorSettings.windowSizeX/motorSettings.stepSizeX;
-    Ny = motorSettings.windowSizeY/motorSettings.stepSizeY;
+    Nz = motorSettings.windowSizeZ/motorSettings.stepSizeZ;
     mutex.unlock();
     emit workRequested();
     QApplication::processEvents();
@@ -102,7 +102,7 @@ void acquisition::getPlanarData()
 
         //Set up scan
         SCOPE.initializeScope();
-        for (int k=1; k<=(Nx+1)*(Ny+1); k++)
+        for (int k=1; k<=(Nx+1)*(Nz+1); k++)
         {
             // Checks if the process should be aborted
             mutex.lock();
@@ -155,9 +155,9 @@ void acquisition::getSampleData()
     // Setup scan
     SCOPE.initializeScope();
     double windowX = motorSettings.windowSizeX;
-    double windowY = motorSettings.windowSizeY;
+    double windowZ = motorSettings.windowSizeZ;
     double stepXmm = motorSettings.stepSizeX;
-    double stepYmm = motorSettings.stepSizeY;
+    double stepZmm = motorSettings.stepSizeZ;
 
     MOTOR.openMotor();
 
@@ -169,7 +169,7 @@ void acquisition::getSampleData()
     // move motor to bottom left of the ROI (from computer perspective) and get scope data
     emit statusChanged("Preparing for take off ...");
     MOTOR.mov("X", -windowX/2); //(minus is left)
-    MOTOR.mov("Y", windowY/2); //(minus is up)
+    MOTOR.mov("Z", windowZ/2); //(minus is up)
     int k=1;
     int i,j;
     index = k;
@@ -202,7 +202,7 @@ void acquisition::getSampleData()
         }
         if (i%2 == 0)
         {
-            for (j=0; j<=Ny; j++)
+            for (j=0; j<=Nz; j++)
             {
                 // Checks if the process should be aborted
                 mutex.lock();
@@ -216,7 +216,7 @@ void acquisition::getSampleData()
 
                 if (j>0)
                 {
-                    MOTOR.mov("Y", -stepYmm);
+                    MOTOR.mov("Z", -stepZmm);
                     k++;
                     index = k;
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
@@ -229,7 +229,7 @@ void acquisition::getSampleData()
         }
         if (i%2==1)
         {
-            for (j=0; j<=Ny; j++)
+            for (j=0; j<=Nz; j++)
             {
                 // Checks if the process should be aborted
                 mutex.lock();
@@ -243,7 +243,7 @@ void acquisition::getSampleData()
 
                 if (j>0)
                 {
-                    MOTOR.mov("Y", stepYmm);
+                    MOTOR.mov("Z", stepZmm);
                     k++;
                     index = k;
                     emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
@@ -267,13 +267,13 @@ void acquisition::getSampleData()
         MOTOR.mov("X", -windowX/2);
         // This will stupidly wait 1 sec doing nothing...
         Sleep(1000);
-        if ((Ny+1)%2==0)
+        if ((Nz+1)%2==0)
         {
-            MOTOR.mov("Y", -windowY/2);
+            MOTOR.mov("Z", -windowZ/2);
         }
         else
         {
-            MOTOR.mov("Y", windowY/2);
+            MOTOR.mov("Z", windowZ/2);
         }
         MOTOR.closeMotor();
         SCOPE.closeScope();
@@ -287,6 +287,159 @@ void acquisition::getSampleData()
     emit finished();
     }
 }
+
+void acquisition::get3DData()
+{
+    mutex.lock();
+    bool _abort = abort;
+    mutex.unlock();
+    if (_abort)
+        emit finished();
+    else
+    {
+    // Create a directory for saving planar data
+    savePath = saveDir+"/3Dscan";
+    QDir dir(savePath);
+    if(!dir.exists()) dir.mkpath(".");
+
+    // Setup scan
+    SCOPE.initializeScope();
+    double windowX = motorSettings.windowSizeX;
+    double windowY = motorSettings.windowSizeY;
+    double windowZ = motorSettings.windowSizeZ;
+    double stepXmm = motorSettings.stepSizeX;
+    double stepYmm = motorSettings.stepSizeY;
+    double stepZmm = motorSettings.stepSizeZ;
+
+    MOTOR.openMotor();
+
+    // This will stupidly wait 1 sec doing nothing...
+    QEventLoop loop;
+    QTimer::singleShot(1000, &loop, SLOT(quit()));
+    loop.exec();
+
+    // move motor to bottom left of the ROI (from computer perspective) and get scope data
+    emit statusChanged("Preparing for take off ...");
+    MOTOR.mov("X", -windowX/2); //(minus is left)
+    MOTOR.mov("Z", windowY/2); //(minus is up)
+    int k=1;
+    int i,j;
+    index = k;
+    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+    getDataFromScope(k);
+    emit runIndexChanged();
+    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+
+    for (int i=0; i<=Nx; i++)
+    {
+        // Checks if the process should be aborted
+        mutex.lock();
+        bool _abort = abort;
+        mutex.unlock();
+        if (_abort) break;
+
+        // This will stupidly wait 1 sec doing nothing...
+        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        loop.exec();
+
+        if (i>0)
+        {
+            MOTOR.mov("X", stepXmm);
+            k++;
+            index = k;
+            emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+            getDataFromScope(k);
+            emit runIndexChanged();
+            emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+        }
+        if (i%2 == 0)
+        {
+            for (j=0; j<=Nz; j++)
+            {
+                // Checks if the process should be aborted
+                mutex.lock();
+                bool _abort = abort;
+                mutex.unlock();
+                if (_abort) break;
+
+                // This will stupidly wait 1 sec doing nothing...
+                QTimer::singleShot(1000, &loop, SLOT(quit()));
+                loop.exec();
+
+                if (j>0)
+                {
+                    MOTOR.mov("Z", -stepZmm);
+                    k++;
+                    index = k;
+                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                    getDataFromScope(k);
+                    emit runIndexChanged();
+                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+                }
+            }
+            if (_abort) break;
+        }
+        if (i%2==1)
+        {
+            for (j=0; j<=Nz; j++)
+            {
+                // Checks if the process should be aborted
+                mutex.lock();
+                bool _abort = abort;
+                mutex.unlock();
+                if (_abort) break;
+
+                // This will stupidly wait 1 sec doing nothing...
+                QTimer::singleShot(1000, &loop, SLOT(quit()));
+                loop.exec();
+
+                if (j>0)
+                {
+                    MOTOR.mov("Z", stepZmm);
+                    k++;
+                    index = k;
+                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                    getDataFromScope(k);
+                    emit runIndexChanged();
+                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+                }
+            }
+            if (_abort) break;
+        }
+        if (_abort) break;
+    }
+    mutex.lock();
+    bool _abort = abort;
+    mutex.unlock();
+    if (!_abort)
+    {
+        Sleep(1000);
+        emit statusChanged("Data acquisition complete. Moving back to center of ROI ...");
+        // Move motor back to center of the ROI
+        MOTOR.mov("X", -windowX/2);
+        // This will stupidly wait 1 sec doing nothing...
+        Sleep(1000);
+        if ((Nz+1)%2==0)
+        {
+            MOTOR.mov("Z", -windowZ/2);
+        }
+        else
+        {
+            MOTOR.mov("Z", windowZ/2);
+        }
+        MOTOR.closeMotor();
+        SCOPE.closeScope();
+        // Set acquiring to false, meaning the process can't be aborted anymore.
+        mutex.lock();
+        acquiring = false;
+        mutex.unlock();
+
+    }
+    emit statusChanged("Done!");
+    emit finished();
+    }
+}
+
 
 void acquisition::getDataFromScope(int k)
 {

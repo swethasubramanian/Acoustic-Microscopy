@@ -6,18 +6,15 @@
     {
         double stepSizeX;
         double stepSizeY;
+        double stepSizeZ;
         double windowSizeX;
         double windowSizeY;
+        double windowSizeZ;
     };
 
     struct SCOPESETTINGS
     {
-        char probeAttn[10] = "10";
-        int numOfPoints;
-        int numOfAverages;
         char channel[10] = "CHANNEL1";
-        char coupling[10] = "DC";
-        int mode;
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED
