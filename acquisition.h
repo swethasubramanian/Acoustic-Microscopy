@@ -7,6 +7,7 @@
 #include "scope.h"
 //#include "bsc.h"
 #include "settingsMotorScope.h"
+class bsc;
 class acquisition : public QObject
 {
     Q_OBJECT

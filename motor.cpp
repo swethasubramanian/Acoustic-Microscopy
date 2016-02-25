@@ -2,156 +2,102 @@
 #include <stdio.h>
 #include "settingsMotorScope.h"
 #include <QtGui>
-#include <QTcpSocket>
 
 
 motor::motor(QObject *parent) : QObject(parent)
 {
     motorSocket = new QTcpSocket(this);
+   // motorSocket->connectToHost("172.25.1.3", 5002);
 }
 
 
-void motor::openMotor()
+QString motor::openMotor()
 {
     motorSocket->connectToHost("172.25.1.3", 5002);
-    if (motorSocket->waitForConnected(3000))
+    QString errMsg;
+    if (motorSocket->waitForConnected(15000))
     {
-        qDebug() << "Connected" ;
-        motorSocket->write("SETUP\r\n\r\n"); // Sets up pitch, velocities and pitch etc
+        errMsg = "Connected" ;
+        motorSocket->write("SETUP\r\n\r\n");// Sets up pitch, velocities and pitch etc
+        //setup();
     }
-    else
-    {
-        qDebug() << "Not Connected";
-    }
+    else errMsg = "Not Connected";
+    return errMsg;
 }
 
-void motor::setup()
+QString motor::mov(const QString &motID, double dist)
 {
-     //copied from Janelle's code
-    if (motorSocket->waitForConnected(3000))
+    QString errMsg;
+    if (motorSocket->waitForConnected(15000))
     {
-        // Setup X Scans
-        motorSocket->write("DEL XSCAN\r\n\r\n");
-        motorSocket->write("DEF XSCAN\r\n\r\n");
-        motorSocket->write("DRIVE01000\r\n\r\n");
-        motorSocket->write("D0,(VAR4),0,0,0\r\n\r\n");
-        motorSocket->write("GO01000\r\n\r\n");
-        motorSocket->write("T2\r\n\r\n");
-        motorSocket->write("DRIVE00000\r\n\r\n");
-        motorSocket->write("END\r\n\r\n");
+        errMsg = "movConnected"+motID;
 
-        // Y axis
-        motorSocket->write("DEL YSCAN\r\n\r\n");
-        motorSocket->write("DEF YSCAN\r\n\r\n");
-        motorSocket->write("DRIVE10000\r\n\r\n");
-        motorSocket->write("D(VAR5),0,0,0,0\r\n\r\n");
-        motorSocket->write("GO10000\r\n\r\n");
-        motorSocket->write("T2\r\n\r\n");
-        motorSocket->write("DRIVE00000\r\n\r\n");
-        motorSocket->write("END\r\n\r\n");
+        if (motID == "X")
+        {
+            motorSocket->write("DRIVE01000\r\n\r\n");
+            motorSocket->write("D0,10,0,0,0\r\n\r\n");
+            motorSocket->write("GO01000\r\n\r\n");
+            //motorSocket->write("T2\r\n\r\n");
+            Sleep(2000);
+            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
 
-        // Z axis
-        motorSocket->write("DEL ZSCAN\r\n\r\n");
-        motorSocket->write("DEF ZSCAN\r\n\r\n");
-        motorSocket->write("DRIVE00100\r\n\r\n");
-        motorSocket->write("D0,0,(VAR3),0,0\r\n\r\n");
-        motorSocket->write("GO00100\r\n\r\n");
-        motorSocket->write("T2\r\n\r\n");
-        motorSocket->write("DRIVE00000\r\n\r\n");
-        motorSocket->write("END\r\n\r\n");
+        if (motID == "Y")
+        {
 
-        // phi axis control
-        motorSocket->write("DEL PHISCAN\r\n\r\n");
-        motorSocket->write("DEF PHISCAN\r\n\r\n");
-        motorSocket->write("DRIVE00010\r\n\r\n");
-        motorSocket->write("D0,0,0,(VAR1),0\r\n\r\n");
-        motorSocket->write("GO00010\r\n\r\n");
-        motorSocket->write("T10\r\n\r\n");
-        motorSocket->write("DRIVE00000\r\n\r\n");
-        motorSocket->write("END\r\n\r\n");
+            motorSocket->write("DRIVE10000\r\n\r\n");
+            motorSocket->write("D-10,0,0,0,0\r\n\r\n");
+            motorSocket->write("GO10000\r\n\r\n");
+            //motorSocket->write("T2\r\n\r\n");
+            Sleep(2000);
+            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
 
-        // theta axis
-        motorSocket->write("DEL THETASCAN\r\n\r\n");
-        motorSocket->write("DEF THETASCAN\r\n\r\n");
-        motorSocket->write("DRIVE00001\r\n\r\n");
-        motorSocket->write("D0,0,0,0,(VAR2)\r\n\r\n");
-        motorSocket->write("GO00001\r\n\r\n");
-        motorSocket->write("T10\r\n\r\n");
-        motorSocket->write("DRIVE00000\r\n\r\n");
-        motorSocket->write("END\r\n\r\n");
+        if (motID == "Z")
+        {
+            motorSocket->write("DRIVE00100\r\n\r\n");
+            motorSocket->write("D0,0,-10,0,0\r\n\r\n");
+            motorSocket->write("GO00100\r\n\r\n");
+            //motorSocket->write("T2\r\n\r\n");
+            Sleep(2000);
+            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
+
+        if (motID == "PHI")
+        {
+            motorSocket->write("DRIVE00010\r\n\r\n");
+            motorSocket->write("D0,0,0,-10,0\r\n\r\n");
+            motorSocket->write("GO00010\r\n\r\n");
+            //motorSocket->write("T10\r\n\r\n");
+            Sleep(10000);
+            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
+
+        if (motID == "THETA")
+        {
+            motorSocket->write("DRIVE00001\r\n\r\n");
+            motorSocket->write("D0,0,0,0,-10\r\n\r\n");
+            motorSocket->write("GO00001\r\n\r\n");
+            //motorSocket->write("T10\r\n\r\n");
+            Sleep(10000);
+            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
     }
-    else
-    {
-     qDebug() << "Not Connected";
-    }
+    else errMsg = "Not Connected";
+    return errMsg;
 }
 
-int motor::mov(const char* motID, double dist)
+QString motor::closeMotor(void)
 {
-    // convert dist
-    if (motID == "X")
-    {
-        if (motorSocket->waitForConnected(3000))
-        {
-            motorSocket->write("VAR4=-10\r\n\r\n");
-            motorSocket->write("XSCAN\r\n\r\n");
-        }
-        else qDebug() << "Not Connected";
-    }
-
-    else if (motID == "Y")
-    {
-        if (motorSocket->waitForConnected(3000))
-        {
-            motorSocket->write("VAR5=-10\r\n\r\n");
-            motorSocket->write("YSCAN\r\n\r\n");
-        }
-        else qDebug() << "Not Connected";
-    }
-
-    else if (motID == "Z")
-    {
-        if (motorSocket->waitForConnected(3000))
-        {
-            motorSocket->write("VAR3=-10\r\n\r\n");
-            motorSocket->write("ZSCAN\r\n\r\n");
-        }
-        else
-            qDebug() << "Not Connected";
-    }
-
-    else if (motID == "PHI")
-    {
-        if (motorSocket->waitForConnected(3000))
-        {
-            motorSocket->write("VAR1=-10\r\n\r\n");
-            motorSocket->write("PHISCAN\r\n\r\n");
-        }
-        else
-            qDebug() << "Not Connected";
-    }
-
-    else if (motID == "THETA")
-    {
-        if (motorSocket->waitForConnected(3000))
-        {
-            motorSocket->write("VAR2=-10\r\n\r\n");
-            motorSocket->write("THETASCAN\r\n\r\n");
-        }
-        else
-            qDebug() << "Not Connected";
-    }
-}
-
-void motor::closeMotor(void)
-{
+    QString errMsg;
     if (motorSocket->waitForConnected(3000))
     {
+        errMsg = "is connected";
         motorSocket->close();
-        qDebug() << "disconnected";
+        errMsg = "connection closed";
     }
-    else
-        qDebug() << "Not Connected";
+   else errMsg = "Not Connected";
+   return errMsg;
 }
 
 

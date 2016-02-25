@@ -120,6 +120,14 @@ void scope::getScopeData(const char* filename, const SCOPESETTINGS& scopeSetting
     }
 }
 
+void scope::setTimeDelay(double timeDelay)
+{
+    char foo[100];
+   // viPrintf(vi, ":TIMEBASE:REFERENCE CENTER\n");
+    //viPrintf(vi, ":TIMEBASE:POSITION 20e-6\n");
+    sprintf(foo, "TRig_DeLay %fe-9\n", timeDelay);
+    viPrintf(vi, foo);
+}
 
 
 //double scope::getNumPoints(void)

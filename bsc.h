@@ -19,6 +19,7 @@ public:
     explicit bsc(QWidget *parent = 0);
     void acquire();
     void getParameters();
+    void getSOSWater();
     QString saveDir();
     QString savePath;
     QString qFilename;
@@ -47,6 +48,8 @@ public slots:
     void getCurrentRun();
     void updateWaveform();
     void displayWaveform(const QVector<double> &, const QVector<double> &);
+    void calculateTimeDelay();
+    void setTimeDelay();
 
 
 signals:

@@ -32,22 +32,33 @@ void acquisition::moveMotor()
 
     if (!_abort)
     {
-        MOTOR.openMotor();
-        if (motorID == "X")
-            MOTOR.mov("X", dist);
-        if (motorID == "Y")
-            MOTOR.mov("Y", dist);
-        if (motorID == "Z")
-            MOTOR.mov("Z", dist);
-        MOTOR.closeMotor();
-   // emit statusChanged("Movement completed!");
+        QString statusMsg;
+        statusMsg = MOTOR.openMotor();
+        emit statusChanged(statusMsg);
+
+        //statusMsg = MOTOR.mov("X", dist);
+        // This will stupidly wait 1 sec doing nothing...
+        QEventLoop loop;
+        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        loop.exec();
+
+        statusMsg = MOTOR.mov(motorID, dist);
+        // This will stupidly wait 1 sec doing nothing...
+       // QEventLoop loop;
+        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        loop.exec();
+        emit statusChanged("it moved");
+
+        statusMsg =MOTOR.closeMotor();
+        //emit statusChanged(statusMsg);
+       // emit statusChanged("Movement completed!");
         mutex.lock();
         _abort = true;
         abort = true;
         mutex.unlock();
         emit finished();
-    }
-    else
+   }
+   else
         emit finished();
 }
 

@@ -9,10 +9,10 @@ class motor : public QObject
     Q_OBJECT;
     public:
         explicit motor(QObject *parent = 0);
-        void openMotor();
+        QString openMotor();
         void setup();
-        int mov(const char* motID, double dist);
-        void closeMotor(void);
+        QString mov(const QString &, double dist);
+        QString closeMotor(void);
 
     private:
         QTcpSocket *motorSocket;

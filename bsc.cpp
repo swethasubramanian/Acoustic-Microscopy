@@ -37,6 +37,9 @@ bsc::bsc(QWidget *parent) :
     ui->windowSizeY->setText("18");
     ui->displacement->setText("1");
     ui->motorSpeed->setText("1.25");
+    ui->waterTemperature->setText("23");
+    ui->cSample->setText("1540");
+
 
 
     ui->planar->setChecked(true);
@@ -48,6 +51,53 @@ bsc::bsc(QWidget *parent) :
     connect(ui->moveMotor, SIGNAL(clicked()), this, SLOT(movMotor()));
     connect(ui->acquireWaveform, SIGNAL(clicked()), this, SLOT(updateWaveform()));
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
+    connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
+    connect(ui->setTimeDelay, SIGNAL(clicked()), this, SLOT(setTimeDelay()));
+
+    getSOSWater();
+}
+
+void bsc::calculateTimeDelay(void)
+{
+    getSOSWater();
+    QString tmp;
+
+    tmp = ui->cSample->text();
+    double csample = tmp.toDouble();
+
+    tmp = ui->cWater->text();
+    double cwater = tmp.toDouble();
+
+    tmp = ui->t_focus->text();
+    double tdFocus = tmp.toDouble();
+
+    tmp = ui->t_frontEdge->text();
+    double tdSampleFrontEdge = tmp.toDouble();
+
+    double td_window = tdSampleFrontEdge + (tdFocus - tdSampleFrontEdge)*cwater/csample;
+    ui->timeDelay->setText(QString::number(td_window));
+}
+
+void bsc::setTimeDelay(void)
+{
+    QString tmp;
+    tmp = ui->timeDelay->text();
+    double timeDelay = tmp.toDouble();
+
+    SCOPE.initializeScope();
+    SCOPE.setTimeDelay(-timeDelay);
+    SCOPE.closeScope();
+    ui->statusMsg->setText("time delay set to");
+}
+
+void bsc::getSOSWater(void)
+{
+    QString tmp = ui->waterTemperature->text();
+    double temperature = tmp.toDouble();
+    double cwater = 1.402385*pow(10,3) + 5.038813*temperature -
+    5.799136*pow(10,-2)*pow(temperature,2) + 3.287156*pow(10,-4)*pow(temperature,3) -
+    1.398845*pow(10,-6)*pow(temperature,4) + 2.787860*pow(10,-9)*pow(temperature, 5);
+    ui->cWater->setText(QString::number(cwater));
 }
 
 
@@ -174,6 +224,13 @@ void bsc::stopAcquisition(void)
     }
 }
 
+/*void bsc::movMotor(void)
+{
+    acquisition* ACQ2 = new acquisition();
+    ACQ2->moveMotor();
+}*/
+
+
 // Moving motor for aligning things
 void bsc::movMotor(void)
 {
@@ -193,25 +250,28 @@ void bsc::movMotor(void)
     connect(ACQ2, SIGNAL (finished()), ACQ2, SLOT (deleteLater()));
     connect(motorCtrlThread, SIGNAL (finished()), motorCtrlThread, SLOT (deleteLater()));
 
+
     if (ui->XDir->isChecked())
     {
         ACQ2->requestMotorMovement("X", dist, motorSettings);
-        ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+        //ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
         return;
     }
     if (ui->YDir->isChecked())
     {
         ACQ2->requestMotorMovement("Y", dist, motorSettings);
-        ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
+       // ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
         return;
     }
     if (ui->ZDir->isChecked())
     {
         ACQ2->requestMotorMovement("Z", dist, motorSettings);
-        ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
+       // ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         return;
     }
 }
+
+
 
 // To kill motor movement
 void bsc::killMotor(void)
@@ -242,7 +302,7 @@ void bsc::getParentDir()
 {
    //
     QString parentDirName = QFileDialog::getExistingDirectory(this, tr("Select Experiment Directory"),
-                 "C:/Documents and Settings/wetlab/My Documents/MATLAB/Data/",
+                 "C:/Data/",
                  QFileDialog::ShowDirsOnly);
     ui->dirName->setText(parentDirName);
 }
