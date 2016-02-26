@@ -32,8 +32,8 @@ private:
     SCOPESETTINGS scopeSettings;
     MOTORSETTINGS motorSettings;
     bool abort;
-    QThread *planarThread, *sampleThread;
-    acquisition *ACQp, *ACQs;
+    QThread *planarThread, *sampleThread, *threeDThread;
+    acquisition *ACQp, *ACQs, *ACQ3D;
     bool threadAbort;
     QMutex mutex;
     double maxVal(const QVector<double> &);

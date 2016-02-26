@@ -20,6 +20,8 @@ bsc::bsc(QWidget *parent) :
     ACQp = new acquisition();
     sampleThread = new QThread();
     ACQs = new acquisition();
+    threeDThread = new QThread();
+    ACQ3D = new acquisition();
 
     // Load up defaults here
     // Default parent directory
@@ -196,6 +198,31 @@ void bsc::startAcquisition(void)
         QCoreApplication::processEvents();
         ACQs->requestWork(saveDir(), scopeSettings, motorSettings);
     }
+    else if (ui->threeD->isChecked())
+    {
+      //  QThread* sampleThread = new QThread;
+       // acquisition* ACQs = new acquisition();
+
+        ACQ3D->moveToThread(threeDThread);
+        connect(ACQ3D, SIGNAL(workRequested()), threeDThread, SLOT(start()));
+        connect(ACQ3D, SIGNAL(finished()), threeDThread, SLOT(quit()), Qt::DirectConnection);
+        connect(ACQ3D, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
+        connect(ACQ3D, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+        connect(ACQ3D, SIGNAL(connectionStatusChanged(QString)), ui->tcpipMsg, SLOT(setText(QString)));
+        connect(ACQ3D,
+            SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
+            this,
+            SLOT(displayWaveform(QVector<double>, QVector<double>)));
+
+        connect(threeDThread, SIGNAL(started()), ACQ3D, SLOT(getSampleData()));
+       // connect(ui->quitProg, SIGNAL(clicked()), ACQs, SLOT(stopAcquisition()));
+        //connect(ACQs, SIGNAL(finished()), ACQs, SLOT (deleteLater()));
+        //connect(sampleThread, SIGNAL (finished()), sampleThread, SLOT (deleteLater()));
+
+        ui->statusMsg->setText("Acquiring Sample data...");
+        QCoreApplication::processEvents();
+        ACQ3D->requestWork(saveDir(), scopeSettings, motorSettings);
+    }
 }
 
 void bsc::getCurrentRun()
@@ -222,6 +249,14 @@ void bsc::stopAcquisition(void)
         sampleThread->quit();
         ACQs->stopAcquisition();
         sampleThread->wait();
+        ui->statusMsg->setText("Ready!");
+        return;
+    }
+    else if (ui->threeD->isChecked())
+    {
+        threeDThread->quit();
+        ACQ3D->stopAcquisition();
+        threeDThread->wait();
         ui->statusMsg->setText("Ready!");
         return;
     }
@@ -356,7 +391,7 @@ bsc::~bsc()
     planarThread->wait();
     ACQs->stopAcquisition();
     sampleThread->wait();
-    delete planarThread, sampleThread;
-    delete ACQp, ACQs;
+    delete planarThread, sampleThread, threeDThread;
+    delete ACQp, ACQs, ACQ3D;
     delete ui;
 }

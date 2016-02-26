@@ -418,7 +418,7 @@ void acquisition::get3DData()
             int k=1;
             int i,j;
             index = k;
-            emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+            emit statusChanged(QString("Acquiring 3D sample data set #%1 ...").arg(k));
             getDataFromScope(k);
             emit runIndexChanged();
             emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
@@ -456,7 +456,7 @@ void acquisition::get3DData()
 
                             k++;
                             index = k;
-                            emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                            emit statusChanged(QString("Acquiring 3D data set #%1 ...").arg(k));
                             getDataFromScope(k);
                             emit runIndexChanged();
                             emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
@@ -487,7 +487,7 @@ void acquisition::get3DData()
 
                                     k++;
                                     index = k;
-                                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                                    emit statusChanged(QString("Acquiring 3D data set #%1 ...").arg(k));
                                     getDataFromScope(k);
                                     emit runIndexChanged();
                                     emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
@@ -522,7 +522,7 @@ void acquisition::get3DData()
 
                                     k++;
                                     index = k;
-                                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                                    emit statusChanged(QString("Acquiring 3D data set #%1 ...").arg(k));
                                     getDataFromScope(k);
                                     emit runIndexChanged();
                                     emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
