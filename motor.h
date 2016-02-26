@@ -4,18 +4,23 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <qDebug>
+#include <QMutex>
+
 class motor : public QObject
 {
     Q_OBJECT;
     public:
         explicit motor(QObject *parent = 0);
-        QString openMotor();
+        bool openMotor();
         void setup();
-        QString mov(const QString &, double dist);
-        QString closeMotor(void);
+        bool mov(const QString &, double dist);
+        bool closeMotor(void);
+
 
     private:
         QTcpSocket *motorSocket;
+        QMutex mutex;
+        bool connected;
 };
 
 #endif // MOTOR_H

@@ -7,31 +7,32 @@
 motor::motor(QObject *parent) : QObject(parent)
 {
     motorSocket = new QTcpSocket(this);
+    connected = false;
    // motorSocket->connectToHost("172.25.1.3", 5002);
 }
 
-QString motor::openMotor()
+bool motor::openMotor()
 {
     motorSocket->connectToHost("172.25.1.3", 5002);
-    QString errMsg;
     if (motorSocket->waitForConnected(15000))
     {
-        errMsg = "Connected" ;
+        mutex.lock();
+        connected = true;
+        mutex.unlock();
         motorSocket->write("SETUP\r\n\r\n");// Sets up pitch, velocities and pitch etc
         //setup();
     }
-    else errMsg = "Not Connected";
-    return errMsg;
+    return connected;
 }
 
-QString motor::mov(const QString &motID, double dist)
+bool motor::mov(const QString &motID, double dist)
 {
-    QString errMsg;
     char foo[100];
     if (motorSocket->waitForConnected(15000))
     {
-        errMsg = "movConnected"+motID;
-
+        mutex.lock();
+        connected = true;
+        mutex.unlock();
         if (motID == "X")
         {
             motorSocket->write("DRIVE01000\r\n\r\n");
@@ -88,21 +89,19 @@ QString motor::mov(const QString &motID, double dist)
             motorSocket->write("DRIVE00000\r\n\r\n");
         }
     }
-    else errMsg = "Not Connected";
-    return errMsg;
+    return connected;
 }
 
-QString motor::closeMotor(void)
+bool motor::closeMotor(void)
 {
-    QString errMsg;
     if (motorSocket->waitForConnected(3000))
     {
-        errMsg = "is connected";
         motorSocket->close();
-        errMsg = "connection closed";
+        mutex.lock();
+        connected = false;
+        mutex.unlock();
     }
-   else errMsg = "Not Connected";
-   return errMsg;
+   return connected;
 }
 
 

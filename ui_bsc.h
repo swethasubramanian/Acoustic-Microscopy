@@ -114,6 +114,7 @@ public:
     QHBoxLayout *horizontalLayout_15;
     QLabel *label_18;
     QLineEdit *timeDelay;
+    QLabel *tcpipMsg;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -511,6 +512,9 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_15);
 
+        tcpipMsg = new QLabel(centralWidget);
+        tcpipMsg->setObjectName(QStringLiteral("tcpipMsg"));
+        tcpipMsg->setGeometry(QRect(10, 180, 391, 16));
         bsc->setCentralWidget(centralWidget);
         layoutWidget->raise();
         layoutWidget->raise();
@@ -527,6 +531,7 @@ public:
         WaveformPlot->raise();
         label_23->raise();
         acquireWaveform->raise();
+        tcpipMsg->raise();
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 775, 21));
@@ -583,6 +588,7 @@ public:
         label_21->setText(QApplication::translate("bsc", "Speed of Sound in Water (m/s) = ", 0));
         label_22->setText(QApplication::translate("bsc", "Speed of Sound in Sample (m/s)= ", 0));
         label_18->setText(QApplication::translate("bsc", "Time Delay (ns) =                        ", 0));
+        tcpipMsg->setText(QApplication::translate("bsc", "TCPIP Status:", 0));
     } // retranslateUi
 
 };

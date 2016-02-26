@@ -155,6 +155,7 @@ void bsc::startAcquisition(void)
         connect(ACQp, SIGNAL(finished()), planarThread, SLOT(quit()), Qt::DirectConnection);
         connect(ACQp, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
         connect(ACQp, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+        connect(ACQp, SIGNAL(connectionStatusChanged(QString)), ui->tcpipMsg, SLOT(setText(QString)));
         connect(ACQp,
             SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
             this,
@@ -178,6 +179,7 @@ void bsc::startAcquisition(void)
         connect(ACQs, SIGNAL(finished()), sampleThread, SLOT(quit()), Qt::DirectConnection);
         connect(ACQs, SIGNAL(runIndexChanged()), this, SLOT(getCurrentRun()));
         connect(ACQs, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
+        connect(ACQs, SIGNAL(connectionStatusChanged(QString)), ui->tcpipMsg, SLOT(setText(QString)));
         connect(ACQs,
             SIGNAL(waveformUpdated(QVector<double>, QVector<double>)),
             this,
@@ -248,7 +250,7 @@ void bsc::movMotor(void)
     connect(ACQ2, SIGNAL(statusChanged(QString)), ui->statusMsg, SLOT(setText(QString)));
     connect(ACQ2, SIGNAL (finished()), ACQ2, SLOT (deleteLater()));
     connect(motorCtrlThread, SIGNAL (finished()), motorCtrlThread, SLOT (deleteLater()));
-
+    connect(ACQ2, SIGNAL(connectionStatusChanged(QString)), ui->tcpipMsg, SLOT(setText(QString)));
 
     if (ui->XDir->isChecked())
     {

@@ -39,6 +39,7 @@ class acquisition : public QObject
         SCOPESETTINGS scopeSettings;
         bool abort;
         bool acquiring;
+        bool connected;
         QMutex mutex;
         int Nx, Nz;
         QString savePath, qFilename;
@@ -60,6 +61,7 @@ class acquisition : public QObject
         void runIndexChanged();
         void finished();
         void statusChanged(const QString &status);
+        void connectionStatusChanged(const QString &status);
         void waveformUpdated(const QVector<double> &, const QVector<double> &);
         void somethingHappened();
         void motorMovementRequested();
