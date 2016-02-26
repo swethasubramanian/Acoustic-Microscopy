@@ -10,11 +10,15 @@
         double windowSizeX;
         double windowSizeY;
         double windowSizeZ;
+        // using default values given in Janelle's Program
+        double velX = 1; // mm/s
+        double velY = 1; // mm/s
+        double velZ = 1; // mm/s
     };
 
     struct SCOPESETTINGS
     {
-        char channel[10] = "CHANNEL1";
+        char channel[10] = "C1";
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED

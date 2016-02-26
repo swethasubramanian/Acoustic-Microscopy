@@ -33,8 +33,10 @@ bsc::bsc(QWidget *parent) :
     // Setting default motor and ocilloscope settings
     ui->stepSizeX->setText("2");
     ui->stepSizeY->setText("2");
+    ui->stepSizeZ->setText("2");
     ui->windowSizeX->setText("18");
     ui->windowSizeY->setText("18");
+    ui->windowSizeZ->setText("18");
     ui->displacement->setText("1");
     ui->waterTemperature->setText("23");
     ui->cSample->setText("1540");
@@ -225,13 +227,6 @@ void bsc::stopAcquisition(void)
     }
 }
 
-/*void bsc::movMotor(void)
-{
-    acquisition* ACQ2 = new acquisition();
-    ACQ2->moveMotor();
-}*/
-
-
 // Moving motor for aligning things
 void bsc::movMotor(void)
 {
@@ -255,19 +250,19 @@ void bsc::movMotor(void)
     if (ui->XDir->isChecked())
     {
         ACQ2->requestMotorMovement("X", dist, motorSettings);
-        //ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
+        ui->statusMsg->setText(QString("Moved in X direction by %1 mm").arg(dist));
         return;
     }
     if (ui->YDir->isChecked())
     {
         ACQ2->requestMotorMovement("Y", dist, motorSettings);
-       // ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
+        ui->statusMsg->setText(QString("Moved in Y direction by %1 mm").arg(dist));
         return;
     }
     if (ui->ZDir->isChecked())
     {
         ACQ2->requestMotorMovement("Z", dist, motorSettings);
-       // ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
+        ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         return;
     }
 }

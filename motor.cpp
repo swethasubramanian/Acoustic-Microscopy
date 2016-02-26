@@ -19,7 +19,8 @@ bool motor::openMotor()
         mutex.lock();
         connected = true;
         mutex.unlock();
-        motorSocket->write("SETUP\r\n\r\n");// Sets up pitch, velocities and pitch etc
+        motorSocket->write("SETUP\r\n\r\n");// Directly uses setup program that Janelle wrote?
+        //Sets up pitch, velocities and pitch etc
         //setup();
     }
     return connected;
@@ -28,6 +29,8 @@ bool motor::openMotor()
 bool motor::mov(const QString &motID, double dist)
 {
     char foo[100];
+    //default value for velocity is 1
+    int pausetime = (int) abs(1000*(dist)) + 3000; //in millisecs
     if (motorSocket->waitForConnected(15000))
     {
         mutex.lock();
@@ -40,7 +43,7 @@ bool motor::mov(const QString &motID, double dist)
             motorSocket->write(foo);
             motorSocket->write("GO01000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
-            Sleep(2000);
+            Sleep(pausetime);
             motorSocket->write("DRIVE00000\r\n\r\n");
         }
 
@@ -52,7 +55,7 @@ bool motor::mov(const QString &motID, double dist)
             motorSocket->write(foo);
             motorSocket->write("GO10000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
-            Sleep(2000);
+            Sleep(pausetime);
             motorSocket->write("DRIVE00000\r\n\r\n");
         }
 
@@ -63,7 +66,7 @@ bool motor::mov(const QString &motID, double dist)
             motorSocket->write(foo);
             motorSocket->write("GO00100\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
-            Sleep(2000);
+            Sleep(pausetime);
             motorSocket->write("DRIVE00000\r\n\r\n");
         }
 

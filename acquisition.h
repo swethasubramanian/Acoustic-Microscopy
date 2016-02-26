@@ -41,7 +41,7 @@ class acquisition : public QObject
         bool acquiring;
         bool connected;
         QMutex mutex;
-        int Nx, Nz;
+        int Nx, Ny, Nz;
         QString savePath, qFilename;
         int index=0;
         QString saveDir;
