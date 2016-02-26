@@ -54,7 +54,7 @@ void acquisition::moveMotor()
         connected = MOTOR.closeMotor();
         if (!connected) emit connectionStatusChanged("safely disconnected");
         //emit statusChanged(statusMsg);
-       // emit statusChanged("Movement completed!");
+        // emit statusChanged("Movement completed!");
         mutex.lock();
         _abort = true;
         abort = true;
@@ -339,7 +339,7 @@ void acquisition::getSampleData()
                 loop.exec();
                 if (!connected)
                 {
-                    emit statusChanged("safely disconnected");
+                    emit connectionStatusChanged("safely disconnected");
                     connected = false;
                 }
 
@@ -422,44 +422,12 @@ void acquisition::get3DData()
             getDataFromScope(k);
             emit runIndexChanged();
             emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
-
-            for (int i=0; i<=Nx; i++)
+            int n = 0;
+            for (int p=0; p<=Ny; p++)
             {
-                // Checks if the process should be aborted
-                mutex.lock();
-                bool _abort = abort;
-                bool _connected = connected;
-                mutex.unlock();
-                if (_abort) break;
-                if (!_connected) break;
-
-                // This will stupidly wait 1 sec doing nothing...
-                QTimer::singleShot(1000, &loop, SLOT(quit()));
-                loop.exec();
-
-                if (i>0)
+                if (p>0)
                 {
-                    connected = MOTOR.mov("X", stepXmm);
-                    QTimer::singleShot(1000, &loop, SLOT(quit()));
-                    loop.exec();
-                    if (!connected)
-                    {
-                        emit connectionStatusChanged("ERROR: not connected");
-                        break;
-                    }
-                    else emit connectionStatusChanged("connected");
-
-
-                    k++;
-                    index = k;
-                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
-                    getDataFromScope(k);
-                    emit runIndexChanged();
-                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
-                }
-                if (i%2 == 0)
-                {
-                    for (j=0; j<=Nz; j++)
+                    for (i=n; i<=Nx+n; i++)
                     {
                         // Checks if the process should be aborted
                         mutex.lock();
@@ -473,13 +441,18 @@ void acquisition::get3DData()
                         QTimer::singleShot(1000, &loop, SLOT(quit()));
                         loop.exec();
 
-                        if (j>0)
+                        if (i>0)
                         {
-                            connected = MOTOR.mov("Z", -stepZmm);
+                            connected = MOTOR.mov("X", stepXmm);
                             QTimer::singleShot(1000, &loop, SLOT(quit()));
                             loop.exec();
-                            if (!connected) emit connectionStatusChanged("ERROR: not connected");
+                            if (!connected)
+                            {
+                                emit connectionStatusChanged("ERROR: not connected");
+                                break;
+                            }
                             else emit connectionStatusChanged("connected");
+
 
                             k++;
                             index = k;
@@ -488,52 +461,86 @@ void acquisition::get3DData()
                             emit runIndexChanged();
                             emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
                         }
-                    }
-                    if (_abort) break;
-                    if (!_connected) break;
-                }
-                if (i%2==1)
-                {
-                    for (j=0; j<=Nz; j++)
-                    {
-                        // Checks if the process should be aborted
-                        mutex.lock();
-                        bool _abort = abort;
-                        bool _connected = connected;
-                        mutex.unlock();
+                        if (i%2 == 0)
+                        {
+                            for (j=0; j<=Nz; j++)
+                            {
+                                // Checks if the process should be aborted
+                                mutex.lock();
+                                bool _abort = abort;
+                                bool _connected = connected;
+                                mutex.unlock();
+                                if (_abort) break;
+                                if (!_connected) break;
+
+                                // This will stupidly wait 1 sec doing nothing...
+                                QTimer::singleShot(1000, &loop, SLOT(quit()));
+                                loop.exec();
+
+                                if (j>0)
+                                {
+                                    connected = MOTOR.mov("Z", -stepZmm);
+                                    QTimer::singleShot(1000, &loop, SLOT(quit()));
+                                    loop.exec();
+                                    if (!connected) emit connectionStatusChanged("ERROR: not connected");
+                                    else emit connectionStatusChanged("connected");
+
+                                    k++;
+                                    index = k;
+                                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                                    getDataFromScope(k);
+                                    emit runIndexChanged();
+                                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+                                }
+                            }
+                            if (_abort) break;
+                            if (!_connected) break;
+                        }
+                        if (i%2==1)
+                        {
+                            for (j=0; j<=Nz; j++)
+                            {
+                                // Checks if the process should be aborted
+                                mutex.lock();
+                                bool _abort = abort;
+                                bool _connected = connected;
+                                mutex.unlock();
+                                if (_abort) break;
+                                if (!_connected) break;
+
+                                // This will stupidly wait 1 sec doing nothing...
+                                QTimer::singleShot(1000, &loop, SLOT(quit()));
+                                loop.exec();
+
+                                if (j>0)
+                                {
+                                    connected = MOTOR.mov("Z", stepZmm);
+                                    QTimer::singleShot(1000, &loop, SLOT(quit()));
+                                    loop.exec();
+                                    if (!connected) emit connectionStatusChanged("ERROR: not connected");
+                                    else emit connectionStatusChanged("connected");
+
+                                    k++;
+                                    index = k;
+                                    emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
+                                    getDataFromScope(k);
+                                    emit runIndexChanged();
+                                    emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
+                                }
+                            }
+                            if (_abort) break;
+                            if (!_connected) break;
+                        }
                         if (_abort) break;
                         if (!_connected) break;
-
-                        // This will stupidly wait 1 sec doing nothing...
-                        QTimer::singleShot(1000, &loop, SLOT(quit()));
-                        loop.exec();
-
-                        if (j>0)
-                        {
-                            connected = MOTOR.mov("Z", stepZmm);
-                            QTimer::singleShot(1000, &loop, SLOT(quit()));
-                            loop.exec();
-                            if (!connected) emit connectionStatusChanged("ERROR: not connected");
-                            else emit connectionStatusChanged("connected");
-
-                            k++;
-                            index = k;
-                            emit statusChanged(QString("Acquiring sample data set #%1 ...").arg(k));
-                            getDataFromScope(k);
-                            emit runIndexChanged();
-                            emit waveformUpdated(SCOPE.getVoltageData(), SCOPE.getTimeData());
-                        }
                     }
-                    if (_abort) break;
-                    if (!_connected) break;
+                    mutex.lock();
+                    bool _abort = abort;
+                    mutex.unlock();
                 }
-                if (_abort) break;
-                if (!_connected) break;
             }
-            mutex.lock();
-            bool _abort = abort;
-            mutex.unlock();
-            if (!_abort & connected)
+
+            if (!_abort)
             {
                 Sleep(1000);
                 emit statusChanged("Data acquisition complete. Moving back to center of ROI ...");
