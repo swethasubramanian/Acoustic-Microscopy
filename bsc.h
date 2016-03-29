@@ -50,6 +50,7 @@ public slots:
     void displayWaveform(const QVector<double> &, const QVector<double> &);
     void calculateTimeDelay();
     void setTimeDelay();
+    void motorSetup();
 
 
 signals:

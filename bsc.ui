@@ -232,8 +232,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>100</y>
+      <x>500</x>
+      <y>120</y>
       <width>201</width>
       <height>71</height>
      </rect>
@@ -489,7 +489,7 @@
      <string>TCPIP Status:</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>21</x>
@@ -531,7 +531,19 @@
      </item>
     </layout>
    </widget>
-   <zorder>layoutWidget</zorder>
+   <widget class="QPushButton" name="motorSetup">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>720</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Motor Setup</string>
+    </property>
+   </widget>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
@@ -547,7 +559,8 @@
    <zorder>label_23</zorder>
    <zorder>acquireWaveform</zorder>
    <zorder>tcpipMsg</zorder>
-   <zorder></zorder>
+   <zorder>layoutWidget</zorder>
+   <zorder>motorSetup</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -581,7 +594,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup"/>
   <buttongroup name="buttonGroup_2"/>
+  <buttongroup name="buttonGroup"/>
  </buttongroups>
 </ui>

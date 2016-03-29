@@ -110,16 +110,17 @@ public:
     QLabel *label_18;
     QLineEdit *timeDelay;
     QLabel *tcpipMsg;
-    QWidget *widget;
+    QWidget *layoutWidget8;
     QHBoxLayout *horizontalLayout_3;
     QRadioButton *threeD;
     QRadioButton *sample;
     QRadioButton *planar;
+    QPushButton *motorSetup;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
-    QButtonGroup *buttonGroup;
     QButtonGroup *buttonGroup_2;
+    QButtonGroup *buttonGroup;
 
     void setupUi(QMainWindow *bsc)
     {
@@ -279,7 +280,7 @@ public:
 
         layoutWidget5 = new QWidget(centralWidget);
         layoutWidget5->setObjectName(QStringLiteral("layoutWidget5"));
-        layoutWidget5->setGeometry(QRect(470, 100, 201, 71));
+        layoutWidget5->setGeometry(QRect(500, 120, 201, 71));
         verticalLayout_2 = new QVBoxLayout(layoutWidget5);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -488,15 +489,15 @@ public:
         tcpipMsg = new QLabel(centralWidget);
         tcpipMsg->setObjectName(QStringLiteral("tcpipMsg"));
         tcpipMsg->setGeometry(QRect(10, 180, 391, 16));
-        widget = new QWidget(centralWidget);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(21, 561, 193, 19));
-        horizontalLayout_3 = new QHBoxLayout(widget);
+        layoutWidget8 = new QWidget(centralWidget);
+        layoutWidget8->setObjectName(QStringLiteral("layoutWidget8"));
+        layoutWidget8->setGeometry(QRect(21, 561, 193, 19));
+        horizontalLayout_3 = new QHBoxLayout(layoutWidget8);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        threeD = new QRadioButton(widget);
+        threeD = new QRadioButton(layoutWidget8);
         buttonGroup = new QButtonGroup(bsc);
         buttonGroup->setObjectName(QStringLiteral("buttonGroup"));
         buttonGroup->addButton(threeD);
@@ -504,20 +505,22 @@ public:
 
         horizontalLayout_3->addWidget(threeD);
 
-        sample = new QRadioButton(widget);
+        sample = new QRadioButton(layoutWidget8);
         buttonGroup->addButton(sample);
         sample->setObjectName(QStringLiteral("sample"));
 
         horizontalLayout_3->addWidget(sample);
 
-        planar = new QRadioButton(widget);
+        planar = new QRadioButton(layoutWidget8);
         buttonGroup->addButton(planar);
         planar->setObjectName(QStringLiteral("planar"));
 
         horizontalLayout_3->addWidget(planar);
 
+        motorSetup = new QPushButton(centralWidget);
+        motorSetup->setObjectName(QStringLiteral("motorSetup"));
+        motorSetup->setGeometry(QRect(20, 720, 75, 23));
         bsc->setCentralWidget(centralWidget);
-        layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
         layoutWidget->raise();
@@ -533,6 +536,8 @@ public:
         label_23->raise();
         acquireWaveform->raise();
         tcpipMsg->raise();
+        layoutWidget->raise();
+        motorSetup->raise();
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 775, 21));
@@ -590,6 +595,7 @@ public:
         threeD->setText(QApplication::translate("bsc", "3D", 0));
         sample->setText(QApplication::translate("bsc", "2D", 0));
         planar->setText(QApplication::translate("bsc", "Planar (no motor)", 0));
+        motorSetup->setText(QApplication::translate("bsc", "Motor Setup", 0));
     } // retranslateUi
 
 };

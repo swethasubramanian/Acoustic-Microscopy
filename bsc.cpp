@@ -56,8 +56,24 @@ bsc::bsc(QWidget *parent) :
     connect(ui->quitProg, SIGNAL(clicked()), this, SLOT(stopAcquisition()));
     connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
     connect(ui->setTimeDelay, SIGNAL(clicked()), this, SLOT(setTimeDelay()));
+    connect(ui->motorSetup, SIGNAL(clicked()), this, SLOT(motorSetup()));
 
     getSOSWater();
+}
+
+void bsc::motorSetup(void)
+{
+    bool connected;
+    connected = MOTOR.openMotor();
+    if (connected) ui->tcpipMsg->setText("Status: Connected");
+    else ui->tcpipMsg->setText("Status: Disconnected");
+    connected = MOTOR.setup();
+    if (connected) ui->tcpipMsg->setText("Status: Connected");
+    else ui->tcpipMsg->setText("Status: Disconnected");
+    connected = MOTOR.closeMotor();
+    if (connected) ui->tcpipMsg->setText("ERROR! Still connected");
+    else ui->tcpipMsg->setText("Status: Safely Disconnected");
+    ui->statusMsg->setText("Motor setup complete");
 }
 
 void bsc::calculateTimeDelay(void)

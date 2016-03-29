@@ -12,8 +12,9 @@ class motor : public QObject
     public:
         explicit motor(QObject *parent = 0);
         bool openMotor();
-        void setup();
+        bool setup();
         bool mov(const QString &, double dist);
+        bool movAlign(const QString &, double dist);
         bool closeMotor(void);
 
 

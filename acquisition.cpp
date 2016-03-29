@@ -40,13 +40,13 @@ void acquisition::moveMotor()
 
         // This will stupidly wait 1 sec doing nothing...
         QEventLoop loop;
-        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        QTimer::singleShot(5, &loop, SLOT(quit()));
         loop.exec();
 
-        connected = MOTOR.mov(motorID, dist);
+        connected = MOTOR.movAlign(motorID, dist);
         // This will stupidly wait 1 sec doing nothing...
        // QEventLoop loop;
-        QTimer::singleShot(1000, &loop, SLOT(quit()));
+        QTimer::singleShot(5, &loop, SLOT(quit()));
         loop.exec();
         if (!connected)
             emit connectionStatusChanged("ERROR: not connected");
@@ -159,9 +159,9 @@ void acquisition::getSampleData()
 
 
         double windowX = motorSettings.windowSizeX;
-        double windowZ = motorSettings.windowSizeZ;
+        double windowY = motorSettings.windowSizeY;
         double stepXmm = motorSettings.stepSizeX;
-        double stepZmm = motorSettings.stepSizeZ;
+        double stepYmm = motorSettings.stepSizeY;
 
         connected = MOTOR.openMotor();
         // This will stupidly wait 1 sec doing nothing...
@@ -182,7 +182,7 @@ void acquisition::getSampleData()
             if (!connected)
                 emit connectionStatusChanged("ERROR: not connected, will abort when safe");
             else emit connectionStatusChanged("connected");
-            connected = MOTOR.mov("Z", windowZ/2); //(minus is up)
+            connected = MOTOR.mov("Y", windowY/2); //(minus is up)
             QTimer::singleShot(1000, &loop, SLOT(quit()));
             loop.exec();
             emit connectionStatusChanged("connected");
@@ -236,7 +236,7 @@ void acquisition::getSampleData()
                 }
                 if (i%2 == 0)
                 {
-                    for (j=0; j<=Nz; j++)
+                    for (j=0; j<=Ny; j++)
                     {
                         // Checks if the process should be aborted
                         mutex.lock();
@@ -252,7 +252,7 @@ void acquisition::getSampleData()
 
                         if (j>0)
                         {
-                            connected = MOTOR.mov("Z", -stepZmm);
+                            connected = MOTOR.mov("Y", -stepYmm);
                             QTimer::singleShot(1000, &loop, SLOT(quit()));
                             loop.exec();
                             if (!connected) emit connectionStatusChanged("ERROR: not connected");
@@ -271,7 +271,7 @@ void acquisition::getSampleData()
                 }
                 if (i%2==1)
                 {
-                    for (j=0; j<=Nz; j++)
+                    for (j=0; j<=Ny; j++)
                     {
                         // Checks if the process should be aborted
                         mutex.lock();
@@ -287,7 +287,7 @@ void acquisition::getSampleData()
 
                         if (j>0)
                         {
-                            connected = MOTOR.mov("Z", stepZmm);
+                            connected = MOTOR.mov("Y", stepYmm);
                             QTimer::singleShot(1000, &loop, SLOT(quit()));
                             loop.exec();
                             if (!connected) emit connectionStatusChanged("ERROR: not connected");
@@ -323,10 +323,10 @@ void acquisition::getSampleData()
                     emit connectionStatusChanged("ERROR: not connected");
                 else emit connectionStatusChanged("connected");
 
-                if ((Nz+1)%2==0)
-                    connected = MOTOR.mov("Z", -windowZ/2);
+                if ((Ny+1)%2==0)
+                    connected = MOTOR.mov("Y", -windowY/2);
                 else
-                    connected = MOTOR.mov("Z", windowZ/2);
+                    connected = MOTOR.mov("Y", windowY/2);
                 // This will stupidly wait 1 sec doing nothing...
                 QTimer::singleShot(1000, &loop, SLOT(quit()));
                 loop.exec();
@@ -342,7 +342,6 @@ void acquisition::getSampleData()
                     emit connectionStatusChanged("safely disconnected");
                     connected = false;
                 }
-
 
                 SCOPE.closeScope();
                 // Set acquiring to false, meaning the process can't be aborted anymore.
