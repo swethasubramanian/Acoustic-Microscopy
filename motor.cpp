@@ -214,6 +214,18 @@ bool motor::mov(const QString &motID, double dist)
     return connected;
 }
 
+bool motor::killMotor(void)
+{
+    if(motorSocket->waitForConnected(3000))
+    {
+        mutex.lock();
+        connected = true;
+        mutex.unlock();
+        motorSocket->write("!K\r\n\r\n");
+    }
+    return connected;
+}
+
 bool motor::closeMotor(void)
 {
     if (motorSocket->waitForConnected(3000))

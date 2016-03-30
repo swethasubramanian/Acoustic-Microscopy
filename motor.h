@@ -16,6 +16,7 @@ class motor : public QObject
         bool mov(const QString &, double dist);
         bool movAlign(const QString &, double dist);
         bool closeMotor(void);
+        bool killMotor(void);
 
 
     private:

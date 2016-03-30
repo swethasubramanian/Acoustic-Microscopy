@@ -57,6 +57,7 @@ bsc::bsc(QWidget *parent) :
     connect(ui->calTimeDelay, SIGNAL(clicked()), this, SLOT(calculateTimeDelay()));
     connect(ui->setTimeDelay, SIGNAL(clicked()), this, SLOT(setTimeDelay()));
     connect(ui->motorSetup, SIGNAL(clicked()), this, SLOT(motorSetup()));
+    connect(ui->killMotor, SIGNAL(clicked()), this, SLOT(killMotor()));
 
     getSOSWater();
 }
@@ -74,6 +75,29 @@ void bsc::motorSetup(void)
     if (connected) ui->tcpipMsg->setText("ERROR! Still connected");
     else ui->tcpipMsg->setText("Status: Safely Disconnected");
     ui->statusMsg->setText("Motor setup complete");
+}
+
+void bsc::killMotor()
+{
+    bool connected;
+    connected = MOTOR.openMotor();
+    if (connected) ui->tcpipMsg->setText("Status: Connected");
+    else ui->tcpipMsg->setText("Error: Not Connected");
+    connected = MOTOR.killMotor();
+    if (connected)
+    {
+        ui->tcpipMsg->setText("Status: Connected");
+        ui->statusMsg->setText("Kill command issued!");
+    }
+    else
+    {
+        ui->tcpipMsg->setText("ERROR!Not Connected!");
+        ui->statusMsg->setText("Not dying...because I can't connect");
+    }
+    connected = MOTOR.closeMotor();
+    if (connected) ui->tcpipMsg->setText("ERROR! Still connected");
+    else ui->tcpipMsg->setText("Status: Safely Disconnected");
+    ui->statusMsg->setText("Motor killed.");
 }
 
 void bsc::calculateTimeDelay(void)
@@ -316,18 +340,6 @@ void bsc::movMotor(void)
         ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         return;
     }
-}
-
-
-
-// To kill motor movement
-void bsc::killMotor(void)
-{
-   // abort = true;
-   // thread->quit();
-    //ACQ->stopAcquisition();
-    //thread->wait();
-    //ui->statusMsg->setText("Ready!");
 }
 
 // Set up motor and scope settings

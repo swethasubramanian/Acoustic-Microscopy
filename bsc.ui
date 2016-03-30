@@ -107,8 +107,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>100</y>
+      <x>110</x>
+      <y>90</y>
       <width>230</width>
       <height>71</height>
      </rect>
@@ -232,10 +232,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>120</y>
+      <x>540</x>
+      <y>90</y>
       <width>201</width>
-      <height>71</height>
+      <height>61</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -313,8 +313,8 @@
    <widget class="QLabel" name="label_23">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>210</y>
+      <x>590</x>
+      <y>230</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -365,8 +365,8 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>510</x>
-      <y>240</y>
+      <x>530</x>
+      <y>250</y>
       <width>241</width>
       <height>178</height>
      </rect>
@@ -534,14 +534,27 @@
    <widget class="QPushButton" name="motorSetup">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>720</y>
+      <x>540</x>
+      <y>160</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Motor Setup</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="killMotor">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>160</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Kill Motor</string>
     </property>
    </widget>
    <zorder>layoutWidget</zorder>
@@ -561,6 +574,7 @@
    <zorder>tcpipMsg</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>motorSetup</zorder>
+   <zorder>killMotor</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -594,7 +608,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>

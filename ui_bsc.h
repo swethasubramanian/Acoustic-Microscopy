@@ -116,11 +116,12 @@ public:
     QRadioButton *sample;
     QRadioButton *planar;
     QPushButton *motorSetup;
+    QPushButton *killMotor;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
-    QButtonGroup *buttonGroup_2;
     QButtonGroup *buttonGroup;
+    QButtonGroup *buttonGroup_2;
 
     void setupUi(QMainWindow *bsc)
     {
@@ -181,7 +182,7 @@ public:
 
         layoutWidget2 = new QWidget(centralWidget);
         layoutWidget2->setObjectName(QStringLiteral("layoutWidget2"));
-        layoutWidget2->setGeometry(QRect(130, 100, 230, 71));
+        layoutWidget2->setGeometry(QRect(110, 90, 230, 71));
         gridLayout = new QGridLayout(layoutWidget2);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -280,7 +281,7 @@ public:
 
         layoutWidget5 = new QWidget(centralWidget);
         layoutWidget5->setObjectName(QStringLiteral("layoutWidget5"));
-        layoutWidget5->setGeometry(QRect(500, 120, 201, 71));
+        layoutWidget5->setGeometry(QRect(540, 90, 201, 61));
         verticalLayout_2 = new QVBoxLayout(layoutWidget5);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
@@ -344,7 +345,7 @@ public:
         WaveformPlot->setGeometry(QRect(10, 200, 481, 271));
         label_23 = new QLabel(centralWidget);
         label_23->setObjectName(QStringLiteral("label_23"));
-        label_23->setGeometry(QRect(570, 210, 131, 16));
+        label_23->setGeometry(QRect(590, 230, 131, 16));
         acquireWaveform = new QPushButton(centralWidget);
         acquireWaveform->setObjectName(QStringLiteral("acquireWaveform"));
         acquireWaveform->setGeometry(QRect(10, 490, 121, 23));
@@ -368,7 +369,7 @@ public:
 
         layoutWidget7 = new QWidget(centralWidget);
         layoutWidget7->setObjectName(QStringLiteral("layoutWidget7"));
-        layoutWidget7->setGeometry(QRect(510, 240, 241, 178));
+        layoutWidget7->setGeometry(QRect(530, 250, 241, 178));
         verticalLayout = new QVBoxLayout(layoutWidget7);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -519,7 +520,10 @@ public:
 
         motorSetup = new QPushButton(centralWidget);
         motorSetup->setObjectName(QStringLiteral("motorSetup"));
-        motorSetup->setGeometry(QRect(20, 720, 75, 23));
+        motorSetup->setGeometry(QRect(540, 160, 75, 23));
+        killMotor = new QPushButton(centralWidget);
+        killMotor->setObjectName(QStringLiteral("killMotor"));
+        killMotor->setGeometry(QRect(630, 160, 75, 23));
         bsc->setCentralWidget(centralWidget);
         layoutWidget->raise();
         layoutWidget->raise();
@@ -538,6 +542,7 @@ public:
         tcpipMsg->raise();
         layoutWidget->raise();
         motorSetup->raise();
+        killMotor->raise();
         menuBar = new QMenuBar(bsc);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 775, 21));
@@ -596,6 +601,7 @@ public:
         sample->setText(QApplication::translate("bsc", "2D", 0));
         planar->setText(QApplication::translate("bsc", "Planar (no motor)", 0));
         motorSetup->setText(QApplication::translate("bsc", "Motor Setup", 0));
+        killMotor->setText(QApplication::translate("bsc", "Kill Motor", 0));
     } // retranslateUi
 
 };
