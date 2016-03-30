@@ -13,7 +13,7 @@ motor::motor(QObject *parent) : QObject(parent)
 
 bool motor::setup()
 {
-    if (motorSocket->waitForConnected(3000))
+    if (motorSocket->waitForConnected(15000))
     {
         mutex.lock();
         connected = true;
@@ -111,26 +111,26 @@ bool motor::movAlign(const QString &motID, double dist)
 
         if (motID == "X")
         {
-            sprintf(foo, "VAR4=%d\r\n\r\n", (int)dist);
+            sprintf(foo, "VAR4=%g\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("XSCANS\r\n\r\n");
         }
 
         else if (motID == "Y")
         {
-            sprintf(foo, "VAR5=%d\r\n\r\n", (int)dist);
+            sprintf(foo, "VAR5=%g\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("YSCANS\r\n\r\n");
         }
 
         else if (motID == "Z")
         {
-           // motorSocket->write("OUT11\r\n\r\n");
+            //motorSocket->write("OUT11\r\n\r\n");
             sprintf(foo, "VAR3=%d\r\n\r\n", (int)dist);
             motorSocket->write(foo);
             motorSocket->write("ALIGNZS\r\n\r\n");
 //            motorSocket->write("DRIVE00100\r\n\r\n");
-//            sprintf(foo, "D0,0,%d,0,0\r\n\r\n", (int)dist);
+//            sprintf(foo, "D0,0,%g,0,0\r\n\r\n", dist);
 //            motorSocket->write(foo);
 //            motorSocket->write("OUT11\r\n\r\n"); // disable the bloody brake
 //            motorSocket->write("GO00100\r\n\r\n");
@@ -156,7 +156,7 @@ bool motor::mov(const QString &motID, double dist)
         if (motID == "X")
         {
             motorSocket->write("DRIVE01000\r\n\r\n");
-            sprintf(foo, "D0,%d,0,0,0\r\n\r\n", (int)dist);
+            sprintf(foo, "D0,%g,0,0,0\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("GO01000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
@@ -168,7 +168,7 @@ bool motor::mov(const QString &motID, double dist)
         {
 
             motorSocket->write("DRIVE10000\r\n\r\n");
-            sprintf(foo, "D%d,0,0,0,0\r\n\r\n", (int)dist);
+            sprintf(foo, "D%g,0,0,0,0\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("GO10000\r\n\r\n");
             //motorSocket->write("T2\r\n\r\n");
@@ -179,7 +179,7 @@ bool motor::mov(const QString &motID, double dist)
         else if (motID == "Z")
         {
             motorSocket->write("DRIVE00100\r\n\r\n");
-            sprintf(foo, "D0,0,%d,0,0\r\n\r\n", (int)dist);
+            sprintf(foo, "D0,0,%g,0,0\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("OUT11\r\n\r\n"); // disable the bloody brake
             motorSocket->write("GO00100\r\n\r\n");
@@ -192,7 +192,7 @@ bool motor::mov(const QString &motID, double dist)
         else if (motID == "PHI")
         {
             motorSocket->write("DRIVE00010\r\n\r\n");
-            sprintf(foo, "D0,0,0,%d,0\r\n\r\n", (int)dist);
+            sprintf(foo, "D0,0,0,%g,0\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("GO00010\r\n\r\n");
             //motorSocket->write("T10\r\n\r\n");
@@ -203,8 +203,8 @@ bool motor::mov(const QString &motID, double dist)
         else if (motID == "THETA")
         {
             motorSocket->write("DRIVE00001\r\n\r\n");
-            sprintf(foo, "D0,0,0,0,%d\r\n\r\n", (int)dist);
-            motorSocket->write("D0,0,0,0,%d\r\n\r\n");
+            sprintf(foo, "D0,0,0,0,%g\r\n\r\n", dist);
+            motorSocket->write(foo);
             motorSocket->write("GO00001\r\n\r\n");
             //motorSocket->write("T10\r\n\r\n");
             Sleep(10000);

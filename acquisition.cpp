@@ -35,7 +35,11 @@ void acquisition::moveMotor()
         bool connected;
         connected = MOTOR.openMotor();
         if (!connected)
+        {
             emit connectionStatusChanged("ERROR: not connected");
+            return;
+        }
+
         else emit connectionStatusChanged("connected");
 
         // This will stupidly wait 1 sec doing nothing...
@@ -176,13 +180,13 @@ void acquisition::getSampleData()
 
             // move motor to bottom left of the ROI (from computer perspective) and get scope data
             emit statusChanged("Preparing for take off ...");
-            connected = MOTOR.mov("X", -windowX/2); //(minus is left)
+            connected = MOTOR.movAlign("X", -windowX/2); //(minus is left)
             QTimer::singleShot(1000, &loop, SLOT(quit()));
             loop.exec();
             if (!connected)
                 emit connectionStatusChanged("ERROR: not connected, will abort when safe");
             else emit connectionStatusChanged("connected");
-            connected = MOTOR.mov("Y", windowY/2); //(minus is up)
+            connected = MOTOR.movAlign("Y", windowY/2); //(minus is up)
             QTimer::singleShot(1000, &loop, SLOT(quit()));
             loop.exec();
             emit connectionStatusChanged("connected");
@@ -216,7 +220,7 @@ void acquisition::getSampleData()
 
                 if (i>0)
                 {
-                    connected = MOTOR.mov("X", stepXmm);
+                    connected = MOTOR.movAlign("X", stepXmm);
                     QTimer::singleShot(1000, &loop, SLOT(quit()));
                     loop.exec();
                     if (!connected)
@@ -252,7 +256,7 @@ void acquisition::getSampleData()
 
                         if (j>0)
                         {
-                            connected = MOTOR.mov("Y", -stepYmm);
+                            connected = MOTOR.movAlign("Y", -stepYmm);
                             QTimer::singleShot(1000, &loop, SLOT(quit()));
                             loop.exec();
                             if (!connected) emit connectionStatusChanged("ERROR: not connected");
@@ -287,7 +291,7 @@ void acquisition::getSampleData()
 
                         if (j>0)
                         {
-                            connected = MOTOR.mov("Y", stepYmm);
+                            connected = MOTOR.movAlign("Y", stepYmm);
                             QTimer::singleShot(1000, &loop, SLOT(quit()));
                             loop.exec();
                             if (!connected) emit connectionStatusChanged("ERROR: not connected");
@@ -315,7 +319,7 @@ void acquisition::getSampleData()
                 Sleep(1000);
                 emit statusChanged("Data acquisition complete. Moving back to center of ROI ...");
                 // Move motor back to center of the ROI
-                connected = MOTOR.mov("X", -windowX/2);
+                connected = MOTOR.movAlign("X", -windowX/2);
                 // This will stupidly wait 1 sec doing nothing...
                 QTimer::singleShot(1000, &loop, SLOT(quit()));
                 loop.exec();
@@ -324,9 +328,9 @@ void acquisition::getSampleData()
                 else emit connectionStatusChanged("connected");
 
                 if ((Ny+1)%2==0)
-                    connected = MOTOR.mov("Y", -windowY/2);
+                    connected = MOTOR.movAlign("Y", -windowY/2);
                 else
-                    connected = MOTOR.mov("Y", windowY/2);
+                    connected = MOTOR.movAlign("Y", windowY/2);
                 // This will stupidly wait 1 sec doing nothing...
                 QTimer::singleShot(1000, &loop, SLOT(quit()));
                 loop.exec();

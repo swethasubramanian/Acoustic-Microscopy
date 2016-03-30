@@ -66,10 +66,10 @@ void bsc::motorSetup(void)
     bool connected;
     connected = MOTOR.openMotor();
     if (connected) ui->tcpipMsg->setText("Status: Connected");
-    else ui->tcpipMsg->setText("Status: Disconnected");
+    else ui->tcpipMsg->setText("Error: Not Connected");
     connected = MOTOR.setup();
     if (connected) ui->tcpipMsg->setText("Status: Connected");
-    else ui->tcpipMsg->setText("Status: Disconnected");
+    else ui->tcpipMsg->setText("Error: Not Connected");
     connected = MOTOR.closeMotor();
     if (connected) ui->tcpipMsg->setText("ERROR! Still connected");
     else ui->tcpipMsg->setText("Status: Safely Disconnected");
