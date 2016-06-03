@@ -20,8 +20,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_bsc_t {
-    QByteArrayData data[16];
-    char stringdata0[214];
+    QByteArrayData data[17];
+    char stringdata0[223];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,23 +37,25 @@ QT_MOC_LITERAL(3, 25, 19), // "sampleDataRequested"
 QT_MOC_LITERAL(4, 45, 16), // "startAcquisition"
 QT_MOC_LITERAL(5, 62, 12), // "getParentDir"
 QT_MOC_LITERAL(6, 75, 8), // "movMotor"
-QT_MOC_LITERAL(7, 84, 9), // "killMotor"
-QT_MOC_LITERAL(8, 94, 15), // "stopAcquisition"
-QT_MOC_LITERAL(9, 110, 13), // "getCurrentRun"
-QT_MOC_LITERAL(10, 124, 14), // "updateWaveform"
-QT_MOC_LITERAL(11, 139, 15), // "displayWaveform"
-QT_MOC_LITERAL(12, 155, 15), // "QVector<double>"
-QT_MOC_LITERAL(13, 171, 18), // "calculateTimeDelay"
-QT_MOC_LITERAL(14, 190, 12), // "setTimeDelay"
-QT_MOC_LITERAL(15, 203, 10) // "motorSetup"
+QT_MOC_LITERAL(7, 84, 8), // "setScope"
+QT_MOC_LITERAL(8, 93, 9), // "killMotor"
+QT_MOC_LITERAL(9, 103, 15), // "stopAcquisition"
+QT_MOC_LITERAL(10, 119, 13), // "getCurrentRun"
+QT_MOC_LITERAL(11, 133, 14), // "updateWaveform"
+QT_MOC_LITERAL(12, 148, 15), // "displayWaveform"
+QT_MOC_LITERAL(13, 164, 15), // "QVector<double>"
+QT_MOC_LITERAL(14, 180, 18), // "calculateTimeDelay"
+QT_MOC_LITERAL(15, 199, 12), // "setTimeDelay"
+QT_MOC_LITERAL(16, 212, 10) // "motorSetup"
 
     },
     "bsc\0planarDataRequested\0\0sampleDataRequested\0"
     "startAcquisition\0getParentDir\0movMotor\0"
-    "killMotor\0stopAcquisition\0getCurrentRun\0"
-    "updateWaveform\0displayWaveform\0"
-    "QVector<double>\0calculateTimeDelay\0"
-    "setTimeDelay\0motorSetup"
+    "setScope\0killMotor\0stopAcquisition\0"
+    "getCurrentRun\0updateWaveform\0"
+    "displayWaveform\0QVector<double>\0"
+    "calculateTimeDelay\0setTimeDelay\0"
+    "motorSetup"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,7 +65,7 @@ static const uint qt_meta_data_bsc[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,21 +73,22 @@ static const uint qt_meta_data_bsc[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   79,    2, 0x06 /* Public */,
-       3,    0,   80,    2, 0x06 /* Public */,
+       1,    0,   84,    2, 0x06 /* Public */,
+       3,    0,   85,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       4,    0,   81,    2, 0x0a /* Public */,
-       5,    0,   82,    2, 0x0a /* Public */,
-       6,    0,   83,    2, 0x0a /* Public */,
-       7,    0,   84,    2, 0x0a /* Public */,
-       8,    0,   85,    2, 0x0a /* Public */,
-       9,    0,   86,    2, 0x0a /* Public */,
-      10,    0,   87,    2, 0x0a /* Public */,
-      11,    2,   88,    2, 0x0a /* Public */,
-      13,    0,   93,    2, 0x0a /* Public */,
-      14,    0,   94,    2, 0x0a /* Public */,
-      15,    0,   95,    2, 0x0a /* Public */,
+       4,    0,   86,    2, 0x0a /* Public */,
+       5,    0,   87,    2, 0x0a /* Public */,
+       6,    0,   88,    2, 0x0a /* Public */,
+       7,    0,   89,    2, 0x0a /* Public */,
+       8,    0,   90,    2, 0x0a /* Public */,
+       9,    0,   91,    2, 0x0a /* Public */,
+      10,    0,   92,    2, 0x0a /* Public */,
+      11,    0,   93,    2, 0x0a /* Public */,
+      12,    2,   94,    2, 0x0a /* Public */,
+      14,    0,   99,    2, 0x0a /* Public */,
+      15,    0,  100,    2, 0x0a /* Public */,
+      16,    0,  101,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -99,7 +102,8 @@ static const uint qt_meta_data_bsc[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 12, 0x80000000 | 12,    2,    2,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 13, 0x80000000 | 13,    2,    2,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -118,20 +122,21 @@ void bsc::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **
         case 2: _t->startAcquisition(); break;
         case 3: _t->getParentDir(); break;
         case 4: _t->movMotor(); break;
-        case 5: _t->killMotor(); break;
-        case 6: _t->stopAcquisition(); break;
-        case 7: _t->getCurrentRun(); break;
-        case 8: _t->updateWaveform(); break;
-        case 9: _t->displayWaveform((*reinterpret_cast< const QVector<double>(*)>(_a[1])),(*reinterpret_cast< const QVector<double>(*)>(_a[2]))); break;
-        case 10: _t->calculateTimeDelay(); break;
-        case 11: _t->setTimeDelay(); break;
-        case 12: _t->motorSetup(); break;
+        case 5: _t->setScope(); break;
+        case 6: _t->killMotor(); break;
+        case 7: _t->stopAcquisition(); break;
+        case 8: _t->getCurrentRun(); break;
+        case 9: _t->updateWaveform(); break;
+        case 10: _t->displayWaveform((*reinterpret_cast< const QVector<double>(*)>(_a[1])),(*reinterpret_cast< const QVector<double>(*)>(_a[2]))); break;
+        case 11: _t->calculateTimeDelay(); break;
+        case 12: _t->setTimeDelay(); break;
+        case 13: _t->motorSetup(); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
         default: *reinterpret_cast<int*>(_a[0]) = -1; break;
-        case 9:
+        case 10:
             switch (*reinterpret_cast<int*>(_a[1])) {
             default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 1:
@@ -183,13 +188,13 @@ int bsc::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     }
     return _id;
 }

@@ -42,6 +42,8 @@ bsc::bsc(QWidget *parent) :
     ui->displacement->setText("1");
     ui->waterTemperature->setText("23");
     ui->cSample->setText("1540");
+    ui->numberofAvgs->setText("256");
+    ui->numOfPoints->setText("1000");
 
 
 
@@ -61,6 +63,15 @@ bsc::bsc(QWidget *parent) :
 
     getSOSWater();
 }
+
+void bsc::setScope(void)
+{
+    if (ui->whichScope->currentIndex() == 0)
+        strcpy(scopeSettings.whichScope, "LeCroy");
+    else
+        strcpy(scopeSettings.whichScope, "Agilent");
+}
+
 
 void bsc::motorSetup(void)
 {
@@ -340,11 +351,24 @@ void bsc::movMotor(void)
         ui->statusMsg->setText(QString("Moved in Z direction by %1 mm").arg(dist));
         return;
     }
+    if (ui->phi->isChecked())
+    {
+        ACQ2->requestMotorMovement("PHI", dist, motorSettings);
+        ui->statusMsg->setText(QString("Moved PHI direction by %1 degrees").arg(dist));
+        return;
+    }
+    if (ui->theta->isChecked())
+    {
+        ACQ2->requestMotorMovement("THETA", dist, motorSettings);
+        ui->statusMsg->setText(QString("Moved THETA direction by %1 degrees").arg(dist));
+        return;
+    }
 }
 
 // Set up motor and scope settings
 void bsc::getParameters(void)
 {
+    setScope();
     QString tmp;
     double motorVel;
     tmp = ui->stepSizeX->text();
@@ -359,6 +383,11 @@ void bsc::getParameters(void)
     motorSettings.windowSizeY = tmp.toDouble();
     tmp = ui->windowSizeZ->text();
     motorSettings.windowSizeZ = tmp.toDouble();
+
+    tmp = ui->numberofAvgs->text();
+    scopeSettings.numOfAvgs = tmp.toInt();
+    tmp = ui->numOfPoints->text();
+    scopeSettings.numOfPoints = tmp.toInt();
 }
 
 void bsc::getParentDir()

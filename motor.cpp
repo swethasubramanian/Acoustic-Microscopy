@@ -43,6 +43,7 @@ bool motor::setup()
         // Define setup programs fpr the lousy machine
         motorSocket->write("SETUP\r\n\r\n");
 
+
         motorSocket->write("VAR7=0\r\n\r\n");
        // motorSocket->write("OUT11\r\n\r\n");
 
@@ -76,6 +77,27 @@ bool motor::setup()
         motorSocket->write("OUT00\r\n\r\n");
         motorSocket->write("DRIVE00000\r\n\r\n");
         motorSocket->write("END\r\n\r\n");
+
+        motorSocket->write("DEL ALIGNTS\r\n\r\n");
+        motorSocket->write("DEF ALIGNTS\r\n\r\n");
+        motorSocket->write("DRIVE00001\r\n\r\n");
+        motorSocket->write("D0,0,0,0,(VAR2)\r\n\r\n");
+        motorSocket->write("GO00001\r\n\r\n");
+        motorSocket->write("T10\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
+
+        motorSocket->write("DEL ALIGNPS\r\n\r\n");
+        motorSocket->write("DEF ALIGNPS\r\n\r\n");
+        motorSocket->write("DRIVE00010\r\n\r\n");
+        motorSocket->write("D0,0,0,(VAR1),0\r\n\r\n");
+        motorSocket->write("GO00010\r\n\r\n");
+        motorSocket->write("T10\r\n\r\n");
+        motorSocket->write("DRIVE00000\r\n\r\n");
+        motorSocket->write("END\r\n\r\n");
+
+
+
     }
     return connected;
 
@@ -105,7 +127,7 @@ bool motor::movAlign(const QString &motID, double dist)
         mutex.unlock();
 
         char foo[100];
-        int pausetime = (int) abs(1000*(dist)) + 3000; //in millisecs
+        int pausetime = (int) abs(1000*(dist)) + 5000; //in millisecs
         sprintf(foo, "VAR7=%d\r\n\r\n", pausetime);
         motorSocket->write(foo);
 
@@ -126,7 +148,7 @@ bool motor::movAlign(const QString &motID, double dist)
         else if (motID == "Z")
         {
             //motorSocket->write("OUT11\r\n\r\n");
-            sprintf(foo, "VAR3=%d\r\n\r\n", (int)dist);
+            sprintf(foo, "VAR3=%g\r\n\r\n", dist);
             motorSocket->write(foo);
             motorSocket->write("ALIGNZS\r\n\r\n");
 //            motorSocket->write("DRIVE00100\r\n\r\n");
@@ -138,6 +160,21 @@ bool motor::movAlign(const QString &motID, double dist)
 //            Sleep(pausetime);
 //            //motorSocket->write("OUT00\r\n\r\n"); // applying brake again previous person did?
 //            motorSocket->write("DRIVE00000\r\n\r\n");
+        }
+
+
+        else if (motID == "PHI")
+        {
+            sprintf(foo, "VAR1=%g\r\n\r\n", dist);
+            motorSocket->write(foo);
+            motorSocket->write("ALIGNPS\r\n\r\n");
+        }
+
+        else if (motID == "THETA")
+        {
+            sprintf(foo, "VAR2=%g\r\n\r\n", dist);
+            motorSocket->write(foo);
+            motorSocket->write("ALIGNTS\r\n\r\n");
         }
     }
     return connected;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>775</width>
-    <height>834</height>
+    <width>885</width>
+    <height>942</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,21 +17,24 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>340</x>
       <y>30</y>
       <width>201</width>
       <height>20</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 12pt &quot;Calibri&quot;;</string>
+    </property>
     <property name="text">
-     <string>Scan Tank Software</string>
+     <string>Acoustic Microscope Software</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_12">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>520</y>
+      <y>530</y>
       <width>91</width>
       <height>16</height>
      </rect>
@@ -107,9 +110,9 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>49</x>
       <y>90</y>
-      <width>230</width>
+      <width>241</width>
       <height>71</height>
      </rect>
     </property>
@@ -180,32 +183,6 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>70</y>
-      <width>701</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>                                              Motor Settings</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_13">
-       <property name="text">
-        <string>                                            Motor Controls</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
       <x>490</x>
       <y>710</y>
       <width>239</width>
@@ -226,77 +203,6 @@
         <string>Run</string>
        </property>
       </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>90</y>
-      <width>201</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>Displacement (mm)  </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="displacement"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <widget class="QRadioButton" name="XDir">
-           <property name="text">
-            <string>X </string>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">buttonGroup_2</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="YDir">
-           <property name="text">
-            <string> Y</string>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">buttonGroup_2</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="ZDir">
-           <property name="text">
-            <string>Z</string>
-           </property>
-           <attribute name="buttonGroup">
-            <string notr="true">buttonGroup_2</string>
-           </attribute>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="moveMotor">
-           <property name="text">
-            <string>Move </string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>
@@ -534,8 +440,8 @@
    <widget class="QPushButton" name="motorSetup">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>160</y>
+      <x>350</x>
+      <y>150</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -547,8 +453,8 @@
    <widget class="QPushButton" name="killMotor">
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>160</y>
+      <x>450</x>
+      <y>150</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -557,7 +463,189 @@
      <string>Kill Motor</string>
     </property>
    </widget>
-   <zorder>layoutWidget</zorder>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>90</y>
+      <width>290</width>
+      <height>55</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_14">
+         <property name="text">
+          <string>Displacement (mm or theta)  </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="displacement"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QRadioButton" name="XDir">
+         <property name="text">
+          <string>X </string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup_2</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="YDir">
+         <property name="text">
+          <string> Y</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup_2</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="ZDir">
+         <property name="text">
+          <string>Z</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup_2</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="phi">
+         <property name="text">
+          <string>Phi</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup_2</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="theta">
+         <property name="text">
+          <string>Theta</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup_2</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="moveMotor">
+         <property name="text">
+          <string>Move </string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>70</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Oscilloscope Settings</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="whichScope">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>90</y>
+      <width>121</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;LeCroy&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>LeCroy LT342</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Agilent DSO5012A</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>70</y>
+      <width>208</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>                                              Motor Settings</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>71</y>
+      <width>203</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>                                            Motor Controls</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>120</y>
+      <width>191</width>
+      <height>48</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Number of averages</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="numberofAvgs"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>Number of Points</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="numOfPoints"/>
+     </item>
+    </layout>
+   </widget>
+   <zorder>label_5</zorder>
+   <zorder>label_13</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>layoutWidget</zorder>
    <zorder>label_9</zorder>
@@ -575,13 +663,19 @@
    <zorder>layoutWidget</zorder>
    <zorder>motorSetup</zorder>
    <zorder>killMotor</zorder>
+   <zorder>label_7</zorder>
+   <zorder>whichScope</zorder>
+   <zorder>numberofAvgs</zorder>
+   <zorder>label_8</zorder>
+   <zorder>label_15</zorder>
+   <zorder>numOfPoints</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>775</width>
+     <width>885</width>
      <height>21</height>
     </rect>
    </property>

@@ -307,9 +307,15 @@ void acquisition::getSampleData()
                     }
                     if (_abort) break;
                     if (!_connected) break;
+                                // This will stupidly wait 1 sec doing nothing...
+                    QTimer::singleShot(1000, &loop, SLOT(quit()));
+                    loop.exec();
                 }
                 if (_abort) break;
                 if (!_connected) break;
+                            // This will stupidly wait 1 sec doing nothing...
+                QTimer::singleShot(1000, &loop, SLOT(quit()));
+                loop.exec();
             }
             mutex.lock();
             bool _abort = abort;

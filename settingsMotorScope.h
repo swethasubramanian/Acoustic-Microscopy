@@ -19,6 +19,9 @@
     struct SCOPESETTINGS
     {
         char channel[10] = "C1";
+        char whichScope[100];
+        int numOfAvgs;
+        int numOfPoints;
     };
 
 #endif // SETTINGSMOTORSCOPE_H_INCLUDED

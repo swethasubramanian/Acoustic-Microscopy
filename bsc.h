@@ -43,6 +43,7 @@ public slots:
     void startAcquisition();
     void getParentDir();
     void movMotor();
+    void setScope();
     void killMotor();
     void stopAcquisition();
     void getCurrentRun();
