@@ -1,5 +1,6 @@
-### Software to control and acquire data from the Acoustic Microscope ###
+## Software to control and acquire data from the Acoustic Microscope ###
 
+### GUI interface
 * Communicates with  (Agilent or Lecroy) oscilloscope to acquire RF echo data
 * Controls the stepper motor to position the 70-MHz single element ultrasound transducer within the 3D-scan plane
 
